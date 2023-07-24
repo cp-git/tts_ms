@@ -1,6 +1,6 @@
 @startuml
 actor user
-participant ${Cservice}Application as uhpoc
+participant ${Cservice}Application as tts
 participant ${Cservice}Controller as main
 participant CPException as cp
 participant ResponseHandler as rh
@@ -8,18 +8,18 @@ participant ${Cservice}Service as serv
 participant ${Cservice}ServiceImpl as impl
 participant ${Cservice}Repository as repo
 database DATABASE as db
-activate uhpoc
+activate tts
 activate user
-  user-->uhpoc : Enter URL-[http://localhost:8090/uhpocms/${service}/{${param}}]
+  user-->tts : Enter URL-[http://localhost:8090/ttsms/${service}/{${param}}]
     alt#Gold Case:If any Exception occur
-    uhpoc-> main : 
+    tts-> main : 
     activate main
     main->cp : throws CPException
     activate cp
     cp-> user : ${Cservice} deletion Failed 
     deactivate cp
     else  Case: If no exception occur
-     uhpoc -> main : main()
+     tts -> main : main()
           main -> serv : delete${Cservice}By${findBy}()
           activate serv
           serv -> impl : delete${Cservice}By${findBy}()
@@ -43,18 +43,18 @@ activate user
           rh->rh : generating response
           rh->main : response with HttpStatus code 204
           deactivate rh
-          main --> uhpoc :  Return updated data and return HttpStatus code 204
-          uhpoc--> user :  Return updated data and return HttpStatus code 204
+          main --> tts :  Return updated data and return HttpStatus code 204
+          tts--> user :  Return updated data and return HttpStatus code 204
           else If count<1
            main->rh : generateResponse()
           activate rh
           rh->rh : generating response
           rh->main : response with HttpStatus code 500
           deactivate rh
-          main->uhpoc : ${Cservice} deletion failed with HttpStatus Code 500
+          main->tts : ${Cservice} deletion failed with HttpStatus Code 500
           deactivate main
-          uhpoc->user : ${Cservice} deletion failed with HttpStatus Code 500
-          deactivate uhpoc
+          tts->user : ${Cservice} deletion failed with HttpStatus Code 500
+          deactivate tts
           deactivate user
       end
       end

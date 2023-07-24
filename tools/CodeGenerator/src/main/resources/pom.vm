@@ -5,19 +5,19 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.cpa.uhpoc.ms</groupId>
-		<artifactId>uhpocms</artifactId>
+		<groupId>com.cpa.tts.ms</groupId>
+		<artifactId>ttsms</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.cpa.uhpocms.ms.services</groupId>
+	<groupId>com.cpa.ttsms.ms.services</groupId>
 	<artifactId>${service}</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>${service}</name>
 	<packaging>war</packaging>
-	<description>This is ${module} ${service} module of uhpocms</description>
+	<description>This is ${module} ${service} module of ttsms</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 	</properties>
 
 	<build>

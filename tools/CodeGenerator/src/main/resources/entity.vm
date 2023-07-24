@@ -5,7 +5,7 @@
  * 
  */
 
-package com.cpa.uhpocms.entity;
+package com.cpa.ttsms.entity;
 
 import java.util.Date;
 

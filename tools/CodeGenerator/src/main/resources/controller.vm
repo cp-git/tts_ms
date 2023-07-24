@@ -5,7 +5,7 @@
  * 
  */
 
-package com.cpa.uhpocms.controller;
+package com.cpa.ttsms.controller;
 
 import java.util.List;
 import java.util.Locale;
@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cpa.uhpocms.entity.${entity};
-import com.cpa.uhpocms.exception.CPException;
-import com.cpa.uhpocms.helper.ResponseHandler;
-import com.cpa.uhpocms.service.${Cservice}Service;
+import com.cpa.ttsms.entity.${entity};
+import com.cpa.ttsms.exception.CPException;
+import com.cpa.ttsms.helper.ResponseHandler;
+import com.cpa.ttsms.service.${Cservice}Service;
 
 @RestController
-@RequestMapping("/uhpocms")
+@RequestMapping("/ttsms")
 public class ${Cservice}Controller {
 
 	@Autowired

@@ -5,7 +5,7 @@
  * 
  */
 
-package com.cpa.uhpocms.serviceimpl;
+package com.cpa.ttsms.serviceimpl;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//import com.cpa.uhpocms.controller.${Cservice}Controller;
-import com.cpa.uhpocms.entity.${Cservice};
-import com.cpa.uhpocms.repository.${Cservice}Repo;
-import com.cpa.uhpocms.service.${Cservice}Service;
+//import com.cpa.ttsms.controller.${Cservice}Controller;
+import com.cpa.ttsms.entity.${Cservice};
+import com.cpa.ttsms.repository.${Cservice}Repo;
+import com.cpa.ttsms.service.${Cservice}Service;
 
 @Service
 public class ${Cservice}ServiceImpl implements ${Cservice}Service {

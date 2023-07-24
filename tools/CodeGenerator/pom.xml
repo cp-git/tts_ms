@@ -6,12 +6,12 @@
 	<name>Code Generator</name>
 	<description>Genrate Spring Boot Microservice maven project</description>
 	<parent>
-		<groupId>com.cpa.uhpoc.ms</groupId>
-		<artifactId>uhpocms</artifactId>
+		<groupId>com.cpa.tts.ms</groupId>
+		<artifactId>tts</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>17</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 	</properties>
 

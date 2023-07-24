@@ -28,9 +28,9 @@ public interface Constants {
 
 	public static final String FILE_SERVINIT = "ServletInitializer.java";
 
-	public static final String PATH_SERVINIT = MAIN_JAVA + "/com/cpa/uhpocms";
+	public static final String PATH_SERVINIT = MAIN_JAVA + "/com/cpa/ttsms";
 
-	public static final String VM_APP = "uhpocapp.vm";
+	public static final String VM_APP = "ttsapp.vm";
 
 	public static final String FILE_APP = "Application.java";
 

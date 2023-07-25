@@ -88,7 +88,7 @@
 	</dependencies>
 	<modules>
 
-		<module>services/company</module>
+		
 		<module>tools/CodeGenerator</module>
 
 	</modules>

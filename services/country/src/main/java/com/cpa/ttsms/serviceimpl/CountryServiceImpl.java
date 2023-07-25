@@ -27,24 +27,26 @@ public class CountryServiceImpl implements CountryService {
 	private static Logger logger;
 
 	public CountryServiceImpl() {
-	    logger = Logger.getLogger(CountryServiceImpl.class);
+		logger = Logger.getLogger(CountryServiceImpl.class);
 	}
 
 	/**
 	 * Create a new country entry in the Country table.
 	 *
-	 * @param country - The Country object containing the details of the country to be created.
+	 * @param country - The Country object containing the details of the country to
+	 *                be created.
 	 *
 	 * @return The newly created Country object if successful, otherwise null.
 	 */
 	@Override
 	public Country createCountry(Country country) {
-	    logger.debug("Entering createCountry"); 
-	    Country createdCountry = null; // Initialize a variable to store the newly created country.
-	    createdCountry = countryRepo.save(country); // Save the country object to the database and get the created entity.
-	    logger.info("Created Country: " + createdCountry); // Log the created country for information.
+		logger.debug("Entering createCountry");
+		Country createdCountry = null; // Initialize a variable to store the newly created country.
+		createdCountry = countryRepo.save(country); // Save the country object to the database and get the created
+													// entity.
+		logger.info("Created Country: " + createdCountry); // Log the created country for information.
 
-	    return createdCountry; // Return the newly created country object.
+		return createdCountry; // Return the newly created country object.
 	}
 
 	/**
@@ -55,13 +57,14 @@ public class CountryServiceImpl implements CountryService {
 	 * @return The found Country object if a match is found, otherwise null.
 	 */
 	@Override
-	public Country getCountryBycode(int countryCode) {
-	    logger.debug("Entering getCountryBycode"); 
+	public Country getCountryByCountryCode(int countryCode) {
+		logger.debug("Entering getCountryBycode");
 
-	    Country country = countryRepo.findByCountryCode(countryCode); // Retrieve the country from the database by country code.
-	    logger.info("Found Country: " + country); 
+		Country country = countryRepo.findByCountryCode(countryCode); // Retrieve the country from the database by
+																		// country code.
+		logger.info("Found Country: " + country);
 
-	    return country; // Return the found country object.
+		return country; // Return the found country object.
 	}
 
 	/**
@@ -71,16 +74,17 @@ public class CountryServiceImpl implements CountryService {
 	 */
 	@Override
 	public List<Object> getAllCountries() {
-	    logger.debug("Entering getAllCountries"); 
+		logger.debug("Entering getAllCountries");
 
-	    List<Country> countries = countryRepo.findAll(); // Retrieve all active countries from the database.
-	    logger.info("Fetched all active countries: " + countries);
+		List<Country> countries = countryRepo.findAll(); // Retrieve all active countries from the database.
+		logger.info("Fetched all active countries: " + countries);
 
-	    // Create a new list to store objects
-	    List<Object> objects = new ArrayList<>(countries); // Convert the list of Country objects to a list of generic Objects.
+		// Create a new list to store objects
+		List<Object> objects = new ArrayList<>(countries); // Convert the list of Country objects to a list of generic
+															// Objects.
 
-	    logger.info("Fetched all active countries: " + countries); 
-	    return objects; // Return the list of generic Objects.
+		logger.info("Fetched all active countries: " + countries);
+		return objects; // Return the list of generic Objects.
 	}
 
 	/**
@@ -89,30 +93,32 @@ public class CountryServiceImpl implements CountryService {
 	 * @param country - The Country object containing the updated country details.
 	 * @param code    - The country code used to find the country to be updated.
 	 *
-	 * @return The updated Country object if the update is successful, otherwise null.
+	 * @return The updated Country object if the update is successful, otherwise
+	 *         null.
 	 */
 	@Override
-	public Country updateCountryBycode(Country country, int code) {
-	    logger.debug("Entering updateCountry"); 
+	public Country updateCountryByCountryCode(Country country, int code) {
+		logger.debug("Entering updateCountry");
 
-	    Country toCountryAlreadyPresent = null; // Initialize a variable to store the existing country to be updated.
-	    Country updatedCountry = null; // Initialize a variable to store the updated country.
+		Country toCountryAlreadyPresent = null; // Initialize a variable to store the existing country to be updated.
+		Country updatedCountry = null; // Initialize a variable to store the updated country.
 
-	    toCountryAlreadyPresent = countryRepo.findByCountryCode(code); // Retrieve the existing country by country code.
-	    logger.info("Existing Country: " + toCountryAlreadyPresent); 
+		toCountryAlreadyPresent = countryRepo.findByCountryCode(code); // Retrieve the existing country by country code.
+		logger.info("Existing Country: " + toCountryAlreadyPresent);
 
-	    if (toCountryAlreadyPresent != null) { // Check if the existing country is found.
-	        logger.debug("Setting new data of Country to existing Country");
+		if (toCountryAlreadyPresent != null) { // Check if the existing country is found.
+			logger.debug("Setting new data of Country to existing Country");
 
-	        // Update the existing country's data with the new data from the input country object.
-	        toCountryAlreadyPresent.setCountryName(country.getCountryName());
-	        toCountryAlreadyPresent.setCountryCode(country.getCountryCode());
+			// Update the existing country's data with the new data from the input country
+			// object.
+			toCountryAlreadyPresent.setCountryName(country.getCountryName());
+			toCountryAlreadyPresent.setCountryCode(country.getCountryCode());
 
-	        updatedCountry = countryRepo.save(toCountryAlreadyPresent); // Save the updated country to the database.
-	        logger.info("Updated Country: " + updatedCountry); 
-	    }
+			updatedCountry = countryRepo.save(toCountryAlreadyPresent); // Save the updated country to the database.
+			logger.info("Updated Country: " + updatedCountry);
+		}
 
-	    return updatedCountry; // Return the updated country object if successful, otherwise null.
+		return updatedCountry; // Return the updated country object if successful, otherwise null.
 	}
 
 	/**
@@ -123,13 +129,14 @@ public class CountryServiceImpl implements CountryService {
 	 * @return The count of records updated (usually 1 if successful).
 	 */
 	@Override
-	public int deleteCountryBycode(int code) {
-	    logger.debug("Entering deleteCountryBycode");
+	public int deleteCountryByCountryCode(int code) {
+		logger.debug("Entering deleteCountryBycode");
 
-	    int count = countryRepo.deleteCountryBycode(code); // Delete the country record by country code and get the count of affected records.
-	    logger.info("Deleted Country count: " + count); 
+		int count = countryRepo.deleteCountryByCode(code); // Delete the country record by country code and get the
+															// count of affected records.
+		logger.info("Deleted Country count: " + count);
 
-	    return count; // Return the count of deleted records.
+		return count; // Return the count of deleted records.
 	}
 
 }

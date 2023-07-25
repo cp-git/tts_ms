@@ -17,17 +17,18 @@ public interface CountryService {
 	public Country createCountry(Country country);
 
 	// Retrieves a country by its unique country code.
-	public Country getCountryBycode(int countryCode);
+	public Country getCountryByCountryCode(int countryCode);
 
-	// Retrieves a list of all countries in the database. The returned list may contain generic Objects.
+	// Retrieves a list of all countries in the database. The returned list may
+	// contain generic Objects.
 	public List<Object> getAllCountries();
 
-	// Updates an existing country record in the database based on the provided country code.
+	// Updates an existing country record in the database based on the provided
+	// country code.
 	// The updated country information is contained in the 'country' parameter.
-	public Country updateCountryBycode(Country country, int countryCode);
+	public Country updateCountryByCountryCode(Country country, int countryCode);
 
 	// Deletes a country from the database using its unique country code.
-	public int deleteCountryBycode(int countryCode);
-
+	public int deleteCountryByCountryCode(int countryCode);
 
 }

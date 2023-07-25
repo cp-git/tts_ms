@@ -27,12 +27,11 @@ public interface CountryRepo extends JpaRepository<Country, Integer> {
 	// This method retrieves a list of all countries.
 	public List<Country> findAll();
 
-	
-	// This method deletes a country from the database based on the provided country code
+	// This method deletes a country from the database based on the provided country
+	// code
 	@Transactional
 	@Modifying
 	@Query(value = "DELETE FROM country WHERE code = ?", nativeQuery = true)
-	public int deleteCountryBycode(int countryCode);
+	public int deleteCountryByCode(int countryCode);
 
-	
 }

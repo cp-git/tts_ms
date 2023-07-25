@@ -88,8 +88,10 @@
 	</dependencies>
 	<modules>
 
-		
+		<module>services/company</module>
+		<module>services/country</module>
 		<module>tools/CodeGenerator</module>
+
 
 	</modules>
 </project>

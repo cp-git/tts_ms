@@ -58,23 +58,23 @@ public class StatusServiceImpl implements StatusService {
 	 * 
 	 * Retrieved a status in the repository
 	 * 
-	 * @param id - Integer value containing id of status.
+	 * @param statusId - Integer value containing statusId of status.
 	 * 
 	 * @return The Retrieved status object if successful, otherwise null.
 	 */
 	@Override
 
-	public Status getStatusById(int id) {
-		logger.info("Retrieving status with ID: " + id);
+	public Status getStatusByStatusId(int statusId) {
+		logger.info("Retrieving status with ID: " + statusId);
 
 		Status status = null;
-		// Call the userRepository to retrieve the status by id
-		status = statusRepo.findByStatusId(id);
+		// Call the userRepository to retrieve the status by statusId
+		status = statusRepo.findByStatusId(statusId);
 
 		if (status == null) {
-			logger.warn("No status found with ID: " + id);
+			logger.warn("No status found with ID: " + statusId);
 		} else {
-			logger.info("Retrieved status: " + id);
+			logger.info("Retrieved status: " + statusId);
 		}
 
 		return status;
@@ -102,19 +102,19 @@ public class StatusServiceImpl implements StatusService {
 	/**
 	 * Updates an existing status in the system.
 	 * 
-	 * @param id     The id of the status to update.
-	 * @param status The updated Status object.
+	 * @param statusId The statusId of the status to update.
+	 * @param status   The updated Status object.
 	 * @return The updated Status object.
 	 */
 	@Override
-	public Status updateStatusById(Status status, int id) {
+	public Status updateStatusByStatusId(Status status, int statusId) {
 		logger.debug("Entering updateStatus");
 
 		Status toStatusAlreadyPresent = null;
 		Status updatedStatus = null;
 
 		// Check if the status exists in the database
-		toStatusAlreadyPresent = statusRepo.findByStatusId(id);
+		toStatusAlreadyPresent = statusRepo.findByStatusId(statusId);
 		logger.info("exisitng Status :: " + toStatusAlreadyPresent);
 
 		if (toStatusAlreadyPresent != null) {
@@ -130,23 +130,23 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	/**
-	 * deletes the status with the given id.
+	 * deletes the status with the given statusId.
 	 *
-	 * @param id The id of the status to delete.
+	 * @param statusId The statusId of the status to delete.
 	 * @return True if the status was successfully deleted, false otherwise.
 	 */
 	@Override
-	public boolean deleteStatusById(int id) {
-		logger.debug("Entering deleteStatusById");
+	public boolean deleteStatusByStatusId(int statusId) {
+		logger.debug("Entering deleteStatusByStatusId");
 
-		int deletedCount = statusRepo.deleteStatusById(id);
+		int deletedCount = statusRepo.deleteStatusByStatusId(statusId);
 		logger.info("deleted Status count : " + deletedCount);
 		// If a status is successfully deleted, return true; otherwise, return false
 		if (deletedCount > 0) {
-			logger.info("Status has been deleted with id: " + id);
+			logger.info("Status has been deleted with statusId: " + statusId);
 			return true;
 		} else {
-			logger.warn("Status not found or could not be deleted with id : " + id);
+			logger.warn("Status not found or could not be deleted with statusId : " + statusId);
 			return false;
 		}
 	}

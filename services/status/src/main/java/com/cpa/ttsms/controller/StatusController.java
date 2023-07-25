@@ -7,7 +7,6 @@
 
 package com.cpa.ttsms.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -86,25 +85,25 @@ public class StatusController {
 	/**
 	 * Retrieves a status by their ID.
 	 *
-	 * @param id The ID of the status to retrieve.
-	 * @return The status with the specified Id, or a 404 Not Found response if no
-	 *         such status exists.
+	 * @param statusId The ID of the status to retrieve.
+	 * @return The status with the specified StatusId, or a 404 Not Found response
+	 *         if no such status exists.
 	 * @throws CPException
 	 */
 
 	@GetMapping("/status/{id}")
-	public ResponseEntity<Object> getStatusById(@PathVariable("id") int id) throws CPException {
-		logger.info("Received request to retrieve status with ID: " + id);
+	public ResponseEntity<Object> getStatusByStatusId(@PathVariable("id") int statusId) throws CPException {
+		logger.info("Received request to retrieve status with ID: " + statusId);
 		try {
 
-			Status status = statusService.getStatusById(id);
+			Status status = statusService.getStatusByStatusId(statusId);
 			if (status == null) {
-				logger.warn("No status found with ID: " + id);
+				logger.warn("No status found with ID: " + statusId);
 
 				// If the status not found/ exists, return an error response.
 				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
 			} else {
-				logger.info("Retrieved status with ID: " + id);
+				logger.info("Retrieved status with ID: " + statusId);
 
 				// returns retrieved status.
 				return ResponseHandler.generateResponse(status, HttpStatus.OK);
@@ -132,8 +131,6 @@ public class StatusController {
 		try {
 			// Call the statusService to retrieve all status
 			status = statusService.getAllStatus();
-			// Create a list of status objects to return
-			List<Object> statusObjects = new ArrayList<Object>(status);
 
 			// If no status are found, return a response with a warning status and errorcode
 			if (status.isEmpty()) {
@@ -143,7 +140,7 @@ public class StatusController {
 				// Log the number of status being returned and return them with a success
 				// status
 				logger.info("Returning status: " + status.size());
-				return ResponseHandler.generateListResponse(statusObjects, HttpStatus.OK);
+				return ResponseHandler.generateListResponse(status, HttpStatus.OK);
 			}
 
 		} catch (Exception ex) {
@@ -155,23 +152,23 @@ public class StatusController {
 	}
 
 	/**
-	 * deletes a status by status id.
+	 * deletes a status by status statusId.
 	 * 
-	 * @param id The id of the status to be deleted.
+	 * @param statusId The statusId of the status to be deleted.
 	 * @return ResponseEntity with NO_CONTENT status code on successful deletion or
 	 *         INTERNAL_SERVER_ERROR on failure.
 	 * @throws CPException if an error occurs while performing the operation.
 	 */
 	@DeleteMapping("/status/{id}")
-	public ResponseEntity<Object> deleteStatusById(@PathVariable("id") int id) throws CPException {
-		logger.info("Deleting status by id : " + id);
+	public ResponseEntity<Object> deleteStatusByStatusId(@PathVariable("id") int statusId) throws CPException {
+		logger.info("Deleting status by statusId : " + statusId);
 
 		boolean success = false;
 
 		try {
 
 			// Call the statusService to perform the hard delete operation.
-			success = statusService.deleteStatusById(id);
+			success = statusService.deleteStatusByStatusId(statusId);
 			if (success) {
 				// Return a response with NO_CONTENT status code if the operation is successful.
 				return ResponseHandler.generateResponse(HttpStatus.NO_CONTENT);
@@ -190,22 +187,22 @@ public class StatusController {
 	}
 
 	/**
-	 * Update a status by their id.
+	 * Update a status by their statusId.
 	 * 
-	 * @param id     The id of the status to update
-	 * @param status the updated status object
+	 * @param statusId The statusId of the status to update
+	 * @param status   the updated status object
 	 * @return the updated status object, or null if the status was not found
 	 */
 	@PutMapping("/status/{id}")
-	public ResponseEntity<Object> updateStatusById(@RequestBody Status status, @PathVariable("id") int id)
+	public ResponseEntity<Object> updateStatusByStatusId(@RequestBody Status status, @PathVariable("id") int statusId)
 			throws CPException {
-		logger.info("Updating status by code : " + id);
+		logger.info("Updating status by code : " + statusId);
 
 		Status updatedStatus = null;
 
 		try {
 			// Call the statusService to perform the update operation.
-			updatedStatus = statusService.updateStatusById(status, id);
+			updatedStatus = statusService.updateStatusByStatusId(status, statusId);
 
 			if (updatedStatus == null) {
 				// If the status not exists, return an error response.

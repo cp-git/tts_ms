@@ -211,9 +211,6 @@ public class CompanyController {
 			// Call the companyService to retrieve all companies
 			companies = companyService.getAllCompanies();
 
-			// Create a list of company objects to return
-			List<Object> companyObjects = new ArrayList<Object>(companies);
-
 			// If no companies are found, return a response with a warning status and error
 			// code
 			if (companies.isEmpty()) {
@@ -223,7 +220,7 @@ public class CompanyController {
 				// Log the number of companies being returned and return them with a success
 				// status
 				logger.info("Returning companies: " + companies.size());
-				return ResponseHandler.generateListResponse(companyObjects, HttpStatus.OK);
+				return ResponseHandler.generateListResponse(companies, HttpStatus.OK);
 			}
 
 		} catch (Exception ex) {

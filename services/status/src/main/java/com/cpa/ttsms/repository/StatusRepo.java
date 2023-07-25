@@ -19,14 +19,14 @@ import com.cpa.ttsms.entity.Status;
 @Repository
 public interface StatusRepo extends JpaRepository<Status, Integer> {
 
-	// Retrieves a status by their id
-	public Status findByStatusId(int id);
+	// Retrieves a status by their statusId
+	public Status findByStatusId(int statusId);
 
-	// delete status by their id
+	// delete status by their statusId
 	@Transactional
 	@Modifying
 	@Query(value = "Delete from status WHERE id = ?1", nativeQuery = true)
-	public int deleteStatusById(int id);
+	public int deleteStatusByStatusId(int statusId);
 
 	// Retrieves a status by their code
 	public Status findByStatusCode(String statusCode);

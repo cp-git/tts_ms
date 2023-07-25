@@ -23,12 +23,12 @@ public interface StatusService {
 	Status createStatus(Status status);
 
 	/**
-	 * Gets a status by their Id.
+	 * Gets a status by their StatusId.
 	 * 
-	 * @param id The id of the status to get.
+	 * @param statusId The statusId of the status to get.
 	 * @return The status object corresponding to the provided code.
 	 */
-	Status getStatusById(int id);
+	Status getStatusByStatusId(int statusId);
 
 	/**
 	 * Gets all status in the system.
@@ -40,18 +40,18 @@ public interface StatusService {
 	/**
 	 * Updates an existing status in the system.
 	 * 
-	 * @param id     The id of the status to update.
-	 * @param status The updated status object.
+	 * @param statusId The statusId of the status to update.
+	 * @param status   The updated status object.
 	 * @return The updated status object.
 	 */
-	Status updateStatusById(Status status, int id);
+	Status updateStatusByStatusId(Status status, int statusId);
 
 	/**
-	 * Deletes a status by their id.
+	 * Deletes a status by their statusId.
 	 * 
-	 * @param id The id of the status to delete.
+	 * @param statusId The statusId of the status to delete.
 	 * @return The number of rows affected by the delete operation.
 	 */
-	boolean deleteStatusById(int id);
+	boolean deleteStatusByStatusId(int statusId);
 
 }

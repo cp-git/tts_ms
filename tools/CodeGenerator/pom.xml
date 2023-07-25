@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.cpa.uhpoc.tools</groupId>
+	<groupId>com.cpa.tts.tools</groupId>
 	<artifactId>codegen</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Code Generator</name>
 	<description>Genrate Spring Boot Microservice maven project</description>
 	<parent>
 		<groupId>com.cpa.tts.ms</groupId>
-		<artifactId>tts</artifactId>
+		<artifactId>ttsms</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<properties>

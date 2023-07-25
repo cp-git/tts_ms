@@ -93,12 +93,12 @@ public class CompanyController {
 	 * @throws CPException
 	 */
 	@GetMapping("/company/{id}")
-	public ResponseEntity<Object> getCompanyById(@PathVariable("id") int id) throws CPException {
+	public ResponseEntity<Object> getCompanyByCompanyId(@PathVariable("id") int id) throws CPException {
 		logger.info("Received request to retrieve company with ID: " + id);
 
 		try {
 
-			Company company = companyService.getCompanyById(id);
+			Company company = companyService.getCompanyByCompanyId(id);
 			if (company == null) {
 				logger.warn("No company found with ID: " + id);
 

@@ -27,7 +27,7 @@ public interface CompanyService {
 	 * @param companyid The id of the company to get.
 	 * @return The Company object corresponding to the provided code.
 	 */
-	Company getCompanyById(int id);
+	Company getCompanyByCompanyId(int id);
 
 	/**
 	 * Gets all companies in the system.

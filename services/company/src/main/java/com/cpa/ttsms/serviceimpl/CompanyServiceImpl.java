@@ -64,7 +64,7 @@ public class CompanyServiceImpl implements CompanyService {
 	 * @return The Retrieved company object if successful, otherwise null.
 	 */
 	@Override
-	public Company getCompanyById(int id) {
+	public Company getCompanyByCompanyId(int id) {
 
 		logger.info("Retrieving company with ID: " + id);
 

@@ -31,7 +31,7 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	/**
-	 * Create a new user in the repository.
+	 * Create a new company in the repository.
 	 * 
 	 * @param : Company object containing the company details.
 	 * @return : The newly created company object if successful, otherwise null.
@@ -47,9 +47,9 @@ public class CompanyServiceImpl implements CompanyService {
 		if (existingCompany == null) {
 			// If the company does not already exist, create it.
 			createdCompany = companyRepo.save(company);
-			logger.info("User created successfully for code :" + company.getCompanyCode());
+			logger.info("Company created successfully for code :" + company.getCompanyCode());
 		} else {
-			logger.warn("User already exists with code :" + company.getCompanyCode());
+			logger.warn("Company already exists with code :" + company.getCompanyCode());
 		}
 
 		return createdCompany;
@@ -69,7 +69,7 @@ public class CompanyServiceImpl implements CompanyService {
 		logger.info("Retrieving company with ID: " + id);
 
 		Company company = null;
-		// Call the userRepository to retrieve the company by id
+		// Call the companyRepository to retrieve the company by id
 		company = companyRepo.findByCompanyId(id);
 
 		if (company == null) {
@@ -137,7 +137,7 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	/**
-	 * deletes the company with the given code //by setting isActive to false.
+	 * deletes the company with the given code
 	 *
 	 * @param companyCode The code of the company to delete.
 	 * @return True if the company was successfully deleted, false otherwise.
@@ -149,8 +149,7 @@ public class CompanyServiceImpl implements CompanyService {
 		logger.info("Deleting company by code : " + companyCode);
 
 		// Call the DeleteCompanyByCode method of companyRepository to delete the
-		// company with
-		// the given Company
+		// company with the given Company
 		int deletedCount = companyRepo.deleteByCompanyCode(companyCode);
 
 		// If a company is successfully deleted, return true; otherwise, return false

@@ -7,8 +7,6 @@
 
 package com.cpa.ttsms.entity;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,24 +14,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
-@Table(name = "Country")
+@Table(name = "country")
 public class Country {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int countryId;
-	
+
 	@Column(name = "code")
 	private int countryCode;
-	
-	@Column (name = "name")
+
+	@Column(name = "name")
 	private String countryName;
 
 	/**
@@ -103,9 +96,7 @@ public class Country {
 		return "Country [countryId=" + countryId + ", countryCode=" + countryCode + ", countryName=" + countryName
 				+ "]";
 	}
-	
 
-	
 //TODO - add attributed and genrate setters and getters
 
 }

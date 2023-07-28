@@ -1,5 +1,6 @@
 /**
  * @author - Code Generator
+ * @developer - Akash
  * @createdOn 25-07-2023
  * @Description Controller class for task
  * 
@@ -15,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cpa.ttsms.entity.Task;
+import com.cpa.ttsms.entity.TaskDTO;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.TaskService;
@@ -37,165 +38,216 @@ public class TaskController {
 	@Autowired
 	private TaskService taskService;;
 
-	private ResourceBundle resourceBunde;
+	// The ResourceBundle is used to retrieve localized messages.
+	private ResourceBundle resourceBundle;
+
+	// The logger is used for logging messages related to this class.
 	private static Logger logger;
 
 	TaskController() {
-		resourceBunde = ResourceBundle.getBundle("ErrorMessage", Locale.US);
+		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(TaskController.class);
 	}
 
-	@PostMapping("/task")
+	/**
+	 * Creates a new task in the system based on the provided Task object.
+	 *
+	 * @param task The Task object representing the task to be created.
+	 * @return ResponseEntity containing the created Task object and HTTP status
+	 *         CREATED if successful. If the task with the provided task name
+	 *         already exists, returns an error ResponseEntity with HTTP status
+	 *         INTERNAL_SERVER_ERROR and an error message "err003".
+	 * @throws CPException If an exception occurs during task creation, a custom
+	 *                     CPException is thrown with the error code "err003" and
+	 *                     the localized error message from the resource bundle.
+	 */
+	@PostMapping("/savetask")
 	public ResponseEntity<Object> createTask(@RequestBody Task task) throws CPException {
+		// Log that the method has been entered and print task details
 		logger.debug("Entering createTask");
-		logger.info("data of creating Task  :" + task.toString());
+		logger.info("Data of creating Task: " + task.getTaskName());
 
-		Task createdTask = null;
 		try {
+			Task createdTask = taskService.createTask(task);
+			// If the task does not exist (i.e., createdTask is not null), it has been
+			// successfully created
+			if (createdTask != null) {
+				logger.info("Task created: " + createdTask.getTaskName());
 
-			Task toCheckTask = taskService.getTaskById(task.getTaskId());
-			logger.debug("existing task :" + toCheckTask);
-
-			if (toCheckTask == null) {
-
-				// TODO: Uncomment below 2 lines and change the method name as per your Entity
-				// class
-				// task.setCreatedby("admin");
-				// task.setUpdatedby("admin");
-
-				createdTask = taskService.createTask(task);
-				logger.info("Task created :" + createdTask);
-
+				// Return a successful response with the created task and HTTP status CREATED
 				return ResponseHandler.generateResponse(createdTask, HttpStatus.CREATED);
 
 			} else {
-
-				logger.error(resourceBunde.getString("err003"));
+				// If the task with the provided task name already exists, return an error
+				// response
+				// with HTTP status INTERNAL_SERVER_ERROR and an error message "err003"
+				logger.error(resourceBundle.getString("err003"));
 				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 			}
 
 		} catch (Exception ex) {
-			logger.error("Failed Task creation : " + ex.getMessage());
-			throw new CPException("err003", resourceBunde.getString("err003"));
+			// If an exception occurs during task creation, log the error and throw a custom
+			// CPException
+			// with the error message "err003" and the localized error message from the
+			// resource bundle.
+			logger.error("Failed Task creation: " + ex.getMessage());
+			throw new CPException("err003", resourceBundle.getString("err003"));
 		}
 	}
 
+	/**
+	 * Endpoint to get a task by its ID.
+	 *
+	 * @param id The ID of the task to retrieve, received as a path variable.
+	 * @return ResponseEntity with the fetched Task object if it exists, or
+	 *         ResponseEntity with HTTP status NOT_FOUND if the task does not exist.
+	 * @throws CPException If there is an exception while fetching the task, it is
+	 *                     caught and wrapped into a custom CPException, which will
+	 *                     be handled by the global exception handler to return a
+	 *                     meaningful error response to the client.
+	 */
 	@GetMapping("/task/{id}")
 	public ResponseEntity<Object> getTaskById(@PathVariable("id") int id) throws CPException {
-		logger.debug("Entering getTaskByid");
-		logger.info("entered user name :" + id);
+		// Log that the method has been entered and print the task ID received
+		logger.debug("Entering getTaskById");
+		logger.info("Entered task ID: " + id);
 
+		// Initialize a variable to hold the fetched task
 		Task task = null;
 
 		try {
-
+			// Fetch the task by its ID using the taskService
 			task = taskService.getTaskById(id);
-			logger.info("fetched Task :" + task);
+			logger.info("Fetched Task: " + task);
 
+			// If the task is found (i.e., not null), return a successful response
+			// with the fetched task and HTTP status OK
 			if (task != null) {
-				logger.debug("Task fetched generating response");
+				logger.debug("Task fetched, generating response");
 				return ResponseHandler.generateResponse(task, HttpStatus.OK);
 			} else {
+				// If the task is not found, return an error response with HTTP status NOT_FOUND
+				// and an error message "err001"
 				logger.debug("Task not found");
 				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
 			}
 
 		} catch (Exception ex) {
-
-			logger.error("Failed getting task : " + ex.getMessage());
-			throw new CPException("err001", resourceBunde.getString("err001"));
-		}
-
-	}
-
-	@GetMapping("/task")
-	public ResponseEntity<List<Object>> getAllTasks(@RequestParam(name = "id") String id) throws CPException {
-		logger.debug("Entering getAllTask");
-		logger.info("Parameter  :" + id);
-
-		List<Object> tasks = null;
-
-		try {
-
-			if (id.equalsIgnoreCase("all")) {
-
-				tasks = taskService.getAllTasks();
-				logger.info("Fetched all Task :" + tasks);
-
-				return ResponseHandler.generateListResponse(tasks, HttpStatus.OK);
-			} else {
-
-				logger.info(resourceBunde.getString("err002"));
-				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
-			}
-
-		} catch (Exception ex) {
-
-			logger.error("Failed getting all tasks : " + ex.getMessage());
-			throw new CPException("err002", resourceBunde.getString("err002"));
-
+			// If an exception occurs while fetching the task, log the error and throw a
+			// custom CPException
+			// with the error message "err001" and the localized error message from the
+			// resource bundle.
+			logger.error("Failed getting task: " + ex.getMessage());
+			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
 	}
 
-	@DeleteMapping("/task/{id}")
-	public ResponseEntity<Object> deleteTaskById(@PathVariable("id") String id) throws CPException {
-		logger.debug("Entering deleteAuthUser");
-		logger.info("entered deleteTask  :" + id);
-		// TODO - implement the business logic
-
-		int count = 0;
-
-		try {
-			count = taskService.deleteTaskById(id);
-			if (count >= 1) {
-				logger.info("deleted Task : Id = " + id);
-				return ResponseHandler.generateResponse(HttpStatus.NO_CONTENT);
-			} else {
-				logger.info(resourceBunde.getString("err005"));
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err005");
-			}
-
-		} catch (Exception ex) {
-			logger.error("Failed to delete Task :" + ex.getMessage());
-			throw new CPException("err005", resourceBunde.getString("err005"));
-		}
-
-	}
-
-	@PutMapping("/task/{id}")
-	public ResponseEntity<Object> updateTaskById(@RequestBody Task task, @PathVariable("id") int id)
-			throws CPException {
-		logger.debug("Entering updateTask");
-		logger.info("entered  updateTask :" + task);
-
-		Task updatedTask = null;
-
-		try {
-			updatedTask = taskService.updateTaskById(task, id);
-
-			if (updatedTask == null) {
-				logger.info(resourceBunde.getString("err004"));
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
-			} else {
-				logger.info("updated task : " + updatedTask);
-				return ResponseHandler.generateResponse(updatedTask, HttpStatus.CREATED);
-			}
-
-		} catch (Exception ex) {
-			logger.error("Failed update Task : " + ex.getMessage());
-			throw new CPException("err004", resourceBunde.getString("err004"));
-
-		}
-
-	}
-
+	/**
+	 * Endpoint to get all parent tasks based on their status.
+	 *
+	 * @param status The status of the parent tasks to retrieve, received as a
+	 *               request parameter.
+	 * @return List of parent tasks with the specified status.
+	 */
 	@GetMapping("/allparenttask")
-	public List<Task> getAllParentTasksByStatus(@RequestParam("status") String status) {
-		return taskService.getAllParentTasksByStatus(status);
+	public ResponseEntity<Object> getAllParentTasksByStatus(@RequestParam("status") String status) {
+		// Log that the method has been entered and print the status received
+		logger.debug("Entering getAllParentTasksByStatus");
+		logger.info("Entered status: " + status);
+
+		try {
+			// Fetch all parent tasks with the specified status using the taskService
+			List<Task> parentTasks = taskService.getAllParentTasksByStatus(status);
+
+			// Log the fetched parent tasks
+			logger.info("Fetched parent tasks with status " + status + ": " + parentTasks);
+
+			// If parentTasks list is not empty, return it as a successful response
+			if (!parentTasks.isEmpty()) {
+				return ResponseHandler.generateResponse(parentTasks, HttpStatus.OK);
+			} else {
+				// If no parent tasks are found with the specified status, return NOT_FOUND
+				// status
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
 	}
 
+	/**
+	 * Retrieves all child tasks with the specified parentId.
+	 *
+	 * @param parentId The ID of the parent task for which to fetch child tasks.
+	 * @return ResponseEntity containing the list of child tasks if successful, or
+	 *         ResponseEntity with HTTP status NOT_FOUND if no child tasks are found
+	 *         with the specified parentId, or ResponseEntity with HTTP status
+	 *         INTERNAL_SERVER_ERROR if an exception occurs during the retrieval.
+	 */
 	@GetMapping("/allchilds/{parentid}")
-	public List<Task> getAllChildTasksByParentId(@PathVariable("parentid") int parentId) {
-		return taskService.getAllChildTasksByParentId(parentId);
+	public ResponseEntity<Object> getAllChildTasksByParentId(@PathVariable("parentid") int parentId) {
+		// Log that the method has been entered and print the parentId received
+		logger.debug("Entering getAllChildTasksByParentId");
+		logger.info("Entered parentid: " + parentId);
+
+		try {
+			// Fetch all child tasks with the specified parentId using the taskService
+			List<Task> childTasks = taskService.getAllChildTasksByParentId(parentId);
+
+			// Log the fetched child tasks
+			logger.info("Fetched child tasks with parentid " + parentId + ": " + childTasks);
+
+			// If childTasks list is not empty, return it as a successful response
+			if (!childTasks.isEmpty()) {
+				return ResponseHandler.generateResponse(childTasks, HttpStatus.OK);
+			} else {
+				// If no child tasks are found with the specified parentId, return NOT_FOUND
+				// status
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching child tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
+	/**
+	 * Update a task based on the provided taskid and TaskDTO.
+	 *
+	 * @param taskid  The ID of the task to be updated.
+	 * @param taskDTO The TaskDTO containing the updated task information.
+	 * @return ResponseEntity with the updated Task object if successful, or
+	 *         ResponseEntity with HTTP status BAD_REQUEST if taskid does not match
+	 *         the TaskDTO taskid, or ResponseEntity with HTTP status
+	 *         INTERNAL_SERVER_ERROR if an exception occurs during the update.
+	 */
+	@PutMapping("/update/{taskid}")
+	public ResponseEntity<Object> updateTask(@PathVariable int taskid, @RequestBody TaskDTO taskDTO) {
+		try {
+			// Check if the taskid in the path variable matches the taskid in the TaskDTO
+			if (taskid != taskDTO.getTaskId()) {
+				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "err006");
+			}
+
+			// Optional: You can fetch the empid from the UserService and set it in the
+			// TaskDTO
+			// int empid = userService.getEmpIdFromUsername(taskDTO.getUsername());
+			// taskDTO.setEmpid(empid);
+
+			// Update the task using the TaskService
+			Task updatedTask = taskService.updateTask(taskDTO);
+
+			// Return the updated Task object with HTTP status OK
+			return ResponseEntity.ok(updatedTask);
+		} catch (Exception e) {
+			// If an exception occurs during the update, return HTTP status
+			// INTERNAL_SERVER_ERROR
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.cpa.ttsms.dto;
 
+import java.util.Date;
+
 public class EmployeeAndPasswordDTO {
 	
 	private int employeeId;
@@ -12,7 +14,7 @@ public class EmployeeAndPasswordDTO {
 
 	private String lastName;
 
-	private String birthDate;
+	private Date birthDate;
 
 	private String employeeEmail;
 
@@ -95,14 +97,14 @@ public class EmployeeAndPasswordDTO {
 	/**
 	 * @return the birthDate
 	 */
-	public String getBirthDate() {
+	public Date getBirthDate() {
 		return birthDate;
 	}
 
 	/**
 	 * @param birthDate the birthDate to set
 	 */
-	public void setBirthDate(String birthDate) {
+	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
 	}
 
@@ -175,7 +177,7 @@ public class EmployeeAndPasswordDTO {
 	 * @param password
 	 */
 	public EmployeeAndPasswordDTO(int employeeId, int countryId, int companyId, String firstName, String lastName,
-			String birthDate, String employeeEmail, int passwordId, String username, String password) {
+			Date birthDate, String employeeEmail, int passwordId, String username, String password) {
 		super();
 		this.employeeId = employeeId;
 		this.countryId = countryId;

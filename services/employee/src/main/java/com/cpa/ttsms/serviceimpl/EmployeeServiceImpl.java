@@ -15,11 +15,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
+
 //import com.cpa.ttsms.controller.EmployeeController;
 import com.cpa.ttsms.entity.Employee;
 import com.cpa.ttsms.entity.Password;
@@ -92,9 +95,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 *
 	 * @return The original EmployeeAndPasswordDTO object if successful.
 	 */
+	
+	@Transactional
 	@Override
 	public EmployeeAndPasswordDTO saveEmployeeAndPassword(EmployeeAndPasswordDTO dto) {
 	    // TODO Auto-generated method stub
+		
+				
 	    // Create a new Employee object and set its properties from the provided DTO
 	    Employee employee = new Employee();
 	    employee.setCountryId(dto.getCountryId());
@@ -102,15 +109,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 	    employee.setFirstName(dto.getFirstName());
 	    employee.setLastName(dto.getLastName());
 
-	    // Parse the date string from the DTO and set it as the employee's birth date
-	    Date dob;
-	    try {
-	        dob = new SimpleDateFormat("yyyy-dd-MM").parse(dto.getBirthDate());
-	        employee.setBirthDate(dob);
-	    } catch (ParseException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-	    }
+//	    // Parse the date string from the DTO and set it as the employee's birth date
+//	    Date dob;
+//	    try {
+//	        dob = new SimpleDateFormat("yyyy-dd-MM").parse(dto.getBirthDate());
+//	        employee.setBirthDate(dob);
+//	    } catch (ParseException e) {
+//	        // TODO Auto-generated catch block
+//	        e.printStackTrace();
+//	    }
+	    
+	    employee.setBirthDate(dto.getBirthDate());
 	    employee.setEmployeeEmail(dto.getEmployeeEmail());
 	    // Save the employee in the database
 	    employeeRepo.save(employee);
@@ -150,9 +159,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	            dto.setCompanyId(emp.getCompanyId());
 	            dto.setFirstName(emp.getFirstName());
 	            dto.setLastName(emp.getLastName());
+	            dto.setBirthDate(emp.getBirthDate());
 	            // Format dob as a String (assuming it's already in Date format in the entity)
-	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	            dto.setBirthDate(dateFormat.format(emp.getBirthDate()));
+//	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//	            dto.setBirthDate(dateFormat.format(emp.getBirthDate()));
 	            dto.setPasswordId(password.getPasswordId());
 	            dto.setEmployeeEmail(emp.getEmployeeEmail());
 	            dto.setUsername(password.getUsername());
@@ -188,7 +198,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	            // Format dob as a String (assuming it's already in Date format in the entity)
 	            // SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	            dto.setPasswordId(password.getPasswordId());
-	            dto.setBirthDate(emp.getBirthDate().toString());
+	            dto.setBirthDate(emp.getBirthDate());
+	          //  dto.setBirthDate(emp.getBirthDate().toString());
 	            dto.setEmployeeEmail(emp.getEmployeeEmail());
 	            dto.setUsername(password.getUsername());
 	            dto.setPassword(password.getPassword());
@@ -233,6 +244,87 @@ public class EmployeeServiceImpl implements EmployeeService {
 	    logger.info("Founded employee :" + employee);
 
 	    return employee;
+	}
+
+	@Override
+	public Password updatePasswordByEmployeeId(Password password ,int employeeId) {
+		// TODO Auto-generated method stub
+		Password toUpdatePassword = null;
+		Password updatedPassword = null;
+		
+		 toUpdatePassword = passwordRepository.findByEmployeeId(employeeId);
+		 
+		 if(toUpdatePassword != null) {
+			 
+			 toUpdatePassword.setUsername(password.getUsername());
+			 toUpdatePassword.setPassword(password.getPassword());
+			 
+			 updatedPassword = passwordRepository.save(toUpdatePassword);
+			 logger.info("updated Employee :" + updatedPassword);
+		 }
+		 
+		return updatedPassword;
+	}
+
+	@Override
+	@Transactional
+	public boolean  updateEmployeeAndPasswordByEmployeeId(EmployeeAndPasswordDTO dto, int employeeId) {
+		// TODO Auto-generated method stub
+		
+		Employee toUpdatedEmployee = null;
+		Employee updatedEmployee = null ;
+		Password toUpdatePassword = null;
+		Password updatedPassowrd = null;
+				
+		boolean isSuccess =false;
+		toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
+			System.out.println("here" + toUpdatedEmployee);
+		if(toUpdatedEmployee != null) {
+			
+			toUpdatedEmployee.setCountryId(dto.getCountryId());
+			toUpdatedEmployee.setCompanyId(dto.getCompanyId());;
+			toUpdatedEmployee.setFirstName(dto.getFirstName());
+			toUpdatedEmployee.setLastName(dto.getLastName());
+		//	toUpdatedEmployee.setBirthDate(employee.getBirthDate());
+			toUpdatedEmployee.setEmployeeEmail(dto.getEmployeeEmail());
+		
+			updatedEmployee= employeeRepo.save(toUpdatedEmployee);
+			System.out.println(toUpdatedEmployee + " ////////////////////////");
+			
+			
+			
+		}
+		toUpdatePassword = passwordRepository.findByEmployeeId(employeeId);
+		
+		if(toUpdatePassword != null) {
+		toUpdatePassword.setUsername(dto.getUsername());;
+		toUpdatePassword.setPassword(dto.getPassword());
+		updatedPassowrd = passwordRepository.save(toUpdatePassword);
+		System.out.println(toUpdatePassword + " ***************************");
+		
+		}
+		
+		
+		if(updatedEmployee!=null && updatedPassowrd!=null) {
+			isSuccess = true;
+		}
+		return isSuccess;
+	}
+
+	@Override
+	public List<Object> getAllEmployees() {
+		// TODO Auto-generated method stub
+		logger.debug("Entering getAllCountries");
+
+		List<Employee> employees = employeeRepo.findAll(); // Retrieve all active countries from the database.
+		logger.info("Fetched all active countries: " + employees);
+
+		// Create a new list to store objects
+		List<Object> objects = new ArrayList<>(employees); // Convert the list of Country objects to a list of generic
+															// Objects.
+
+		logger.info("Fetched all active countries: " + employees);
+		return objects; // Return the list of generic Objects.
 	}
 
 

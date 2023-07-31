@@ -27,6 +27,8 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 	// Retrieves a list of all employees.
 	public List<Employee> findAll(); 
 	
+	public Employee findByEmployeeEmail(String EmployeeEmail);
+	
 
 	// Deletes an employee by their employeeId.
 	@Transactional

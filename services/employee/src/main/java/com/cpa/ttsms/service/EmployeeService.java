@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
 import com.cpa.ttsms.entity.Employee;
+import com.cpa.ttsms.entity.Password;
 
 public interface EmployeeService {
 
@@ -29,8 +30,15 @@ public interface EmployeeService {
 	// Retrieves a list of all employees and their associated password information.
 	List<Object> getAllEmployeesAndPasswords(); 
 	
+	// Retrieves a list of all employees and their associated password information.
+		List<Object> getAllEmployees(); 
+	
 	// Deletes an employee by their employeeId.
 	int deleteEmployeeByEmployeeId(int employeeId); 
+	
+	Password updatePasswordByEmployeeId(Password password ,int employeeId);
+	
+	boolean  updateEmployeeAndPasswordByEmployeeId(EmployeeAndPasswordDTO dto , int employeeId);
 	
 
 }

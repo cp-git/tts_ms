@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
 import com.cpa.ttsms.entity.Employee;
+import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.EmployeeService;
@@ -47,201 +48,320 @@ public class EmployeeController {
 	}
 
 	/**
-	 * Creates a new employee along with their password information based on the provided EmployeeAndPasswordDTO object,
-	 * and generates an appropriate response.
+	 * Creates a new employee along with their password information based on the
+	 * provided EmployeeAndPasswordDTO object, and generates an appropriate
+	 * response.
 	 *
-	 * @param dto - The EmployeeAndPasswordDTO object containing the details of the employee and password to be created.
+	 * @param dto - The EmployeeAndPasswordDTO object containing the details of the
+	 *            employee and password to be created.
 	 *
-	 * @return ResponseEntity containing a CREATED status if the employee was successfully created,
-	 *         otherwise returns an INTERNAL_SERVER_ERROR response.
+	 * @return ResponseEntity containing a CREATED status if the employee was
+	 *         successfully created, otherwise returns an INTERNAL_SERVER_ERROR
+	 *         response.
 	 *
-	 * @throws CPException If there is an error while creating the employee or generating the response.
+	 * @throws CPException If there is an error while creating the employee or
+	 *                     generating the response.
 	 */
+	
 	@PostMapping("/employee")
 	public ResponseEntity<Object> createEmployee(@RequestBody EmployeeAndPasswordDTO dto) throws CPException {
-	    // Log the entry of the method
-	    logger.debug("Entering createEmployee");
-	    logger.info("data of creating Employee  :" + dto.toString());
+		// Log the entry of the method
+		logger.debug("Entering createEmployee");
+		logger.info("data of creating Employee  :" + dto.toString());
 
-	    try {
-	        // Attempt to create the new employee along with their password using the employeeService
-	        employeeService.saveEmployeeAndPassword(dto);
-	        logger.info("Employee created :" + dto);
-	        // Generate a CREATED response
-	        return ResponseHandler.generateResponse(HttpStatus.CREATED);
-	    } catch (Exception e) {
-	        // Log any exceptions that occur during the creation process
-	        logger.error(resourceBunde.getString("err003"));
-	        // Generate an INTERNAL_SERVER_ERROR response with an error message
-	        return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
-	    }
+		try {
+			// Attempt to create the new employee along with their password using the
+			// employeeService
+			employeeService.saveEmployeeAndPassword(dto);
+			logger.info("Employee created :" + dto);
+			// Generate a CREATED response
+			return ResponseHandler.generateResponse(HttpStatus.CREATED);
+		} catch (Exception e) {
+			// Log any exceptions that occur during the creation process
+			logger.error(resourceBunde.getString("err003"));
+			// Generate an INTERNAL_SERVER_ERROR response with an error message
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+		}
 	}
 
-	
-	
-
-	
-	
 	/**
-	 * Retrieves an EmployeeAndPasswordDTO object containing employee and password information
-	 * based on the provided employeeId, and generates an appropriate response.
+	 * Retrieves an EmployeeAndPasswordDTO object containing employee and password
+	 * information based on the provided employeeId, and generates an appropriate
+	 * response.
 	 *
 	 * @param employeeId - The ID of the employee to retrieve.
 	 *
-	 * @return ResponseEntity containing the EmployeeAndPasswordDTO object with an OK status if the employee is found,
-	 *         otherwise returns a NOT_FOUND response.
+	 * @return ResponseEntity containing the EmployeeAndPasswordDTO object with an
+	 *         OK status if the employee is found, otherwise returns a NOT_FOUND
+	 *         response.
 	 */
 	@GetMapping("/employeepass/{employeeId}")
 	public ResponseEntity<EmployeeAndPasswordDTO> getEmployeeWithPasswordById(@PathVariable int employeeId) {
-	    // Retrieve the EmployeeAndPasswordDTO using the employeeService
-	    EmployeeAndPasswordDTO dto = employeeService.getEmployeeAndPasswordByEmployeeId(employeeId);
-	    if (dto != null) {
-	        // If the EmployeeAndPasswordDTO is not null, generate a response with the DTO and a 200 OK status
-	        return ResponseEntity.ok(dto);
-	    } else {
-	        // If the EmployeeAndPasswordDTO is null, generate a NOT_FOUND response
-	        return ResponseEntity.notFound().build();
-	    }
+		// Retrieve the EmployeeAndPasswordDTO using the employeeService
+		EmployeeAndPasswordDTO dto = employeeService.getEmployeeAndPasswordByEmployeeId(employeeId);
+		if (dto != null) {
+			// If the EmployeeAndPasswordDTO is not null, generate a response with the DTO
+			// and a 200 OK status
+			return ResponseEntity.ok(dto);
+		} else {
+			// If the EmployeeAndPasswordDTO is null, generate a NOT_FOUND response
+			return ResponseEntity.notFound().build();
+		}
 	}
 
-	
 	/**
-	 * Retrieves a list of all employees and their associated password information.
+	 * 3 Retrieves a list of all employees and their associated password
+	 * information.
 	 *
-	 * @return ResponseEntity containing the list of EmployeeAndPasswordDTO objects with an OK status if successful.
+	 * @return ResponseEntity containing the list of EmployeeAndPasswordDTO objects
+	 *         with an OK status if successful.
+	 * @throws CPException
 	 */
 	@GetMapping("/allemployee")
-	public ResponseEntity<List<Object>> getAllEmployeeAndPasswordData() {
-	    // Retrieve a list of all employees and their associated password information using the employeeService
-	    List<Object> employeePasswordDTOList = employeeService.getAllEmployeesAndPasswords();
-	    
-	    // Generate a response with the list of EmployeeAndPasswordDTO objects and 200 OK status
-	    return ResponseEntity.ok(employeePasswordDTOList);
+	public ResponseEntity<List<Object>> getAllEmployeeAndPasswordData() throws CPException {
+		// Retrieve a list of all employees and their associated password information
+		// using the employeeService
+		List<Object> employees = null;
+		try {
+			employees = employeeService.getAllEmployeesAndPasswords();
+			if (employees != null && !employees.isEmpty()) {
+				// If active countries are found, generate a success response with the list of
+				// countries.
+				logger.info("Fetched all Country: " + employees);
+				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
+			} else {
+				// If no active countries are found, generate an error response.
+				// logger.info(resourceBundle.getString("err002"));
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed getting all countries: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all countries");
+		}
+
 	}
 
-
 	/**
-	 * Updates an employee based on the provided employeeId and Employee object, and generates an appropriate response.
+	 * Updates an employee based on the provided employeeId and Employee object, and
+	 * generates an appropriate response.
 	 *
-	 * @param employee   - The Employee object containing the updated details of the employee.
+	 * @param employee   - The Employee object containing the updated details of the
+	 *                   employee.
 	 * @param employeeId - The ID of the employee to be updated.
 	 *
-	 * @return ResponseEntity containing the updated Employee details with a CREATED status if successful,
-	 *         otherwise returns an INTERNAL_SERVER_ERROR response.
+	 * @return ResponseEntity containing the updated Employee details with a CREATED
+	 *         status if successful, otherwise returns an INTERNAL_SERVER_ERROR
+	 *         response.
 	 *
-	 * @throws CPException If there is an error while updating the employee or generating the response.
+	 * @throws CPException If there is an error while updating the employee or
+	 *                     generating the response.
 	 */
 	@PutMapping("/employee/update/{employeeId}")
-	public ResponseEntity<Object> updateEmployeeByempId(@RequestBody Employee employee,
-	                                                     @PathVariable("employeeId") int employeeId) throws CPException {
-	    // Log the entry of the method
-	    logger.debug("Entering updateEmployee");
-	    logger.info("entered  updateEmployee :" + employee);
+	public ResponseEntity<Object> updateEmployeeByEmployeeId(@RequestBody Employee employee,
+			@PathVariable("employeeId") int employeeId) throws CPException {
+		// Log the entry of the method
+		logger.debug("Entering updateEmployee");
+		logger.info("entered  updateEmployee :" + employee);
 
-	    // Initialize the updatedEmployee to hold the result of the update
-	    Employee updatedEmployee = null;
+		// Initialize the updatedEmployee to hold the result of the update
+		Employee updatedEmployee = null;
 
-	    try {
-	        // Attempt to update the employee using the employeeService
-	        updatedEmployee = employeeService.updateEmployeeByEmployeeId(employee, employeeId);
+		try {
+			// Attempt to update the employee using the employeeService
+			updatedEmployee = employeeService.updateEmployeeByEmployeeId(employee, employeeId);
 
-	        if (updatedEmployee == null) {
-	            // If the updatedEmployee is null, log the error message and generate an INTERNAL_SERVER_ERROR response
-	            logger.info(resourceBunde.getString("err004"));
-	            return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
-	        } else {
-	            // If the employee was successfully updated, log the updated employee details and generate a CREATED response
-	            logger.info("updated employee : " + updatedEmployee);
-	            return ResponseHandler.generateResponse(updatedEmployee, HttpStatus.CREATED);
-	        }
-	    } catch (Exception ex) {
-	        // Log any exceptions that occur during the update process
-	        logger.error("Failed update Employee : " + ex.getMessage());
-	        // Throw a custom CPException with error code "err004" and the corresponding error message from the resource bundle
-	        throw new CPException("err004", resourceBunde.getString("err004"));
-	    }
+			if (updatedEmployee == null) {
+				// If the updatedEmployee is null, log the error message and generate an
+				// INTERNAL_SERVER_ERROR response
+				logger.info(resourceBunde.getString("err004"));
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
+			} else {
+				// If the employee was successfully updated, log the updated employee details
+				// and generate a CREATED response
+				logger.info("updated employee : " + updatedEmployee);
+				return ResponseHandler.generateResponse(updatedEmployee, HttpStatus.CREATED);
+			}
+		} catch (Exception ex) {
+			// Log any exceptions that occur during the update process
+			logger.error("Failed update Employee : " + ex.getMessage());
+			// Throw a custom CPException with error code "err004" and the corresponding
+			// error message from the resource bundle
+			throw new CPException("err004", resourceBunde.getString("err004"));
+		}
 	}
 
-	
 	/**
-	 * Deletes an employee based on the provided employeeId and generates an appropriate response.
+	 * Deletes an employee based on the provided employeeId and generates an
+	 * appropriate response.
 	 *
 	 * @param employeeId - The ID of the employee to be deleted.
 	 *
-	 * @return ResponseEntity containing NO_CONTENT status if the employee was successfully deleted,
-	 *         otherwise returns an INTERNAL_SERVER_ERROR response.
+	 * @return ResponseEntity containing NO_CONTENT status if the employee was
+	 *         successfully deleted, otherwise returns an INTERNAL_SERVER_ERROR
+	 *         response.
 	 *
-	 * @throws CPException If there is an error while deleting the employee or generating the response.
+	 * @throws CPException If there is an error while deleting the employee or
+	 *                     generating the response.
 	 */
 	@DeleteMapping("/employee/{employeeId}")
-	public ResponseEntity<Object> deleteEmployeeByempId(@PathVariable("employeeId") int employeeId) throws CPException {
-	    // Log the entry of the method
-	    logger.info("entered deleteEmployee  :" + employeeId);
+	public ResponseEntity<Object> deleteEmployeeByEmployeeId(@PathVariable("employeeId") int employeeId)
+			throws CPException {
+		// Log the entry of the method
+		logger.info("entered deleteEmployee  :" + employeeId);
 
-	    // Initialize the count to keep track of the number of employees deleted
-	    int count = 0;
+		// Initialize the count to keep track of the number of employees deleted
+		int count = 0;
 
-	    try {
-	        // Attempt to delete the employee using the employeeService
-	        count = employeeService.deleteEmployeeByEmployeeId(employeeId);
-	        if (count >= 1) {
-	            // If one or more employees were deleted, log the deletion and generate a NO_CONTENT response
-	            logger.info("deleted Employee : empId = " + employeeId);
-	            return ResponseHandler.generateResponse(HttpStatus.NO_CONTENT);
-	        } else {
-	            // If no employee was deleted, log the error message and generate an INTERNAL_SERVER_ERROR response
-	            logger.info(resourceBunde.getString("err005"));
-	            return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err005");
-	        }
-	    } catch (Exception ex) {
-	        // Log any exceptions that occur during the deletion process
-	        logger.error("Failed to delete Employee :" + ex.getMessage());
-	        // Throw a custom CPException with error code "err005" and the corresponding error message from the resource bundle
-	        throw new CPException("err005", resourceBunde.getString("err005"));
-	    }
+		try {
+			// Attempt to delete the employee using the employeeService
+			count = employeeService.deleteEmployeeByEmployeeId(employeeId);
+			if (count >= 1) {
+				// If one or more employees were deleted, log the deletion and generate a
+				// NO_CONTENT response
+				logger.info("deleted Employee : empId = " + employeeId);
+				return ResponseHandler.generateResponse(HttpStatus.NO_CONTENT);
+			} else {
+				// If no employee was deleted, log the error message and generate an
+				// INTERNAL_SERVER_ERROR response
+				logger.info(resourceBunde.getString("err005"));
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err005");
+			}
+		} catch (Exception ex) {
+			// Log any exceptions that occur during the deletion process
+			logger.error("Failed to delete Employee :" + ex.getMessage());
+			// Throw a custom CPException with error code "err005" and the corresponding
+			// error message from the resource bundle
+			throw new CPException("err005", resourceBunde.getString("err005"));
+		}
 	}
 
-	
-	
 	/**
-	 * Retrieves employee details based on the provided employeeId and generates an appropriate response.
+	 * Retrieves employee details based on the provided employeeId and generates an
+	 * appropriate response.
 	 *
 	 * @param employeeId - The ID of the employee to retrieve.
 	 *
-	 * @return ResponseEntity containing the Employee details with a 200 OK status if found, otherwise returns a NOT_FOUND response.
+	 * @return ResponseEntity containing the Employee details with a 200 OK status
+	 *         if found, otherwise returns a NOT_FOUND response.
 	 *
-	 * @throws CPException If there is an error while fetching the employee or generating the response.
+	 * @throws CPException If there is an error while fetching the employee or
+	 *                     generating the response.
 	 */
 	@GetMapping("/employee/{employeeId}")
-	public ResponseEntity<Object> getEmployeeDetailsByEmployeeIde(@PathVariable("employeeId") int employeeId) throws CPException {
-	    // Log the entry of the method
-	    logger.debug("Entering getEmployeeByempId");
-	    logger.info("entered user name :" + employeeId);
+	public ResponseEntity<Object> getEmployeeDetailsByEmployeeId(@PathVariable("employeeId") int employeeId)
+			throws CPException {
+		// Log the entry of the method
+		logger.debug("Entering getEmployeeByempId");
+		logger.info("entered user name :" + employeeId);
 
-	    // Initialize the Employee object
-	    Employee employee = null;
+		// Initialize the Employee object
+		Employee employee = null;
 
-	    try {
-	        // Fetch the employee details using the employeeService
-	        employee = employeeService.getEmployeeByEmployeeId(employeeId);
-	        logger.info("fetched Employee :" + employee);
+		try {
+			// Fetch the employee details using the employeeService
+			employee = employeeService.getEmployeeByEmployeeId(employeeId);
+			logger.info("fetched Employee :" + employee);
 
-	        // Check if employee details were found
-	        if (employee != null) {
-	            logger.debug("Employee fetched generating response");
-	            // Generate a response with the employee details and 200 OK status
-	            return ResponseHandler.generateResponse(employee, HttpStatus.OK);
-	        } else {
-	            logger.debug("Employee not found");
-	            // Generate a NOT_FOUND response if the employee details were not found
-	            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
-	        }
-	    } catch (Exception ex) {
-	        // Log any exceptions that occur during the process
-	        logger.error("Failed getting employee : " + ex.getMessage());
-	        // Throw a custom CPException with error code "err001" and the corresponding error message from the resource bundle
-	        throw new CPException("err001", resourceBunde.getString("err001"));
-	    }
+			// Check if employee details were found
+			if (employee != null) {
+				logger.debug("Employee fetched generating response");
+				// Generate a response with the employee details and 200 OK status
+				return ResponseHandler.generateResponse(employee, HttpStatus.OK);
+			} else {
+				logger.debug("Employee not found");
+				// Generate a NOT_FOUND response if the employee details were not found
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception ex) {
+			// Log any exceptions that occur during the process
+			logger.error("Failed getting employee : " + ex.getMessage());
+			// Throw a custom CPException with error code "err001" and the corresponding
+			// error message from the resource bundle
+			throw new CPException("err001", resourceBunde.getString("err001"));
+		}
+	}
+
+	@PutMapping("/password/{employeeId}")
+	public ResponseEntity<Object> updatePasswordByEmployeeId(@RequestBody Password password,
+			@PathVariable("employeeId") int employeeId) throws CPException {
+		logger.debug("Entering updateCountry");
+		logger.info("Entered  updateCountry :" + password);
+
+		Password updatedPassword = null;
+		try {
+			// Update the country by country code in the service layer.
+			updatedPassword = employeeService.updatePasswordByEmployeeId(password, employeeId);
+
+			if (updatedPassword == null) {
+				// If update is unsuccessful, generate an error response.
+				// logger.info(resourceBundle.getString("err004"));
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
+			} else {
+				// If update is successful, generate a success response with the updated
+				// country.
+				logger.info("Updated Password: " + updatedPassword);
+				return ResponseHandler.generateResponse(updatedPassword, HttpStatus.CREATED);
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed update Country: " + ex.getMessage());
+			throw new CPException("err004", "Error while updating country");
+		}
+	}
+
+	@PutMapping("/emppass/{employeeId}")
+	public ResponseEntity<Object> updateEmployeeAndPasswordByEmployeeId(@RequestBody EmployeeAndPasswordDTO dto,
+			@PathVariable("employeeId") int employeeId) throws CPException {
+		logger.debug("Entering updateCountry");
+		logger.info("Entered  updateCountry :" + dto);
+
+		boolean updateEmployeePassword = false;
+
+		try {
+			// Update the country by country code in the service layer.
+			updateEmployeePassword = employeeService.updateEmployeeAndPasswordByEmployeeId(dto, employeeId);
+
+			if (!updateEmployeePassword) {
+				// If update is unsuccessful, generate an error response.
+				// logger.info(resourceBundle.getString("err004"));
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
+			} else {
+				// If update is successful, generate a success response.
+				logger.info("Employee and password updated successfully.");
+				return ResponseHandler.generateResponse(updateEmployeePassword, HttpStatus.CREATED);
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed update Country: " + ex.getMessage());
+			throw new CPException("err004", "Error while updating country");
+		}
+	}
+
+	@GetMapping("/allemployees")
+	public ResponseEntity<List<Object>> getAllEmployees() throws CPException {
+		logger.debug("Entering getAllCountry");
+
+		List<Object> countries = null;
+		try {
+			// Retrieve all active countries from the service layer.
+			countries = employeeService.getAllEmployees();
+
+			if (countries != null && !countries.isEmpty()) {
+				// If active countries are found, generate a success response with the list of
+				// countries.
+				logger.info("Fetched all Country: " + countries);
+				return ResponseHandler.generateListResponse(countries, HttpStatus.OK);
+			} else {
+				// If no active countries are found, generate an error response.
+				// logger.info(resourceBundle.getString("err002"));
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed getting all countries: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all countries");
+		}
 	}
 
 }

@@ -10,5 +10,7 @@ public interface PasswordRepo extends JpaRepository<Password, Integer> {
 	
 	// Retrieves an password by their employeeId.
 	public Password findByEmployeeId(int employeeId);
+	
+	public Password findByUsername(String username);
 
 }

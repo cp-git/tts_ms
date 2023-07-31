@@ -1,6 +1,7 @@
 
 /**
  * @author  - Code Generator
+ * @developer - Akash
  * @createdOn -  24/07/2023
  * @Description Entity class for Status Service
  * 

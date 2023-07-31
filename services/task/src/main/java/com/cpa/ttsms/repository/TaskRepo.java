@@ -37,8 +37,8 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 	 */
 	@Transactional
 	@Modifying
-	@Query(value = "SELECT task.* FROM task JOIN status ON task.status = status.id WHERE task.parent = 0 AND status.code = ?1", nativeQuery = true)
-	List<Task> findByTaskParentIsNullAndTaskStatus(String status);
+	@Query(value = "SELECT task.* FROM task JOIN status ON task.status = status.id WHERE task.parent IS NULL  AND status.code = ?1", nativeQuery = true)
+	List<Task> findByTaskParentIsNullAndTaskStatus(String status);;
 
 	/**
 	 * Fetch all parent tasks with status not equal to the provided status codes.

@@ -56,7 +56,7 @@ public class Task {
 	private int companyId;
 
 	@Column(name = "parent", nullable = true)
-	private int taskParent;
+	private Integer taskParent;
 
 	/**
 	 * @return the taskId

@@ -122,7 +122,7 @@ public class TaskServiceImpl implements TaskService {
 			// Check if the logged-in user (username) is the same as the owner
 			// (taskCreatedBy) and Assignedto
 			if (empid != task.getTaskCreatedBy() && empid != task.getTaskAssignedTo()) {
-				System.out.println("Logged-in user is not the owner and assignedto of the task");
+				logger.info("Logged-in user is not the owner and assignedto of the task");
 				return null;
 			} else {
 				// Update the status and assignedto fields

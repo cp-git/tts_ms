@@ -10,8 +10,8 @@ package com.cpa.ttsms.service;
 
 import java.util.List;
 
+import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
-import com.cpa.ttsms.entity.TaskDTO;
 
 public interface TaskService {
 

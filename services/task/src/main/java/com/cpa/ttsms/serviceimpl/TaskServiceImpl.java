@@ -13,9 +13,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.entity.Task;
-import com.cpa.ttsms.entity.TaskDTO;
 import com.cpa.ttsms.repository.PasswordRepo;
 import com.cpa.ttsms.repository.TaskRepo;
 import com.cpa.ttsms.service.TaskService;

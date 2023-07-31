@@ -4,7 +4,7 @@
  * The TaskDTO contains information such as the username of the user performing the
  * update the task ID, status, and the ID of the user to whom the task is assigned.
  */
-package com.cpa.ttsms.entity;
+package com.cpa.ttsms.dto;
 
 public class TaskDTO {
 

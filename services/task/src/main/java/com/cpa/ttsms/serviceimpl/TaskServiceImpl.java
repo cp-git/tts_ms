@@ -114,23 +114,24 @@ public class TaskServiceImpl implements TaskService {
 	public Task updateTask(TaskDTO taskDTO) throws Exception {
 		// Fetch the empid from the username
 		int empid = getEmpIdFromUsername(taskDTO.getUsername());
-
-		// Fetch the task from the database based on the task ID
-		Task task = taskRepo.findById(taskDTO.getTaskId()).orElseThrow(() -> new Exception("Task not found"));
-		// Check if the logged-in user (username) is the same as the owner
-		// (taskCreatedBy)
-		if (empid != task.getTaskCreatedBy()) {
-			System.out.println("Logged-in user is not the owner of the task");
+		if (empid <= 0) {
 			return null;
 		} else {
-			// Update the status and assignedto fields
-			task.setTaskStatus(taskDTO.getStatus());
-			task.setTaskAssignedTo(taskDTO.getAssignedTo());
-
-			// Save the updated task to the database
-			Task updatedTask = taskRepo.save(task);
-
-			return updatedTask;
+			// Fetch the task from the database based on the task ID
+			Task task = taskRepo.findByTaskId(taskDTO.getTaskId());
+			// Check if the logged-in user (username) is the same as the owner
+			// (taskCreatedBy) and Assignedto
+			if (empid != task.getTaskCreatedBy() && empid != task.getTaskAssignedTo()) {
+				System.out.println("Logged-in user is not the owner and assignedto of the task");
+				return null;
+			} else {
+				// Update the status and assignedto fields
+				task.setTaskStatus(taskDTO.getStatus());
+				task.setTaskAssignedTo(taskDTO.getAssignedTo());
+				// Save the updated task to the database
+				Task updatedTask = taskRepo.save(task);
+				return updatedTask;
+			}
 		}
 	}
 
@@ -144,15 +145,12 @@ public class TaskServiceImpl implements TaskService {
 	public int getEmpIdFromUsername(String username) throws Exception {
 		// Fetch the Password object from the database based on the provided username
 		Password password = passwordRepo.findByUsername(username);
-
 		// Check if the user with the provided username exists
 		if (password == null) {
 			// If the user is not found, throw an exception with a descriptive message
-			throw new Exception("User not found");
+			return 0;
 		}
-
 		// Return the employee ID (empid) of the user
 		return password.getEmployeeId();
 	}
-
 }

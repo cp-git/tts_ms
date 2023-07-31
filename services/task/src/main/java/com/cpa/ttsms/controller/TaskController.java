@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +32,7 @@ import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.TaskService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/ttsms")
 public class TaskController {
@@ -233,7 +235,6 @@ public class TaskController {
 			if (taskid != taskDTO.getTaskId()) {
 				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "err006");
 			}
-
 			// Optional: You can fetch the empid from the UserService and set it in the
 			// TaskDTO
 			// int empid = userService.getEmpIdFromUsername(taskDTO.getUsername());
@@ -241,13 +242,16 @@ public class TaskController {
 
 			// Update the task using the TaskService
 			Task updatedTask = taskService.updateTask(taskDTO);
-
-			// Return the updated Task object with HTTP status OK
-			return ResponseEntity.ok(updatedTask);
+			if (updatedTask != null) {
+				// Return the updated Task object with HTTP status OK
+				return ResponseHandler.generateResponse(updatedTask, HttpStatus.OK);
+			} else {
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err004");
+			}
 		} catch (Exception e) {
 			// If an exception occurs during the update, return HTTP status
 			// INTERNAL_SERVER_ERROR
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
 		}
 	}
 }

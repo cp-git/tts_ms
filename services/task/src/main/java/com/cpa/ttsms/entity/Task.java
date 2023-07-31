@@ -215,14 +215,14 @@ public class Task {
 	/**
 	 * @return the taskParent
 	 */
-	public int getTaskParent() {
+	public Integer getTaskParent() {
 		return taskParent;
 	}
 
 	/**
 	 * @param taskParent the taskParent to set
 	 */
-	public void setTaskParent(int taskParent) {
+	public void setTaskParent(Integer taskParent) {
 		this.taskParent = taskParent;
 	}
 
@@ -242,7 +242,7 @@ public class Task {
 	 */
 	public Task(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
 			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
-			int companyId, int taskParent) {
+			int companyId, Integer taskParent) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;

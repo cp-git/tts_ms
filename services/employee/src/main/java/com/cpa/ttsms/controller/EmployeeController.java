@@ -101,19 +101,6 @@ public class EmployeeController {
 	 *         OK status if the employee is found, otherwise returns a NOT_FOUND
 	 *         response.
 	 */
-	@GetMapping("/employeepass/{employeeId}")
-	public ResponseEntity<EmployeeAndPasswordDTO> getEmployeeWithPasswordById(@PathVariable int employeeId) {
-		// Retrieve the EmployeeAndPasswordDTO using the employeeService
-		EmployeeAndPasswordDTO dto = employeeService.getEmployeeAndPasswordByEmployeeId(employeeId);
-		if (dto != null) {
-			// If the EmployeeAndPasswordDTO is not null, generate a response with the DTO
-			// and a 200 OK status
-			return ResponseEntity.ok(dto);
-		} else {
-			// If the EmployeeAndPasswordDTO is null, generate a NOT_FOUND response
-			return ResponseEntity.notFound().build();
-		}
-	}
 
 	/**
 	 * 3 Retrieves a list of all employees and their associated password

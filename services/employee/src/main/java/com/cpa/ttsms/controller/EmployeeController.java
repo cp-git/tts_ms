@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
@@ -32,6 +32,7 @@ import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.EmployeeService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/ttsms")
 public class EmployeeController {
@@ -39,11 +40,11 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;;
 
-	private ResourceBundle resourceBunde;
+	private ResourceBundle resourceBundle;
 	private static Logger logger;
 
 	EmployeeController() {
-		resourceBunde = ResourceBundle.getBundle("ErrorMessage", Locale.US);
+		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(EmployeeController.class);
 	}
 
@@ -62,23 +63,28 @@ public class EmployeeController {
 	 * @throws CPException If there is an error while creating the employee or
 	 *                     generating the response.
 	 */
-	
 	@PostMapping("/employee")
 	public ResponseEntity<Object> createEmployee(@RequestBody EmployeeAndPasswordDTO dto) throws CPException {
 		// Log the entry of the method
 		logger.debug("Entering createEmployee");
-		logger.info("data of creating Employee  :" + dto.toString());
+		logger.info("data of creating Employee: " + dto.toString());
 
 		try {
 			// Attempt to create the new employee along with their password using the
 			// employeeService
-			employeeService.saveEmployeeAndPassword(dto);
-			logger.info("Employee created :" + dto);
-			// Generate a CREATED response
-			return ResponseHandler.generateResponse(HttpStatus.CREATED);
+			EmployeeAndPasswordDTO createdDTO = employeeService.saveEmployeeAndPassword(dto);
+			logger.info("Employee and password created: " + createdDTO);
+
+			if (createdDTO != null) {
+				// Generate a CREATED response with a success message
+				return ResponseHandler.generateResponse(createdDTO, HttpStatus.CREATED);
+			} else {
+				// Generate a BAD_REQUEST response with an error message for a failed operation
+				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "Failed to create employee.");
+			}
 		} catch (Exception e) {
 			// Log any exceptions that occur during the creation process
-			logger.error(resourceBunde.getString("err003"));
+			logger.error(resourceBundle.getString("err003"));
 			// Generate an INTERNAL_SERVER_ERROR response with an error message
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 		}
@@ -125,19 +131,18 @@ public class EmployeeController {
 		try {
 			employees = employeeService.getAllEmployeesAndPasswords();
 			if (employees != null && !employees.isEmpty()) {
-				// If active countries are found, generate a success response with the list of
-				// countries.
-				logger.info("Fetched all Country: " + employees);
+
+				logger.info("Fetched all Employee: " + employees);
 				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
 			} else {
-				// If no active countries are found, generate an error response.
+
 				// logger.info(resourceBundle.getString("err002"));
 				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
 			}
 		} catch (Exception ex) {
 			// Log and throw a custom exception for error response.
-			logger.error("Failed getting all countries: " + ex.getMessage());
-			throw new CPException("err002", "Error while retrieving all countries");
+			logger.error("Failed getting all employee: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all employee");
 		}
 
 	}
@@ -174,7 +179,7 @@ public class EmployeeController {
 			if (updatedEmployee == null) {
 				// If the updatedEmployee is null, log the error message and generate an
 				// INTERNAL_SERVER_ERROR response
-				logger.info(resourceBunde.getString("err004"));
+				logger.info(resourceBundle.getString("err004"));
 				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
 			} else {
 				// If the employee was successfully updated, log the updated employee details
@@ -187,7 +192,7 @@ public class EmployeeController {
 			logger.error("Failed update Employee : " + ex.getMessage());
 			// Throw a custom CPException with error code "err004" and the corresponding
 			// error message from the resource bundle
-			throw new CPException("err004", resourceBunde.getString("err004"));
+			throw new CPException("err004", resourceBundle.getString("err004"));
 		}
 	}
 
@@ -224,7 +229,7 @@ public class EmployeeController {
 			} else {
 				// If no employee was deleted, log the error message and generate an
 				// INTERNAL_SERVER_ERROR response
-				logger.info(resourceBunde.getString("err005"));
+				logger.info(resourceBundle.getString("err005"));
 				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err005");
 			}
 		} catch (Exception ex) {
@@ -232,7 +237,7 @@ public class EmployeeController {
 			logger.error("Failed to delete Employee :" + ex.getMessage());
 			// Throw a custom CPException with error code "err005" and the corresponding
 			// error message from the resource bundle
-			throw new CPException("err005", resourceBunde.getString("err005"));
+			throw new CPException("err005", resourceBundle.getString("err005"));
 		}
 	}
 
@@ -278,19 +283,19 @@ public class EmployeeController {
 			logger.error("Failed getting employee : " + ex.getMessage());
 			// Throw a custom CPException with error code "err001" and the corresponding
 			// error message from the resource bundle
-			throw new CPException("err001", resourceBunde.getString("err001"));
+			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
 	}
 
 	@PutMapping("/password/{employeeId}")
 	public ResponseEntity<Object> updatePasswordByEmployeeId(@RequestBody Password password,
 			@PathVariable("employeeId") int employeeId) throws CPException {
-		logger.debug("Entering updateCountry");
-		logger.info("Entered  updateCountry :" + password);
+		logger.debug("Entering updatePassword");
+		logger.info("Entered  updatePassword :" + password);
 
 		Password updatedPassword = null;
 		try {
-			// Update the country by country code in the service layer.
+			// Update password by employeeId in the service layer.
 			updatedPassword = employeeService.updatePasswordByEmployeeId(password, employeeId);
 
 			if (updatedPassword == null) {
@@ -299,27 +304,27 @@ public class EmployeeController {
 				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
 			} else {
 				// If update is successful, generate a success response with the updated
-				// country.
+
 				logger.info("Updated Password: " + updatedPassword);
 				return ResponseHandler.generateResponse(updatedPassword, HttpStatus.CREATED);
 			}
 		} catch (Exception ex) {
 			// Log and throw a custom exception for error response.
-			logger.error("Failed update Country: " + ex.getMessage());
-			throw new CPException("err004", "Error while updating country");
+			logger.error("Failed  updatePassword: " + ex.getMessage());
+			throw new CPException("err004", "Error while updatingPassword");
 		}
 	}
 
 	@PutMapping("/emppass/{employeeId}")
 	public ResponseEntity<Object> updateEmployeeAndPasswordByEmployeeId(@RequestBody EmployeeAndPasswordDTO dto,
 			@PathVariable("employeeId") int employeeId) throws CPException {
-		logger.debug("Entering updateCountry");
-		logger.info("Entered  updateCountry :" + dto);
+		logger.debug("Entering updateemployeepassword");
+		logger.info("Entered  updateemployeepassword :" + dto);
 
 		boolean updateEmployeePassword = false;
 
 		try {
-			// Update the country by country code in the service layer.
+
 			updateEmployeePassword = employeeService.updateEmployeeAndPasswordByEmployeeId(dto, employeeId);
 
 			if (!updateEmployeePassword) {
@@ -333,34 +338,34 @@ public class EmployeeController {
 			}
 		} catch (Exception ex) {
 			// Log and throw a custom exception for error response.
-			logger.error("Failed update Country: " + ex.getMessage());
-			throw new CPException("err004", "Error while updating country");
+			logger.error("Failed update Employee: " + ex.getMessage());
+			throw new CPException("err004", "Error while updating employee");
 		}
 	}
 
 	@GetMapping("/allemployees")
 	public ResponseEntity<List<Object>> getAllEmployees() throws CPException {
-		logger.debug("Entering getAllCountry");
+		logger.debug("Entering getAllEmployees");
 
-		List<Object> countries = null;
+		List<Object> employees = null;
 		try {
-			// Retrieve all active countries from the service layer.
-			countries = employeeService.getAllEmployees();
+			// Retrieve all active employees from the service layer.
+			employees = employeeService.getAllEmployees();
 
-			if (countries != null && !countries.isEmpty()) {
-				// If active countries are found, generate a success response with the list of
-				// countries.
-				logger.info("Fetched all Country: " + countries);
-				return ResponseHandler.generateListResponse(countries, HttpStatus.OK);
+			if (employees != null && !employees.isEmpty()) {
+				// If active employees are found, generate a success response with the list of
+
+				logger.info("Fetched all Employee: " + employees);
+				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
 			} else {
-				// If no active countries are found, generate an error response.
+
 				// logger.info(resourceBundle.getString("err002"));
 				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
 			}
 		} catch (Exception ex) {
 			// Log and throw a custom exception for error response.
-			logger.error("Failed getting all countries: " + ex.getMessage());
-			throw new CPException("err002", "Error while retrieving all countries");
+			logger.error("Failed getting all employees: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all employees");
 		}
 	}
 

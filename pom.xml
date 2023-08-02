@@ -100,6 +100,9 @@
 
 		<module>services/company</module>
 		<module>services/country</module>
+		<module>services/status</module>
+		<module>services/task</module>
+		<module>services/employee</module>
 		<module>tools/CodeGenerator</module>
 
 

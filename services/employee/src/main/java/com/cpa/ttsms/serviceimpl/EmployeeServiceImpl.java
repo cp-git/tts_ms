@@ -66,7 +66,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			logger.debug("setting new data of Employee to existing Employee");
 
 			// Update the existing employee's data with the provided employee data
-			toUpdatedEmployee.setCountryId(employee.getCompanyId());
+			toUpdatedEmployee.setCountryId(employee.getCountryId());
 			toUpdatedEmployee.setCompanyId(employee.getCompanyId());
 			toUpdatedEmployee.setFirstName(employee.getFirstName());
 			toUpdatedEmployee.setLastName(employee.getLastName());

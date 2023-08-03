@@ -46,7 +46,10 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 	 * @param statuses Status codes to be excluded from the search.
 	 * @return A list of parent tasks with status not in the provided status codes.
 	 */
-	List<Task> findByTaskParentIsNullAndTaskStatusNotIn(String... statuses);
+	@Transactional
+	@Modifying
+	@Query(value = "SELECT task.* FROM task JOIN status ON task.status = status.id WHERE task.parent = 0 AND status.code NOT IN (?1,?2)", nativeQuery = true)
+	List<Task> findByTaskParentIsNullAndTaskStatusNotIn(String status1, String status2);
 
 	/**
 	 * Fetch all child tasks associated with a given parent task ID.

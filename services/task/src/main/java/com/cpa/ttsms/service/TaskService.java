@@ -58,4 +58,19 @@ public interface TaskService {
 	 * @throws Exception If an error occurs during the update process.
 	 */
 	Task updateTask(TaskDTO taskDTO) throws Exception;
+
+	/**
+	 * Retrieves all parent tasks in the system with the specified status,
+	 * createdby, assignedTo.
+	 * 
+	 * @param status     The status of the parent tasks to retrieve (e.g.,
+	 *                   "created", "done").
+	 * @param createdBy  The createdBy of the parent tasks to retrieve
+	 * @param assignedTo The assignedTo of the parent tasks to retrieve
+	 * @return A list of parent Task objects with the specified status, createdby,
+	 *         assignedTo..
+	 * @throws IllegalArgumentException If an invalid status is provided.
+	 */
+	List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, String status, int createdBy, int assignedTo, int companyId);
+
 }

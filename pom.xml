@@ -95,9 +95,13 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.12.5</version>
 		</dependency>
+		<dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-mail</artifactId>
+         </dependency>
 	</dependencies>
 	<modules>
-
+ 
 		<module>services/company</module>
 		<module>services/country</module>
 		<module>services/status</module>

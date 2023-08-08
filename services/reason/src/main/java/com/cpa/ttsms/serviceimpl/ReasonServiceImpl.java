@@ -63,8 +63,8 @@ public class ReasonServiceImpl implements ReasonService {
 
 		List<Reason> reasons = reasonRepo.findAll();
 		// Create a new list to store objects
-		List<Object> objectReason = new ArrayList<>(reasons); // Convert the list of Reason objects to a list of generic
-																// Objects.
+		List<Object> objectReason = new ArrayList<>(reasons); // Convert the list of Reason objects to a list of generic Objects.
+																
 		logger.info("Fetched all reasons: " + reasons.size());
 		return objectReason;
 	}
@@ -79,9 +79,9 @@ public class ReasonServiceImpl implements ReasonService {
 	public List<Object> getReasonsByTaskId(int taskId) {
 		logger.debug("Entering getReasonsByTaskId");
 		List<Object> reasons = reasonRepo.findByTaskId(taskId);
-		List<Object> reasonsAsObjects = new ArrayList<>(reasons);
+
 		logger.info("Found reasons for Task ID " + taskId + ": " + reasons.size());
 
-		return reasonsAsObjects;
+		return reasons;
 	}
 }

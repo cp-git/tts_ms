@@ -80,9 +80,10 @@ public class ReasonController {
 	 *
 	 * @param taskId The ID of the task for which reasons are to be retrieved.
 	 * @return A ResponseEntity containing the list of reasons.
+	 * @throws CPException
 	 */
 	@GetMapping("/reason/{taskId}")
-	public ResponseEntity<List<Object>> getReasonsByTaskId(@PathVariable("taskId") int taskId) {
+	public ResponseEntity<List<Object>> getReasonsByTaskId(@PathVariable("taskId") int taskId) throws CPException {
 		logger.info("Getting reasons for Task ID: " + taskId);
 		List<Object> reasons = null;
 
@@ -106,7 +107,7 @@ public class ReasonController {
 			// If an exception occurs, log the error and return an error response with an
 			// appropriate status code and message.
 			logger.error("Failed to get reasons for Task ID " + taskId + ": " + ex.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
 	}
 

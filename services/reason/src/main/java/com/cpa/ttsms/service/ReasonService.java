@@ -27,12 +27,12 @@ public interface ReasonService {
 	 * @param taskId The ID of the task for which reasons are to be retrieved.
 	 * @return A list of Reason objects associated with the specified task.
 	 */
-	List<Reason> getReasonsByTaskId(int taskId);
+	List<Object> getReasonsByTaskId(int taskId);
 
 	/**
 	 * Retrieves a list of all reasons stored in the system.
 	 * 
 	 * @return A list of all Reason objects.
 	 */
-	List<Reason> getAllReasons();
+	List<Object> getAllReasons();
 }

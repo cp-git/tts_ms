@@ -5,7 +5,6 @@
  */
 package com.cpa.ttsms.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -48,9 +47,10 @@ public class ReasonController {
 	 *
 	 * @param reason The Reason object to be created. Received in the request body.
 	 * @return A ResponseEntity containing the result of the operation.
+	 * @throws CPException
 	 */
 	@PostMapping("/reason")
-	public ResponseEntity<Reason> createReason(@RequestBody Reason reason) {
+	public ResponseEntity<Object> createReason(@RequestBody Reason reason) throws CPException {
 		logger.debug("Entering createReason");
 		logger.info("Received request to create reason: " + reason.getReasonText());
 
@@ -61,17 +61,17 @@ public class ReasonController {
 			if (newReason != null) {
 				// Return a successful response with the newly created reason.
 				logger.info("Reason created successfully: " + newReason.getReasonText());
-				return ResponseEntity.status(HttpStatus.CREATED).body(newReason);
+				return ResponseHandler.generateResponse(newReason, HttpStatus.OK);
 			} else {
 				// Return an error response if reason creation failed.
 				logger.error("Failed to create reason.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 			}
 		} catch (Exception ex) {
 			// Log the error and return an error response with an appropriate status code
 			// and message.
 			logger.error("Error while creating reason: " + ex.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new CPException("err003", resourceBundle.getString("err003"));
 		}
 	}
 
@@ -84,7 +84,7 @@ public class ReasonController {
 	@GetMapping("/reason/{taskId}")
 	public ResponseEntity<List<Object>> getReasonsByTaskId(@PathVariable("taskId") int taskId) {
 		logger.info("Getting reasons for Task ID: " + taskId);
-		List<Reason> reasons = null;
+		List<Object> reasons = null;
 
 		try {
 			// Call the reasonService to retrieve reasons for the specified task ID
@@ -99,8 +99,7 @@ public class ReasonController {
 				// Log the number of reasons being returned and return them with a success
 				// status
 				logger.info("Returning reasons for Task ID " + taskId + ": " + reasons.size());
-				List<Object> reasonsAsObjects = new ArrayList<>(reasons);
-				return ResponseEntity.ok(reasonsAsObjects);
+				return ResponseHandler.generateListResponse(reasons, HttpStatus.OK);
 			}
 
 		} catch (Exception ex) {
@@ -120,7 +119,7 @@ public class ReasonController {
 	@GetMapping("/allreasons")
 	public ResponseEntity<List<Object>> getAllReasons() throws CPException {
 		logger.info("Getting all reasons");
-		List<Reason> reasons = null;
+		List<Object> reasons = null;
 
 		try {
 			// Call the reasonService to retrieve all reasons
@@ -135,8 +134,7 @@ public class ReasonController {
 				// Log the number of reasons being returned and return them with a success
 				// status
 				logger.info("Returning reasons: " + reasons.size());
-				List<Object> reasonsAsObjects = new ArrayList<>(reasons);
-				return ResponseEntity.ok(reasonsAsObjects);
+				return ResponseHandler.generateListResponse(reasons, HttpStatus.OK);
 			}
 
 		} catch (Exception ex) {
@@ -146,4 +144,5 @@ public class ReasonController {
 			throw new CPException("err004", resourceBundle.getString("err004"));
 		}
 	}
+
 }

@@ -23,5 +23,5 @@ public interface ReasonRepo extends JpaRepository<Reason, Integer> {
 	 * @param taskId The ID of the task for which reasons are to be retrieved.
 	 * @return A list of Reason objects associated with the specified task.
 	 */
-	List<Reason> findByTaskId(int taskId);
+	List<Object> findByTaskId(int taskId);
 }

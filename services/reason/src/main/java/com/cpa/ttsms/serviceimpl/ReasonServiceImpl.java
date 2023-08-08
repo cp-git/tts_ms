@@ -8,6 +8,7 @@
  */
 package com.cpa.ttsms.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -57,12 +58,15 @@ public class ReasonServiceImpl implements ReasonService {
 	 * @return A list of all Reason objects.
 	 */
 	@Override
-	public List<Reason> getAllReasons() {
+	public List<Object> getAllReasons() {
 		logger.debug("Entering getAllReasons");
 
 		List<Reason> reasons = reasonRepo.findAll();
+		// Create a new list to store objects
+		List<Object> objectReason = new ArrayList<>(reasons); // Convert the list of Reason objects to a list of generic
+																// Objects.
 		logger.info("Fetched all reasons: " + reasons.size());
-		return reasons;
+		return objectReason;
 	}
 
 	/**
@@ -72,10 +76,12 @@ public class ReasonServiceImpl implements ReasonService {
 	 * @return A list of Reason objects associated with the specified task.
 	 */
 	@Override
-	public List<Reason> getReasonsByTaskId(int taskId) {
+	public List<Object> getReasonsByTaskId(int taskId) {
 		logger.debug("Entering getReasonsByTaskId");
-		List<Reason> reasons = reasonRepo.findByTaskId(taskId);
+		List<Object> reasons = reasonRepo.findByTaskId(taskId);
+		List<Object> reasonsAsObjects = new ArrayList<>(reasons);
 		logger.info("Found reasons for Task ID " + taskId + ": " + reasons.size());
-		return reasons;
+
+		return reasonsAsObjects;
 	}
 }

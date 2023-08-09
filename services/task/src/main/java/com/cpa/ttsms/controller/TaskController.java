@@ -254,4 +254,58 @@ public class TaskController {
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
 		}
 	}
+
+	/**
+	 * Endpoint to get all parent tasks based on their status, created by, and
+	 * assigned to.
+	 *
+	 * @param status     The status of the parent tasks to retrieve, received as a
+	 *                   request parameter.
+	 * @param createdBy  The user ID of the creator of the parent tasks, received as
+	 *                   a request parameter.
+	 * @param assignedTo The user ID of the assignee of the parent tasks, received
+	 *                   as a request parameter.
+	 * @param employeeId The employee ID associated with the tasks, received as a
+	 *                   request parameter.
+	 * @return ResponseEntity containing a list of parent tasks with the specified
+	 *         status, created by, and assigned to.
+	 */
+	@GetMapping("/allparent")
+	public ResponseEntity<Object> findTasksByStatusAndCreatorAndAssigneeOfCompanyByEmployeeId(
+			@RequestParam("parentid") int parentId, @RequestParam("status") String status,
+			@RequestParam("createdby") int createdBy, @RequestParam("assignedto") int assignedTo,
+			@RequestParam("companyid") int companyId) {
+		// Log that the method has been entered and print the status,createdby,
+		// assignedto received
+		logger.debug("Entering findTasksByStatusAndCreatorAndAssigneeOfCompanyByemployeeId");
+		logger.info("Entered status/createdBy/assignedTo : " + status + "/" + createdBy + "/" + assignedTo + "/"
+				+ companyId);
+
+		List<Task> parentTasks = null;
+		try {
+			// Fetch all parent tasks with the specified status, createdby, assignedTo using
+			// the taskService
+			parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId,
+					status, createdBy, assignedTo, companyId);
+
+			// Log the fetched parent tasks
+			logger.info("Fetched parent tasks with status/createdBy/assignedTo " + status + "/" + createdBy + "/"
+					+ assignedTo + "/" + companyId + ": " + parentTasks);
+
+			// If parentTasks list is not empty, return it as a successful response
+			if (parentTasks != null) {
+				return ResponseHandler.generateResponse(parentTasks, HttpStatus.OK);
+			} else {
+				// If no parent tasks are found with the specified status, return NOT_FOUND
+				// status
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
 }

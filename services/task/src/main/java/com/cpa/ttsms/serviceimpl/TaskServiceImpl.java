@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Password;
+import com.cpa.ttsms.entity.Status;
 import com.cpa.ttsms.entity.Task;
 import com.cpa.ttsms.repository.PasswordRepo;
+import com.cpa.ttsms.repository.StatusRepo;
 import com.cpa.ttsms.repository.TaskRepo;
 import com.cpa.ttsms.service.TaskService;
 
@@ -25,8 +27,13 @@ public class TaskServiceImpl implements TaskService {
 
 	@Autowired
 	private TaskRepo taskRepo;
+
 	@Autowired
 	private PasswordRepo passwordRepo;
+
+	@Autowired
+	private StatusRepo statusRepo;
+
 	private static Logger logger;
 
 	public TaskServiceImpl() {
@@ -157,11 +164,10 @@ public class TaskServiceImpl implements TaskService {
 	// Method to find tasks based on status, creator, assignee, and employeeId
 	// Returns a list of tasks that match the given criteria
 	@Override
-	public List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, String status,
+	public List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, String statusCode,
 			int createdBy, int assignedTo, int companyId) {
 
 		List<Task> taskList = null;
-
 //		// Log method entry
 //		logger.info("Entering findTasksByStatusAndCreatorAndAssigneeOfCompanyByemployeeId");
 //
@@ -173,28 +179,31 @@ public class TaskServiceImpl implements TaskService {
 			if (createdBy == 0) {
 
 				// check status is all
-				if (status.equalsIgnoreCase("ALL")) {
+				if (statusCode.equalsIgnoreCase("ALL")) {
 					// Checks assigned to 0 means all
 					if (assignedTo == 0) {
 						// get all task by company id, parent id
-						taskList = taskRepo.findByCompanyIdAndTaskParent(companyId, parentId);
+						taskList = taskRepo.findByCompanyIdAndTaskParentOrderByTaskStartDate(companyId, parentId);
 					} else {
 						// get all task by company id, parent id and assigned to
-						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskAssignedTo(companyId, parentId,
-								assignedTo);
+						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskAssignedToOrderByTaskStartDate(companyId,
+								parentId, assignedTo);
 					}
 				}
 
 				// when status is other than all
 				else {
+					Status status = statusRepo.findByStatusCodeIgnoreCase(statusCode);
 					// Checks assigned to 0 means all
 					if (assignedTo == 0) {
 						// task by company id, parent id and status
-						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskStatus(companyId, parentId, status);
+						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskStatusOrderByTaskStartDate(companyId,
+								parentId, status.getStatusId());
 					} else {
 						// task by company id, parent id, status and assigned to
-						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskStatusAndTaskAssignedTo(companyId,
-								parentId, status, assignedTo);
+						taskList = taskRepo
+								.findByCompanyIdAndTaskParentAndTaskStatusAndTaskAssignedToOrderByTaskStartDate(
+										companyId, parentId, status.getStatusId(), assignedTo);
 					}
 				}
 
@@ -202,28 +211,32 @@ public class TaskServiceImpl implements TaskService {
 			// for created by me
 			else {
 				// checks if status is all
-				if (status.equalsIgnoreCase("ALL")) {
+				if (statusCode.equalsIgnoreCase("ALL")) {
 					// Checks assigned to is 0 means all
 					if (assignedTo == 0) {
 						// task by company id, parent id, and created by
-						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskCreatedBy(companyId, parentId,
-								createdBy);
+						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskCreatedByOrderByTaskStartDate(companyId,
+								parentId, createdBy);
 					} else {
 						// task by company id, parent id, created by and assigned to
-						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskAssignedTo(companyId,
-								parentId, createdBy, assignedTo);
+						taskList = taskRepo
+								.findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskAssignedToOrderByTaskStartDate(
+										companyId, parentId, createdBy, assignedTo);
 					}
-				// When status is not all
+					// When status is not all
 				} else {
+					Status status = statusRepo.findByStatusCodeIgnoreCase(statusCode);
 					// Checks assigned to is 0 means all
 					if (assignedTo == 0) {
 						// task by company id, parent id, created by and status
-						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskStatus(companyId,
-								parentId, createdBy, status);
+						taskList = taskRepo
+								.findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskStatusOrderByTaskStartDate(
+										companyId, parentId, createdBy, status.getStatusId());
 					} else {
 						// task by company id, parent id, created by, status and assigned to
-						taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskStatusAndAssignedTo(
-								companyId, parentId, createdBy, status, assignedTo);
+						taskList = taskRepo
+								.findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskStatusAndTaskAssignedToOrderByTaskStartDate(
+										companyId, parentId, createdBy, status.getStatusId(), assignedTo);
 					}
 				}
 			}

@@ -46,10 +46,10 @@ public class Task {
 	@Column(name = "enddate", nullable = false)
 	private Date taskEndDate;
 
-	@Column(name = "actualstartdate", nullable = false)
+	@Column(name = "actualstartdate")
 	private Date taskActualStartDate;
 
-	@Column(name = "actualenddate", nullable = false)
+	@Column(name = "actualenddate")
 	private Date taskActualEndDate;
 
 	@Column(name = "companyid", nullable = false)

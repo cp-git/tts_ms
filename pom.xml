@@ -103,6 +103,7 @@
 		<module>services/status</module>
 		<module>services/task</module>
 		<module>services/employee</module>
+		<module>services/reason</module>
 		<module>tools/CodeGenerator</module>
 
 

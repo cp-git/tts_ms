@@ -11,17 +11,17 @@
 	</parent>
 
 	<groupId>com.cpa.ttsms.ms.services</groupId>
-	<artifactId>task</artifactId>
+	<artifactId>reason</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>task</name>
+	<name>reason</name>
 	<packaging>war</packaging>
-	<description>This is Task task module of ttsms</description>
+	<description>This is Reason reason module of ttsms</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
 
 	<build>
-		<finalName>task</finalName>
+		<finalName>reason</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

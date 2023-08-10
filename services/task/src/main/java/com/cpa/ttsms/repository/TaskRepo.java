@@ -46,7 +46,10 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 	 * @param statuses Status codes to be excluded from the search.
 	 * @return A list of parent tasks with status not in the provided status codes.
 	 */
-	List<Task> findByTaskParentIsNullAndTaskStatusNotIn(String... statuses);
+	@Transactional
+	@Modifying
+	@Query(value = "SELECT task.* FROM task JOIN status ON task.status = status.id WHERE task.parent = 0 AND status.code NOT IN (?1,?2)", nativeQuery = true)
+	List<Task> findByTaskParentIsNullAndTaskStatusNotIn(String status1, String status2);
 
 	/**
 	 * Fetch all child tasks associated with a given parent task ID.
@@ -56,4 +59,41 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 	 */
 	List<Task> findByTaskParent(int parentId);
 
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentOrderByTaskStartDate(int companyId, int parentId);
+
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentAndTaskAssignedToOrderByTaskStartDate(int companyId, int parentId,
+			int assignedTo);
+
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentAndTaskStatusOrderByTaskStartDate(int companyId, int parentId, int status);
+
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentAndTaskStatusAndTaskAssignedToOrderByTaskStartDate(int companyId,
+			int parentId, int status, int assignedTo);
+
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentAndTaskCreatedByOrderByTaskStartDate(int companyId, int parentId,
+			int createdBy);
+
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskAssignedToOrderByTaskStartDate(int companyId,
+			int parentId, int createdBy, int assignedTo);
+
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskStatusOrderByTaskStartDate(int companyId,
+			int parentId, int createdBy, int status);
+
+	// fetch all task using company and parent id
+	List<Task> findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskStatusAndTaskAssignedToOrderByTaskStartDate(
+			int companyId, int parentId, int createdBy, int status, int assignedTo);
+
+	/*
+	 * Fetch all parent task using status, createdBy and assignedTo, copmany id
+	 * using employee id
+	 */
+//	@Query(value = "SELECT task.* FROM public.task task JOIN public.status st ON task.status = st.id WHERE task.parent = 0 AND task.companyid = ?4 AND (?1 = 'ALL' OR (st.code = ?1)) AND ((?2 > 0 AND task.createdby = ?2) OR ?2 <= 0) AND ((?3 > 0 AND task.assignedto = ?3) OR ?3 <= 0)", nativeQuery = true)
+//	List<Task> findTasksByStatusAndCreatorAndAssigneeOfCompanyByEmployeeId(String status, int createdBy, int assignedTo,
+//			int employeeId);
 }

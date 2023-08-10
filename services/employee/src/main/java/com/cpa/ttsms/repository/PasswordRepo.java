@@ -7,10 +7,13 @@ import com.cpa.ttsms.entity.Password;
 
 @Repository
 public interface PasswordRepo extends JpaRepository<Password, Integer> {
-	
+
 	// Retrieves an password by their employeeId.
 	public Password findByEmployeeId(int employeeId);
-	
-	public Password findByUsername(String username);
+
+	public Password findByUsernameAndPassword(String username, String Password);
+
+	// public Password findByUsernameAndEmployee(String username, Employee
+	// employee);
 
 }

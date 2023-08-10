@@ -93,7 +93,7 @@ public class CountryController {
 	 * @throws CPException If there was an error retrieving the country.
 	 */
 	@GetMapping("/country/{code}")
-	public ResponseEntity<Object> getCountryBycode(@PathVariable("code") int countryCode) throws CPException {
+	public ResponseEntity<Object> getCountryCountryCode(@PathVariable("code") int countryCode) throws CPException {
 		logger.debug("Entering getCountryBycode");
 		logger.info("Entered country code: " + countryCode);
 
@@ -122,7 +122,7 @@ public class CountryController {
 	/**
 	 * Fetch all active countries from the Country table.
 	 *
-	 * @return A list containing all the active Country objects.
+	 * @return A list containing all the  Country objects.
 	 * @throws CPException If there was an error retrieving the countries.
 	 */
 	@GetMapping("/country/allcountry")
@@ -160,7 +160,7 @@ public class CountryController {
 	 * @throws CPException If there was an error deleting the country.
 	 */
 	@DeleteMapping("/country/{code}")
-	public ResponseEntity<Object> deleteCountryBycode(@PathVariable("code") int countryCode) throws CPException {
+	public ResponseEntity<Object> deleteCountryCountryCode(@PathVariable("code") int countryCode) throws CPException {
 		logger.debug("Entering deleteCountryBycode");
 		logger.info("Entered deleteCountry: " + countryCode);
 
@@ -198,7 +198,7 @@ public class CountryController {
 	 * @throws CPException If there was an error updating the country.
 	 */
 	@PutMapping("/country/{code}")
-	public ResponseEntity<Object> updateCountryBycode(@RequestBody Country country, @PathVariable("code") int code)
+	public ResponseEntity<Object> updateCountryByCountryCode(@RequestBody Country country, @PathVariable("code") int code)
 			throws CPException {
 		logger.debug("Entering updateCountry");
 		logger.info("Entered  updateCountry :" + country);

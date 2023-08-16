@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
 import com.cpa.ttsms.exception.CPException;
@@ -64,13 +65,14 @@ public class TaskController {
 	 *                     the localized error message from the resource bundle.
 	 */
 	@PostMapping("/savetask")
-	public ResponseEntity<Object> createTask(@RequestBody Task task) throws CPException {
+	public ResponseEntity<Object> createTaskAndAddReason(@RequestBody TaskAndReasonDTO taskAndReasonDTO)
+			throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createTask");
-		logger.info("Data of creating Task: " + task.getTaskName());
+		logger.info("Data of creating Task: " + taskAndReasonDTO.getTaskName());
 
 		try {
-			Task createdTask = taskService.createTask(task);
+			TaskAndReasonDTO createdTask = taskService.createTaskAndAddReason(taskAndReasonDTO);
 			// If the task does not exist (i.e., createdTask is not null), it has been
 			// successfully created
 			if (createdTask != null) {
@@ -285,8 +287,8 @@ public class TaskController {
 		try {
 			// Fetch all parent tasks with the specified status, createdby, assignedTo using
 			// the taskService
-			parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId,
-					status, createdBy, assignedTo, companyId);
+			parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId, status,
+					createdBy, assignedTo, companyId);
 
 			// Log the fetched parent tasks
 			logger.info("Fetched parent tasks with status/createdBy/assignedTo " + status + "/" + createdBy + "/"

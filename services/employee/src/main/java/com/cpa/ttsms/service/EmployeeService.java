@@ -17,28 +17,33 @@ public interface EmployeeService {
 
 	// Updates an employee's information based on the provided Employee object
 	Employee updateEmployeeByEmployeeId(Employee employee, int employeeId);
-	
-	// Saves a new employee along with their password information using the provided DTO.
-	EmployeeAndPasswordDTO saveEmployeeAndPassword(EmployeeAndPasswordDTO dto); 
-	
-	// Retrieves an Employee object and its associated Password information by employeeId.
-	EmployeeAndPasswordDTO getEmployeeAndPasswordByEmployeeId(int employeeId); 
-	
+
+	// Saves a new employee along with their password information using the provided
+	// DTO.
+	EmployeeAndPasswordDTO saveEmployeeAndPassword(EmployeeAndPasswordDTO dto);
+
+	// Retrieves an Employee object and its associated Password information by
+	// employeeId.
+	EmployeeAndPasswordDTO getEmployeeAndPasswordByEmployeeId(int employeeId);
+
 	// Retrieves an Employee object by employeeId.
 	Employee getEmployeeByEmployeeId(int employeeId);
-	
+
 	// Retrieves a list of all employees and their associated password information.
-	List<Object> getAllEmployeesAndPasswords(); 
-	
+	List<Object> getAllEmployeesAndPasswords();
+
 	// Retrieves a list of all employees and their associated password information.
-		List<Object> getAllEmployees(); 
-	
+	List<Object> getAllEmployees();
+
 	// Deletes an employee by their employeeId.
-	int deleteEmployeeByEmployeeId(int employeeId); 
-	
-	Password updatePasswordByEmployeeId(Password password ,int employeeId);
-	
-	boolean  updateEmployeeAndPasswordByEmployeeId(EmployeeAndPasswordDTO dto , int employeeId);
-	
+	int deleteEmployeeByEmployeeId(int employeeId);
+
+	Password updatePasswordByEmployeeId(Password password, int employeeId);
+
+	boolean updateEmployeeAndPasswordByEmployeeId(EmployeeAndPasswordDTO dto, int employeeId);
+
+	// This method retrieves a Password object based on a given username and
+	// password.
+	Password getUsernameAndPasswordByUsernameAndPassword(String username, String password);
 
 }

@@ -274,6 +274,16 @@ public class EmployeeController {
 		}
 	}
 
+	/**
+	 * Endpoint to update an employee's password by employeeId.
+	 *
+	 * @param password   - The Password object containing the updated password.
+	 * @param employeeId - The ID of the employee whose password is being updated.
+	 *
+	 * @return A ResponseEntity representing the outcome of the password update
+	 *         operation.
+	 * @throws CPException If there's an error during the password update process.
+	 */
 	@PutMapping("/password/{employeeId}")
 	public ResponseEntity<Object> updatePasswordByEmployeeId(@RequestBody Password password,
 			@PathVariable("employeeId") int employeeId) throws CPException {
@@ -301,6 +311,18 @@ public class EmployeeController {
 			throw new CPException("err004", "Error while updatingPassword");
 		}
 	}
+
+	/**
+	 * Endpoint to update an employee's password by employeeId.
+	 *
+	 * @param dto        - The EmployeeAndPasswordDTO containing the updated
+	 *                   employee information and new password.
+	 * @param employeeId - The ID of the employee whose password and information are
+	 *                   being updated.
+	 *
+	 * @return A ResponseEntity representing the outcome of the update operation.
+	 * @throws CPException If there's an error during the update process.
+	 */
 
 	@PutMapping("/emppass/{employeeId}")
 	public ResponseEntity<Object> updateEmployeeAndPasswordByEmployeeId(@RequestBody EmployeeAndPasswordDTO dto,
@@ -351,6 +373,40 @@ public class EmployeeController {
 			}
 		} catch (Exception ex) {
 			// Log and throw a custom exception for error response.
+			logger.error("Failed getting all employees: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all employees");
+		}
+	}
+
+	/**
+	 * Endpoint to check the validity of a password for a given username.
+	 *
+	 * @param username - The username for which the password is being checked.
+	 * @param password - The password to be checked.
+	 *
+	 * @return A Password object if the password is valid for the given username,
+	 *         otherwise null.
+	 * @throws CPException If there's an error while retrieving or checking the
+	 *                     password.
+	 */
+	@GetMapping("password/{username}/{password}")
+	public Password checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
+		Password isPasswordValid = null;
+		try {
+			// Call the employeeService to validate the username and password.
+			isPasswordValid = employeeService.getUsernameAndPasswordByUsernameAndPassword(username, password);
+
+			// If the password is valid, return the Password object.
+			if (isPasswordValid != null) {
+				return isPasswordValid;
+			} else {
+				// If the password is not valid, return null.
+				return null;
+			}
+		} catch (Exception ex) {
+			// If an exception occurs while trying to validate the password,
+			// log the error message and throw a custom exception (CPException) with an
+			// error code and message.
 			logger.error("Failed getting all employees: " + ex.getMessage());
 			throw new CPException("err002", "Error while retrieving all employees");
 		}

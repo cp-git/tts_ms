@@ -315,6 +315,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return isSuccess;
 	}
 
+	/**
+	 * Retrieve a list of generic Objects representing all employees.
+	 *
+	 * @return A list containing generic Objects representing all employees.
+	 */
 	@Override
 	public List<Object> getAllEmployees() {
 		// TODO Auto-generated method stub
@@ -329,6 +334,31 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		logger.info("Fetched all active countries: " + employees);
 		return objects; // Return the list of generic Objects.
+	}
+
+	/**
+	 * Retrieve a Password object using the provided username and password.
+	 *
+	 * @param username - The username for authentication.
+	 * @param password - The password for authentication.
+	 *
+	 * @return The retrieved Password object if authentication is successful,
+	 *         otherwise null.
+	 */
+	@Override
+	public Password getUsernameAndPasswordByUsernameAndPassword(String username, String password) {
+		// TODO Auto-generated method stub
+
+		// Retrieve the Password object from the repository based on the provided
+		// username and password.
+		Password object = passwordRepository.findByUsernameAndPassword(username, password);
+
+		// Log information about the retrieved object for debugging purposes.
+		logger.info("Found Password: " + object);
+
+		// Return the retrieved Password object, which might be null if no match is
+		// found.
+		return object;
 	}
 
 }

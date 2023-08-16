@@ -10,6 +10,7 @@ package com.cpa.ttsms.service;
 
 import java.util.List;
 
+import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
 
@@ -21,7 +22,7 @@ public interface TaskService {
 	 * @param task The Task object to be created.
 	 * @return The created Task object.
 	 */
-	Task createTask(Task task);
+	TaskAndReasonDTO createTaskAndAddReason(TaskAndReasonDTO task);
 
 	/**
 	 * Retrieves a task by its unique ID.
@@ -71,6 +72,7 @@ public interface TaskService {
 	 *         assignedTo..
 	 * @throws IllegalArgumentException If an invalid status is provided.
 	 */
-	List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, String status, int createdBy, int assignedTo, int companyId);
+	List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, String status, int createdBy,
+			int assignedTo, int companyId);
 
 }

@@ -300,7 +300,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			toUpdatedEmployee.setCountryId(dto.getCountryId());
 			toUpdatedEmployee.setCompanyId(dto.getCompanyId());
-			;
 			toUpdatedEmployee.setFirstName(dto.getFirstName());
 			toUpdatedEmployee.setLastName(dto.getLastName());
 			// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
@@ -313,7 +312,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (toUpdatePassword != null) {
 			toUpdatePassword.setUsername(dto.getUsername());
-			;
+			
 			toUpdatePassword.setPassword(dto.getPassword());
 			updatedPassowrd = passwordRepository.save(toUpdatePassword);
 
@@ -418,7 +417,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ResponseEntity<String> response = restTemplate.postForEntity(email_URL, emailDTO, String.class);
 		if (response.getStatusCode() == HttpStatus.OK) {
 			String responseBody = response.getBody();
-			System.out.println(responseBody);
 			return true; // Password update and email sending were successful
 		} else {
 			// Handle error cases where the email sending failed

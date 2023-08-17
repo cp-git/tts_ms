@@ -395,7 +395,7 @@ public class EmployeeController {
 		Password isPasswordValid = null;
 		try {
 			// Call the employeeService to validate the username and password.
-			isPasswordValid = employeeService.getUsernameAndPasswordByUsernameAndPassword(username, password);
+			isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
 
 			// If the password is valid, return the Password object.
 			if (isPasswordValid != null) {
@@ -422,7 +422,7 @@ public class EmployeeController {
 	 */
 
 	@PostMapping("/forgotpass")
-	public ResponseEntity<String> forgotPasswordByUsername(@RequestBody Map<String, String> request)
+	public ResponseEntity<Object> forgotPasswordByUsername(@RequestBody Map<String, String> request)
 			throws CPException {
 
 		try {
@@ -436,7 +436,8 @@ public class EmployeeController {
 			// If no password object is found, return a bad request response with "Email not
 			// found"
 			if (password == null) {
-				return ResponseEntity.badRequest().body("Email not found");
+//				return ResponseEntity.badRequest().body("Email not found");
+				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "err006");
 			}
 
 			// Retrieve the employee ID from the password object
@@ -448,17 +449,17 @@ public class EmployeeController {
 			// If no employee object is found, return a bad request response with "Invalid
 			// username"
 			if (employee == null) {
-				return ResponseEntity.badRequest().body("Invalid username");
+				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "err007");
 			}
 
 			// Update the password for the employee
 			if (!employeeService.updatePassword(employeeId)) {
 				// Generate an internal server error response if the password update fails
-				ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR);
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 
 			// Return a successful response with HTTP status OK
-			return new ResponseEntity<>(HttpStatus.OK);
+			return ResponseHandler.generateResponse(HttpStatus.CREATED);
 
 		} catch (Exception ex) {
 			// Log and handle any exceptions that occur during the process

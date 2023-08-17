@@ -33,7 +33,7 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	private final String email_URL = "http://localhost:8080/sendMail";
+	private final String email_URL = "http://localhost:8090/sendMail";
 
 	private final RestTemplate restTemplate;
 
@@ -356,7 +356,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 *         otherwise null.
 	 */
 	@Override
-	public Password getUsernameAndPasswordByUsernameAndPassword(String username, String password) {
+	public Password getPasswordByUsernameAndPassword(String username, String password) {
 		// TODO Auto-generated method stub
 
 		// Retrieve the Password object from the repository based on the provided
@@ -422,7 +422,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			return true; // Password update and email sending were successful
 		} else {
 			// Handle error cases where the email sending failed
-			System.out.println(response);
+
 			return false; // Password update was successful, but email sending failed
 		}
 	}

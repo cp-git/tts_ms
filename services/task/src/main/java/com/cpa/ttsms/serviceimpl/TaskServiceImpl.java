@@ -13,18 +13,17 @@ import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.cpa.ttsms.dto.ReasonDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Password;
+import com.cpa.ttsms.entity.Reason;
 import com.cpa.ttsms.entity.Status;
 import com.cpa.ttsms.entity.Task;
 import com.cpa.ttsms.repository.PasswordRepo;
+import com.cpa.ttsms.repository.ReasonRepo;
 import com.cpa.ttsms.repository.StatusRepo;
 import com.cpa.ttsms.repository.TaskRepo;
 import com.cpa.ttsms.service.TaskService;
@@ -38,6 +37,9 @@ public class TaskServiceImpl implements TaskService {
 	private TaskRepo taskRepo;
 
 	@Autowired
+	private ReasonRepo reasonRepo;
+
+	@Autowired
 	private PasswordRepo passwordRepo;
 
 	@Autowired
@@ -45,11 +47,11 @@ public class TaskServiceImpl implements TaskService {
 
 	private static Logger logger;
 
-	private final RestTemplate restTemplate;
+//	private final RestTemplate restTemplate;
 
 	public TaskServiceImpl(RestTemplate restTemplate) {
 		logger = Logger.getLogger(TaskServiceImpl.class);
-		this.restTemplate = restTemplate;
+//		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -60,13 +62,16 @@ public class TaskServiceImpl implements TaskService {
 	 */
 	@Transactional
 	@Override
-	public TaskAndReasonDTO createTaskAndAddReason(TaskAndReasonDTO taskAndReasonDTO) {
+	public TaskAndReasonDTO createOrUpdateTaskAndAddReason(TaskAndReasonDTO taskAndReasonDTO) {
 
 		logger.debug("Entering createTask");
 
 		Task task = new Task();
-
+		int taskId = taskAndReasonDTO.getTaskId();
 		// setting values in task object
+		if (taskId > 0) {
+			task.setTaskId(taskId);
+		}
 		task.setTaskName(taskAndReasonDTO.getTaskName());
 		task.setTaskDescription(taskAndReasonDTO.getTaskDescription());
 		task.setTaskCreatedBy(taskAndReasonDTO.getTaskCreatedBy());
@@ -80,36 +85,41 @@ public class TaskServiceImpl implements TaskService {
 		task.setCompanyId(taskAndReasonDTO.getCompanyId());
 
 		Task createdTask = taskRepo.save(task);
+		logger.info("created Task " + createdTask.getTaskName());
+		if (createdTask != null) {
+			// url for adding response in response table
+//			String reasonApiUrl = REASON_API_URL; // Replace with actual URL
 
-		// url for adding response in response table
-		String reasonApiUrl = REASON_API_URL; // Replace with actual URL
+			Reason reason = new Reason();
 
-		ReasonDTO reasonDTO = new ReasonDTO();
+			// setting values in reasonDTO object
+			reason.setReasonText(taskAndReasonDTO.getReason());
+			reason.setTaskId(createdTask.getTaskId());
+			reason.setEmployeeId(taskAndReasonDTO.getEmployeeId());
+			reason.setStatusId(taskAndReasonDTO.getTaskStatus());
+			reason.setAssignedTo(taskAndReasonDTO.getTaskAssignedTo());
 
-		// setting values in reasonDTO object
-		reasonDTO.setReasonText(taskAndReasonDTO.getReason());
-		reasonDTO.setTaskId(createdTask.getTaskId());
-		reasonDTO.setEmployeeId(taskAndReasonDTO.getEmployeeId());
-		reasonDTO.setStatusId(taskAndReasonDTO.getTaskStatus());
-		reasonDTO.setAssignedTo(taskAndReasonDTO.getTaskAssignedTo());
+//			ResponseEntity<String> response = restTemplate.postForEntity(reasonApiUrl, reasonDTO, String.class);
 
-		ResponseEntity<String> response = restTemplate.postForEntity(reasonApiUrl, reasonDTO, String.class);
+//			if (response.getStatusCode() == HttpStatus.OK) {
+//				String responseBody = response.getBody();
+//				System.out.println(responseBody);
+//				// Handle the response as needed
+//			} else {
+//				// Handle error cases
+//				System.out.println(response);
+//			}
 
-		if (response.getStatusCode() == HttpStatus.OK) {
-			String responseBody = response.getBody();
-			System.out.println(responseBody);
-			// Handle the response as needed
-		} else {
-			// Handle error cases
-			System.out.println(response);
+			Reason createdReason = this.reasonRepo.save(reason);
+			logger.info("created Reason " + createdReason.getReasonText());
+			if (createdReason != null) {
+				taskAndReasonDTO.setTaskId(createdTask.getTaskId());
+				return taskAndReasonDTO;
+			}
 		}
 
-		taskAndReasonDTO.setTaskId(createdTask.getTaskId());
-//		Task createdTask = taskRepo.save(taskAndReasonDTO);
-//		logger.info("created Task: " + createdTask);
-//		return createdTask;
+		return null;
 
-		return taskAndReasonDTO;
 	}
 
 	/**

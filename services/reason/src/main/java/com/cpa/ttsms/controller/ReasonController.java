@@ -52,7 +52,7 @@ public class ReasonController {
 	@PostMapping("/reason")
 	public ResponseEntity<Object> createReason(@RequestBody Reason reason) throws CPException {
 		logger.debug("Entering createReason");
-		logger.info("Received request to create reason: " + reason.getReasonText());
+		logger.info("Received request to create reason: " + reason.toString());
 
 		try {
 			// Attempt to create the reason.

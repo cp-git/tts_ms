@@ -1,49 +1,48 @@
-package com.cpa.ttsms.dto;
+/**
+ * @author  - Code Generator
+ * @createdOn -  07-08-2023
+ * @Description Entity class for reason
+ * 
+ */
+
+package com.cpa.ttsms.entity;
 
 import java.util.Date;
 
-public class ReasonDTO {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.hibernate.annotations.CreationTimestamp;
+@Entity
+@Table(name = "reason")
+public class Reason {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
 
+	@Column(name = "taskid")
 	private int taskId;
 
+	@Column(name = "employeeid")
 	private int employeeId;
 
+	@CreationTimestamp
+	@Column(name = "chgdatetime")
 	private Date chgDateTime;
 
+	@Column(name = "reason")
 	private String reasonText;
 
+	@Column(name = "statusid")
 	private int statusId;
 
+	@Column(name = "assignedto")
 	private int assignedTo;
-
-	/**
-	 * 
-	 */
-	public ReasonDTO() {
-		super();
-	}
-
-	/**
-	 * @param id
-	 * @param taskId
-	 * @param employeeId
-	 * @param chgDateTime
-	 * @param reasonText
-	 * @param statusId
-	 * @param assignedTo
-	 */
-	public ReasonDTO(int id, int taskId, int employeeId, Date chgDateTime, String reasonText, int statusId,
-			int assignedTo) {
-		super();
-		this.id = id;
-		this.taskId = taskId;
-		this.employeeId = employeeId;
-		this.chgDateTime = chgDateTime;
-		this.reasonText = reasonText;
-		this.statusId = statusId;
-		this.assignedTo = assignedTo;
-	}
 
 	/**
 	 * @return the id
@@ -143,11 +142,39 @@ public class ReasonDTO {
 		this.assignedTo = assignedTo;
 	}
 
+	/**
+	 * @param id
+	 * @param taskId
+	 * @param employeeId
+	 * @param chgDateTime
+	 * @param reasonText
+	 * @param statusId
+	 * @param assignedTo
+	 */
+	public Reason(int id, int taskId, int employeeId, Date chgDateTime, String reasonText, int statusId,
+			int assignedTo) {
+		super();
+		this.id = id;
+		this.taskId = taskId;
+		this.employeeId = employeeId;
+		this.chgDateTime = chgDateTime;
+		this.reasonText = reasonText;
+		this.statusId = statusId;
+		this.assignedTo = assignedTo;
+	}
+
+	/**
+	 * 
+	 */
+	public Reason() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public String toString() {
-		return "ReasonDTO [id=" + id + ", taskId=" + taskId + ", employeeId=" + employeeId + ", chgDateTime="
-				+ chgDateTime + ", reasonText=" + reasonText + ", statusId=" + statusId + ", assignedTo=" + assignedTo
-				+ "]";
+		return "Reason [id=" + id + ", taskId=" + taskId + ", employeeId=" + employeeId + ", chgDateTime=" + chgDateTime
+				+ ", reasonText=" + reasonText + ", statusId=" + statusId + ", assignedTo=" + assignedTo + "]";
 	}
 
 }

@@ -65,14 +65,14 @@ public class TaskController {
 	 *                     the localized error message from the resource bundle.
 	 */
 	@PostMapping("/savetask")
-	public ResponseEntity<Object> createTaskAndAddReason(@RequestBody TaskAndReasonDTO taskAndReasonDTO)
+	public ResponseEntity<Object> createOrUpdateTaskAndAddReason(@RequestBody TaskAndReasonDTO taskAndReasonDTO)
 			throws CPException {
 		// Log that the method has been entered and print task details
-		logger.debug("Entering createTask");
+		logger.debug("Entering createOrUpdateTaskAndAddReason");
 		logger.info("Data of creating Task: " + taskAndReasonDTO.getTaskName());
 
 		try {
-			TaskAndReasonDTO createdTask = taskService.createTaskAndAddReason(taskAndReasonDTO);
+			TaskAndReasonDTO createdTask = taskService.createOrUpdateTaskAndAddReason(taskAndReasonDTO);
 			// If the task does not exist (i.e., createdTask is not null), it has been
 			// successfully created
 			if (createdTask != null) {

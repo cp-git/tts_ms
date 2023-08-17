@@ -22,7 +22,7 @@ public interface TaskService {
 	 * @param task The Task object to be created.
 	 * @return The created Task object.
 	 */
-	TaskAndReasonDTO createTaskAndAddReason(TaskAndReasonDTO task);
+	TaskAndReasonDTO createOrUpdateTaskAndAddReason(TaskAndReasonDTO task);
 
 	/**
 	 * Retrieves a task by its unique ID.

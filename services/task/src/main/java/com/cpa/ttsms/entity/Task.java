@@ -16,6 +16,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "task")
 public class Task {
@@ -40,15 +42,19 @@ public class Task {
 	@Column(name = "status", nullable = false)
 	private int taskStatus;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "startdate", nullable = false)
 	private Date taskStartDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "enddate", nullable = false)
 	private Date taskEndDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "actualstartdate")
 	private Date taskActualStartDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "actualenddate")
 	private Date taskActualEndDate;
 

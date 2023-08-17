@@ -13,7 +13,8 @@ public interface PasswordRepo extends JpaRepository<Password, Integer> {
 
 	public Password findByUsernameAndPassword(String username, String Password);
 
-	// public Password findByUsernameAndEmployee(String username, Employee
-	// employee);
+	public Password findByEmployeeIdAndUsername(int employeeId, String username);
+
+	public Password findByUsername(String username);
 
 }

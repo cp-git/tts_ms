@@ -10,13 +10,18 @@ package com.cpa.ttsms.serviceimpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.cpa.ttsms.dto.EmailDTO;
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
 //import com.cpa.ttsms.controller.EmployeeController;
 import com.cpa.ttsms.entity.Employee;
@@ -28,6 +33,10 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
+	private final String email_URL = "http://localhost:8090/sendMail";
+
+	private final RestTemplate restTemplate;
+
 	@Autowired
 	private EmployeeRepo employeeRepo;
 	private static Logger logger;
@@ -35,8 +44,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private PasswordRepo passwordRepository;
 
-	public EmployeeServiceImpl() {
+	public EmployeeServiceImpl(RestTemplate restTemplate) {
 		logger = Logger.getLogger(EmployeeServiceImpl.class);
+		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -290,7 +300,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			toUpdatedEmployee.setCountryId(dto.getCountryId());
 			toUpdatedEmployee.setCompanyId(dto.getCompanyId());
-			;
 			toUpdatedEmployee.setFirstName(dto.getFirstName());
 			toUpdatedEmployee.setLastName(dto.getLastName());
 			// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
@@ -303,7 +312,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (toUpdatePassword != null) {
 			toUpdatePassword.setUsername(dto.getUsername());
-			;
+			
 			toUpdatePassword.setPassword(dto.getPassword());
 			updatedPassowrd = passwordRepository.save(toUpdatePassword);
 
@@ -346,7 +355,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 *         otherwise null.
 	 */
 	@Override
-	public Password getUsernameAndPasswordByUsernameAndPassword(String username, String password) {
+	public Password getPasswordByUsernameAndPassword(String username, String password) {
 		// TODO Auto-generated method stub
 
 		// Retrieve the Password object from the repository based on the provided
@@ -359,6 +368,81 @@ public class EmployeeServiceImpl implements EmployeeService {
 		// Return the retrieved Password object, which might be null if no match is
 		// found.
 		return object;
+	}
+
+	/**
+	 * Update the password for the specified employee.
+	 *
+	 * @param employeeId - The ID of the employee for whom the password needs to be
+	 *                   updated.
+	 * @return true if the password update is successful, false otherwise.
+	 */
+	@Override
+	public boolean updatePassword(int employeeId) {
+		// Retrieve the existing Password object for the given employee ID
+		Password password = passwordRepository.findByEmployeeId(employeeId);
+
+		// Generate a new random password
+		String newPassword = generateRandomPassword();
+
+		// Update the password value in the Password object
+		password.setPassword(newPassword);
+
+		// Save the updated Password object to the repository
+		passwordRepository.save(password);
+
+		// Retrieve employee information based on the employee ID
+		Employee employee = employeeRepo.findByEmployeeId(employeeId);
+
+		// Extract necessary information for sending the password reset email
+		String employeeEmail = employee.getEmployeeEmail();
+		String firstName = employee.getFirstName();
+		String lastName = employee.getLastName();
+
+		// Compose the email message body
+		String msgBody = "Dear " + firstName + " " + lastName + ",\n\n"
+				+ "Your new password for Task Tracking System is: " + newPassword + "\n"
+				+ "Please log in and ensure the security of your account.\n\n" + "Best regards,\n"
+				+ "Cloudpoint System Pvt. Ltd";
+
+		logger.info("Fetched Employee Email: " + employeeEmail);
+
+		// Create an EmailDTO object to send the email
+		EmailDTO emailDTO = new EmailDTO();
+		emailDTO.setRecipient(employeeEmail); // Set the recipient's email address
+		emailDTO.setMsgBody(msgBody); // Set the email's message body
+		emailDTO.setSubject("Password Reset for Task Tracking System"); // Set the email's subject
+
+		// Send the email using a REST call
+		ResponseEntity<String> response = restTemplate.postForEntity(email_URL, emailDTO, String.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			String responseBody = response.getBody();
+			return true; // Password update and email sending were successful
+		} else {
+			// Handle error cases where the email sending failed
+
+			return false; // Password update was successful, but email sending failed
+		}
+	}
+
+	private String generateRandomPassword() {
+		// Generate a random 8-digit password
+		StringBuilder password = new StringBuilder();
+		Random random = new Random();
+
+		for (int i = 0; i < 8; i++) {
+			int digit = random.nextInt(10); // Generates a random digit between 0 and 9
+			password.append(digit);
+		}
+
+		return password.toString();
+	}
+
+	@Override
+	public Password getPasswordObjectByUsername(String username) {
+		// TODO Auto-generated method stub
+		Password password = passwordRepository.findByUsername(username);
+		return password;
 	}
 
 }

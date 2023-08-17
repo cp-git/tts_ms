@@ -44,6 +44,12 @@ public interface EmployeeService {
 
 	// This method retrieves a Password object based on a given username and
 	// password.
-	Password getUsernameAndPasswordByUsernameAndPassword(String username, String password);
+	Password getPasswordByUsernameAndPassword(String username, String password);
+
+	// Retrieve data By username
+	Password getPasswordObjectByUsername(String username);
+
+	// update password By employeeId
+	boolean updatePassword(int employeeId);
 
 }

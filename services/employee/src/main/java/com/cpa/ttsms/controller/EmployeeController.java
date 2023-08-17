@@ -9,6 +9,7 @@ package com.cpa.ttsms.controller;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
@@ -407,6 +408,60 @@ public class EmployeeController {
 			// If an exception occurs while trying to validate the password,
 			// log the error message and throw a custom exception (CPException) with an
 			// error code and message.
+			logger.error("Failed getting all employees: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all employees");
+		}
+	}
+
+	/**
+	 * Endpoint to handle password reset for a forgotten password.
+	 *
+	 * @param request - A Map containing username.
+	 * @return A ResponseEntity indicating the success or failure of the password
+	 *         reset.
+	 */
+
+	@PostMapping("/forgotpass")
+	public ResponseEntity<String> forgotPasswordByUsername(@RequestBody Map<String, String> request)
+			throws CPException {
+
+		try {
+			// Extract the username from the request body
+			String username = request.get("username");
+
+			// Retrieve the Password object associated with the provided username
+			Password password = employeeService.getPasswordObjectByUsername(username);
+			logger.info("Fetched Password: " + password);
+
+			// If no password object is found, return a bad request response with "Email not
+			// found"
+			if (password == null) {
+				return ResponseEntity.badRequest().body("Email not found");
+			}
+
+			// Retrieve the employee ID from the password object
+			int employeeId = password.getEmployeeId();
+
+			// Retrieve the Employee object associated with the employee ID
+			Employee employee = employeeService.getEmployeeByEmployeeId(employeeId);
+
+			// If no employee object is found, return a bad request response with "Invalid
+			// username"
+			if (employee == null) {
+				return ResponseEntity.badRequest().body("Invalid username");
+			}
+
+			// Update the password for the employee
+			if (!employeeService.updatePassword(employeeId)) {
+				// Generate an internal server error response if the password update fails
+				ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+			// Return a successful response with HTTP status OK
+			return new ResponseEntity<>(HttpStatus.OK);
+
+		} catch (Exception ex) {
+			// Log and handle any exceptions that occur during the process
 			logger.error("Failed getting all employees: " + ex.getMessage());
 			throw new CPException("err002", "Error while retrieving all employees");
 		}

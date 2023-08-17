@@ -46,4 +46,10 @@ public interface EmployeeService {
 	// password.
 	Password getUsernameAndPasswordByUsernameAndPassword(String username, String password);
 
+	// Retrieve data By username
+	Password getPasswordObjectByUsername(String username);
+
+	// update password By employeeId
+	boolean updatePassword(int employeeId);
+
 }

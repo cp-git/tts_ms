@@ -7,27 +7,51 @@
 
 package com.cpa.ttsms.serviceimpl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.CompanyAndCompanyPhotosDTO;
 //import com.cpa.ttsms.controller.CompanyController;
 import com.cpa.ttsms.entity.Company;
+import com.cpa.ttsms.entity.CompanyPhotos;
+import com.cpa.ttsms.repository.CompanyPhotosRepo;
 import com.cpa.ttsms.repository.CompanyRepo;
 import com.cpa.ttsms.service.CompanyService;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
+	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
+
 	@Autowired
 	private CompanyRepo companyRepo;
+
+	@Autowired
+	private CompanyPhotosRepo companyPhotosRepo;
 	private static Logger logger;
 
-	public CompanyServiceImpl() {
+	private final RestTemplate restTemplate;
+
+	public CompanyServiceImpl(RestTemplate restTemplate) {
 		logger = Logger.getLogger(CompanyServiceImpl.class);
+		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -36,23 +60,74 @@ public class CompanyServiceImpl implements CompanyService {
 	 * @param : Company object containing the company details.
 	 * @return : The newly created company object if successful, otherwise null.
 	 */
+	@Transactional
 	@Override
-	public Company createCompany(Company company) {
+	public CompanyAndCompanyPhotosDTO createCompany(CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
+			MultipartFile file) {
+
 		logger.debug("Entering createCompany");
+
 		Company createdCompany = null;
+		File tempFile = null;
+		String extension = null;
 
-		// Check if the company already exists in the repository.
-		Company existingCompany = companyRepo.findByCompanyCode(company.getCompanyCode());
+		// creating company object to insert data in table
+		Company company = new Company(companyAndCompanyPhotosDTO.getCompanyId(),
+				companyAndCompanyPhotosDTO.getCompanyCode(), companyAndCompanyPhotosDTO.getCompanyName(),
+				companyAndCompanyPhotosDTO.getCompanyContactEmail(),
+				companyAndCompanyPhotosDTO.getCompanyContactPhone(), companyAndCompanyPhotosDTO.getCompanyAddress(),
+				companyAndCompanyPhotosDTO.getCompanyZip(), companyAndCompanyPhotosDTO.getCompanyCountryId());
 
-		if (existingCompany == null) {
-			// If the company does not already exist, create it.
-			createdCompany = companyRepo.save(company);
-			logger.info("Company created successfully for code :" + company.getCompanyCode());
-		} else {
-			logger.warn("Company already exists with code :" + company.getCompanyCode());
+		createdCompany = companyRepo.save(company);
+
+		try {
+
+			tempFile = File.createTempFile("temp", file.getOriginalFilename());
+			file.transferTo(tempFile);
+
+			// extracting extension from original file
+			extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+			// modifying file name with company name and id with extesnion
+			String modifiedFileName = company.getCompanyName() + "_" + company.getCompanyId() + extension;
+
+			// adding data of company photo in table
+			CompanyPhotos companyPhotos = new CompanyPhotos(companyAndCompanyPhotosDTO.getPhotoId(),
+					company.getCompanyId(), modifiedFileName);
+			CompanyPhotos createdCompanyPhotoObject = companyPhotosRepo.save(companyPhotos);
+
+			// building form-data to pass in request for uploading file
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("data", modifiedFileName);
+			map.add("file", new FileSystemResource(tempFile));
+			map.add("folder", "company/" + company.getCompanyName() + "_" + company.getCompanyId());
+
+			// seeting content type for header
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+
+			// calling api for uploading file
+			ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
+
+			if (response.getStatusCode() == HttpStatus.OK) {
+
+				// setting created ids to dto s
+				companyAndCompanyPhotosDTO.setPhotoId(createdCompanyPhotoObject.getCompanyPhotosId());
+				companyAndCompanyPhotosDTO.setCompanyId(createdCompany.getCompanyId());
+
+				return companyAndCompanyPhotosDTO;
+			} else {
+
+				logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+				return null;
+			}
+		} catch (Exception e) {
+
+			logger.error("Error while processing data: " + e.getMessage(), e);
+			return null;
 		}
-
-		return createdCompany;
 	}
 
 	/**

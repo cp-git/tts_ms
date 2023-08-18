@@ -11,17 +11,17 @@
 	</parent>
 
 	<groupId>com.cpa.ttsms.ms.services</groupId>
-	<artifactId>email</artifactId>
+	<artifactId>uploadfile</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>email</name>
+	<name>uploadfile</name>
 	<packaging>war</packaging>
-	<description>This is Email email module of ttsms</description>
+	<description>This is uploadfile module of ttsms</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
 
 	<build>
-		<finalName>email</finalName>
+		<finalName>uploadfile</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

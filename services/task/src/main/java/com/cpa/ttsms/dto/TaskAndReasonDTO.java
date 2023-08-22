@@ -32,6 +32,8 @@ public class TaskAndReasonDTO {
 
 	private int employeeId;
 
+	private String fileName;
+
 	/**
 	 * 
 	 */
@@ -57,7 +59,7 @@ public class TaskAndReasonDTO {
 	 */
 	public TaskAndReasonDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
 			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
-			int companyId, int taskParent, String reason, int employeeId) {
+			int companyId, int taskParent, String reason, int employeeId, String fileName) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -73,6 +75,7 @@ public class TaskAndReasonDTO {
 		this.taskParent = taskParent;
 		this.reason = reason;
 		this.employeeId = employeeId;
+		this.fileName = fileName;
 	}
 
 	/**
@@ -269,6 +272,20 @@ public class TaskAndReasonDTO {
 	 */
 	public void setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
+	}
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 }

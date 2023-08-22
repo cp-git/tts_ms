@@ -8,13 +8,18 @@
 
 package com.cpa.ttsms.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +29,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
@@ -47,6 +54,10 @@ public class TaskController {
 	// The logger is used for logging messages related to this class.
 	private static Logger logger;
 
+	// Inject the value of 'file.base-path' from application.yml file
+	@Value("${file.base-path}")
+	private String basePath;
+
 	TaskController() {
 		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(TaskController.class);
@@ -65,14 +76,14 @@ public class TaskController {
 	 *                     the localized error message from the resource bundle.
 	 */
 	@PostMapping("/savetask")
-	public ResponseEntity<Object> createOrUpdateTaskAndAddReason(@RequestBody TaskAndReasonDTO taskAndReasonDTO)
-			throws CPException {
+	public ResponseEntity<Object> createOrUpdateTaskAndAddReason(@RequestPart("task") TaskAndReasonDTO taskAndReasonDTO,
+			@RequestParam("file") MultipartFile file) throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateTaskAndAddReason");
 		logger.info("Data of creating Task: " + taskAndReasonDTO.getTaskName());
 
 		try {
-			TaskAndReasonDTO createdTask = taskService.createOrUpdateTaskAndAddReason(taskAndReasonDTO);
+			TaskAndReasonDTO createdTask = taskService.createOrUpdateTaskAndAddReason(taskAndReasonDTO, file);
 			// If the task does not exist (i.e., createdTask is not null), it has been
 			// successfully created
 			if (createdTask != null) {
@@ -308,6 +319,53 @@ public class TaskController {
 			logger.error("Error while fetching parent tasks: " + e.getMessage());
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
 		}
+	}
+
+	// Get a list of files by type
+	@GetMapping("/task/getfiles")
+	public ResponseEntity<List<Object>> getFilesByTaskId(@RequestParam("taskid") int taskId) {
+		// Create a list to store file names
+		List<Object> fileNames = new ArrayList<>();
+
+		logger.info("inside getFilesByTaskId");
+		try {
+			fileNames = taskService.getFilesUsingTaskId(taskId);
+			if (fileNames.size() > 0) {
+
+				return ResponseHandler.generateListResponse(fileNames, HttpStatus.OK);
+			} else {
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err008");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error("error to get files using task id");
+			return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err008");
+		}
+	}
+
+	@GetMapping("/download/{taskid}")
+	public ResponseEntity<Object> downloadFile(@PathVariable("taskid") int taskId,
+			@RequestParam("filename") String fileName) {
+
+		logger.info("download file + " + fileName);
+		try {
+			Resource resource = taskService.downloadFileByTaskIdAndFileName(taskId, fileName);
+
+			if (!resource.exists() || !resource.isReadable()) {
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
+			} else {
+				HttpHeaders headers = new HttpHeaders();
+				headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFilename());
+
+				return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_OCTET_STREAM)
+						.body(resource);
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
+		}
+
 	}
 
 }

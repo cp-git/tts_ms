@@ -54,7 +54,7 @@ public class UploadFileController {
 	}
 
 	@PostMapping("/upload")
-	public ResponseEntity<Object> uploadFile(@RequestParam("data") String fileName,
+	public ResponseEntity<Object> uploadFile(@RequestParam("filename") String fileName,
 			@RequestParam("file") MultipartFile file, @RequestParam("folder") String folderName) throws CPException {
 		try {
 			boolean isFileCreated = false;
@@ -72,10 +72,11 @@ public class UploadFileController {
 		}
 	}
 
-	@GetMapping("/downloadfile/{type}/{filename:.+}")
-	public ResponseEntity<Resource> downloadFile(@PathVariable String type, @PathVariable String filename) {
+	@GetMapping("/downloadfile")
+	public ResponseEntity<Resource> downloadFile(@RequestParam("foldername") String type,
+			@RequestParam("filename") String filename) {
 		try {
-			// Determine the subdirectory based on the type (employee, company, task)
+			// Determine the sub directory based on the type (employee, company, task)
 			String uploadSubDir = determineUploadSubDir(type);
 
 			// Resolve the complete file path using the specified type and filename
@@ -103,6 +104,7 @@ public class UploadFileController {
 		// Determine the subdirectory based on the type (employee, company, task)
 		String uploadSubDir = determineUploadSubDir(type);
 
+		System.out.println(uploadSubDir);
 		// Create a File object for the specified subdirectory
 		File uploadDir = new File(basePath, uploadSubDir);
 
@@ -138,7 +140,7 @@ public class UploadFileController {
 		case "task":
 			return "task";
 		default:
-			return "other";
+			return uploadType;
 		}
 	}
 }

@@ -98,7 +98,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 			// building form-data to pass in request for uploading file
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-			map.add("data", modifiedFileName);
+			map.add("filename", modifiedFileName);
 			map.add("file", new FileSystemResource(tempFile));
 			map.add("folder", "company/" + company.getCompanyName() + "_" + company.getCompanyId());
 

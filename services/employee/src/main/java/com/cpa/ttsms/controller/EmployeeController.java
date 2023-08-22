@@ -24,9 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.EmployeeAndEmployeePhotosDTO;
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
+import com.cpa.ttsms.dto.EmployeePasswordAndEmployeePhotosDTO;
 import com.cpa.ttsms.entity.Employee;
 import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.exception.CPException;
@@ -51,29 +56,37 @@ public class EmployeeController {
 
 	/**
 	 * Creates a new employee along with their password information based on the
-	 * provided EmployeeAndPasswordDTO object, and generates an appropriate
-	 * response.
+	 * provided EmployeePasswordAndEmployeePhotosDTO object and an accompanying
+	 * file, and generates an appropriate response.
 	 *
-	 * @param dto - The EmployeeAndPasswordDTO object containing the details of the
-	 *            employee and password to be created.
+	 * @param employeePasswordAndEmployeePhotosDTO - The DTO containing the
+	 *                                             employee's details and password
+	 *                                             information.
+	 * @param file                                 - The MultipartFile containing
+	 *                                             employee photos.
 	 *
 	 * @return ResponseEntity containing a CREATED status if the employee was
-	 *         successfully created, otherwise returns an INTERNAL_SERVER_ERROR
-	 *         response.
+	 *         successfully created, otherwise returns a BAD_REQUEST response.
 	 *
 	 * @throws CPException If there is an error while creating the employee or
 	 *                     generating the response.
 	 */
 	@PostMapping("/employee")
-	public ResponseEntity<Object> createEmployee(@RequestBody EmployeeAndPasswordDTO dto) throws CPException {
+	public ResponseEntity<Object> createEmployee(
+			@RequestPart("employee") EmployeePasswordAndEmployeePhotosDTO employeePasswordAndEmployeePhotosDTO,
+			@RequestParam("file") MultipartFile file) throws CPException {
 		// Log the entry of the method
 		logger.debug("Entering createEmployee");
-		logger.info("data of creating Employee: " + dto.toString());
+
+		// Log information about the data received for creating an employee
+		logger.info("Data of creating Employee: " + employeePasswordAndEmployeePhotosDTO.toString());
 
 		try {
-			// Attempt to create the new employee along with their password using the
-			// employeeService
-			EmployeeAndPasswordDTO createdDTO = employeeService.saveEmployeeAndPassword(dto);
+			// Call the employeeService to create an employee with the provided data
+			EmployeePasswordAndEmployeePhotosDTO createdDTO = employeeService
+					.createEmployee(employeePasswordAndEmployeePhotosDTO, file);
+
+			// Log information about the created employee and password
 			logger.info("Employee and password created: " + createdDTO);
 
 			if (createdDTO != null) {
@@ -86,6 +99,7 @@ public class EmployeeController {
 		} catch (Exception e) {
 			// Log any exceptions that occur during the creation process
 			logger.error(resourceBundle.getString("err003"));
+
 			// Generate an INTERNAL_SERVER_ERROR response with an error message
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 		}
@@ -150,37 +164,73 @@ public class EmployeeController {
 	 * @throws CPException If there is an error while updating the employee or
 	 *                     generating the response.
 	 */
+//	@PutMapping("/employee/update/{employeeId}")
+//	public ResponseEntity<Object> updateEmployeeByEmployeeId(@RequestBody Employee employee,
+//			@PathVariable("employeeId") int employeeId) throws CPException {
+//		// Log the entry of the method
+//		logger.debug("Entering updateEmployee");
+//		logger.info("entered  updateEmployee :" + employee);
+//
+//		// Initialize the updatedEmployee to hold the result of the update
+//		Employee updatedEmployee = null;
+//
+//		try {
+//			// Attempt to update the employee using the employeeService
+//			updatedEmployee = employeeService.updateEmployeeByEmployeeId(employee, employeeId);
+//
+//			if (updatedEmployee == null) {
+//				// If the updatedEmployee is null, log the error message and generate an
+//				// INTERNAL_SERVER_ERROR response
+//				logger.info(resourceBundle.getString("err004"));
+//				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
+//			} else {
+//				// If the employee was successfully updated, log the updated employee details
+//				// and generate a CREATED response
+//				logger.info("updated employee : " + updatedEmployee);
+//				return ResponseHandler.generateResponse(updatedEmployee, HttpStatus.CREATED);
+//			}
+//		} catch (Exception ex) {
+//			// Log any exceptions that occur during the update process
+//			logger.error("Failed update Employee : " + ex.getMessage());
+//			// Throw a custom CPException with error code "err004" and the corresponding
+//			// error message from the resource bundle
+//			throw new CPException("err004", resourceBundle.getString("err004"));
+//		}
+//	}
+
+	/**
+	 * Updates an employee's information and, optionally, their profile photo by
+	 * their employeeId.
+	 *
+	 * This endpoint handles PUT requests to update an employee's data and photo.
+	 *
+	 * @param employeeAndEmployeePhotosDTO The DTO containing employee data and
+	 *                                     photo information.
+	 * @param file                         The profile photo file to update, or null
+	 *                                     if not updating the photo.
+	 * @param employeeId                   The ID of the employee to update.
+	 * @return ResponseEntity containing the updated Employee and photo DTO or an
+	 *         error response.
+	 */
 	@PutMapping("/employee/update/{employeeId}")
-	public ResponseEntity<Object> updateEmployeeByEmployeeId(@RequestBody Employee employee,
+	public ResponseEntity<Object> updateEmployeeByEmployeeId(
+			@RequestPart("employee") EmployeeAndEmployeePhotosDTO employeeAndEmployeePhotosDTO,
+			@RequestParam(value = "file", required = false) MultipartFile file,
 			@PathVariable("employeeId") int employeeId) throws CPException {
-		// Log the entry of the method
-		logger.debug("Entering updateEmployee");
-		logger.info("entered  updateEmployee :" + employee);
 
-		// Initialize the updatedEmployee to hold the result of the update
-		Employee updatedEmployee = null;
+		logger.info("Updating employee by id: " + employeeId);
 
-		try {
-			// Attempt to update the employee using the employeeService
-			updatedEmployee = employeeService.updateEmployeeByEmployeeId(employee, employeeId);
+		// Call the service to update the employee
+		EmployeeAndEmployeePhotosDTO updatedEmployeeDTO = employeeService
+				.updateEmployeeByEmployeeId(employeeAndEmployeePhotosDTO, employeeId, file);
 
-			if (updatedEmployee == null) {
-				// If the updatedEmployee is null, log the error message and generate an
-				// INTERNAL_SERVER_ERROR response
-				logger.info(resourceBundle.getString("err004"));
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
-			} else {
-				// If the employee was successfully updated, log the updated employee details
-				// and generate a CREATED response
-				logger.info("updated employee : " + updatedEmployee);
-				return ResponseHandler.generateResponse(updatedEmployee, HttpStatus.CREATED);
-			}
-		} catch (Exception ex) {
-			// Log any exceptions that occur during the update process
-			logger.error("Failed update Employee : " + ex.getMessage());
-			// Throw a custom CPException with error code "err004" and the corresponding
-			// error message from the resource bundle
-			throw new CPException("err004", resourceBundle.getString("err004"));
+		if (updatedEmployeeDTO != null) {
+			// Return a success response with the updated employee data
+			return ResponseHandler.generateResponse(updatedEmployeeDTO, HttpStatus.OK);
+		} else {
+			// Return a not found response if the employee is not found or an error occurs
+			// during update
+			return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err006");
 		}
 	}
 

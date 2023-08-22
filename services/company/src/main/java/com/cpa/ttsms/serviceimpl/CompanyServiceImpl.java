@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +40,10 @@ import com.cpa.ttsms.service.CompanyService;
 public class CompanyServiceImpl implements CompanyService {
 
 	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
+
+	// Inject the value of 'file.base-path' from application.yml file
+	@Value("${file.base-path}")
+	private String basePath;
 
 	@Autowired
 	private CompanyRepo companyRepo;
@@ -180,36 +185,36 @@ public class CompanyServiceImpl implements CompanyService {
 	 * @param company     The updated Company object.
 	 * @return The updated Company object.
 	 */
-	@Override
-	public Company updateCompanyByCompanyCode(Company company, String companyCode) {
-		logger.info("Updating company by companyCode : " + companyCode);
-
-		// Check if the company exists in the database
-		Company existingCompany = companyRepo.findByCompanyCode(companyCode);
-
-		// If the company does not exist, return null
-		if (existingCompany == null) {
-			logger.warn("Company not found with Code: " + companyCode);
-			return null;
-		}
-		// If the company exists, update their details and save to the database
-		else {
-
-			existingCompany.setCompanyCode(company.getCompanyCode());
-			existingCompany.setCompanyName(company.getCompanyName());
-			existingCompany.setCompanyContactEmail(company.getCompanyContactEmail());
-			existingCompany.setCompanyContactPhone(company.getCompanyContactPhone());
-			existingCompany.setCompanyAddress(company.getCompanyAddress());
-			existingCompany.setCompanyZip(company.getCompanyZip());
-			existingCompany.setCompanyCountryId(company.getCompanyCountryId());
-
-			// Save the updated company to the database
-			Company updatedCompany = companyRepo.save(existingCompany);
-
-			logger.info("Company updated successfully");
-			return updatedCompany;
-		}
-	}
+//	@Override
+//	public Company updateCompanyByCompanyCode(Company company, String companyCode) {
+//		logger.info("Updating company by companyCode : " + companyCode);
+//
+//		// Check if the company exists in the database
+//		Company existingCompany = companyRepo.findByCompanyCode(companyCode);
+//
+//		// If the company does not exist, return null
+//		if (existingCompany == null) {
+//			logger.warn("Company not found with Code: " + companyCode);
+//			return null;
+//		}
+//		// If the company exists, update their details and save to the database
+//		else {
+//
+//			existingCompany.setCompanyCode(company.getCompanyCode());
+//			existingCompany.setCompanyName(company.getCompanyName());
+//			existingCompany.setCompanyContactEmail(company.getCompanyContactEmail());
+//			existingCompany.setCompanyContactPhone(company.getCompanyContactPhone());
+//			existingCompany.setCompanyAddress(company.getCompanyAddress());
+//			existingCompany.setCompanyZip(company.getCompanyZip());
+//			existingCompany.setCompanyCountryId(company.getCompanyCountryId());
+//
+//			// Save the updated company to the database
+//			Company updatedCompany = companyRepo.save(existingCompany);
+//
+//			logger.info("Company updated successfully");
+//			return updatedCompany;
+//		}
+//	}
 
 	/**
 	 * deletes the company with the given code
@@ -234,6 +239,124 @@ public class CompanyServiceImpl implements CompanyService {
 		} else {
 			logger.warn("Company not found or could not be deleted with code : " + companyCode);
 			return false;
+		}
+	}
+
+	/**
+	 * Updates an existing company's information, including its logo, based on the
+	 * company code.
+	 *
+	 * @param companyAndCompanyPhotosDTO The DTO containing updated company details
+	 *                                   and photo information.
+	 * @param companyCode                The code of the company to update.
+	 * @param file                       The updated logo file for the company, or
+	 *                                   null if not updating the logo.
+	 * @return The updated Company and photo DTO object, or null if an error occurs.
+	 */
+	@Transactional
+	@Override
+	public CompanyAndCompanyPhotosDTO updateCompanyByCompanyCode(CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
+			String companyCode, MultipartFile file) {
+
+		logger.debug("Entering updateCompanyByCompanyCode");
+
+		// Check if the company with the given company code exists
+		Company existingCompany = companyRepo.findByCompanyCode(companyCode);
+
+		if (existingCompany == null) {
+			logger.warn("Company not found with Code: " + companyCode);
+			return null;
+		}
+
+		try {
+			// Update the company details
+			existingCompany.setCompanyCode(companyAndCompanyPhotosDTO.getCompanyCode());
+			existingCompany.setCompanyName(companyAndCompanyPhotosDTO.getCompanyName());
+			existingCompany.setCompanyContactEmail(companyAndCompanyPhotosDTO.getCompanyContactEmail());
+			existingCompany.setCompanyContactPhone(companyAndCompanyPhotosDTO.getCompanyContactPhone());
+			existingCompany.setCompanyAddress(companyAndCompanyPhotosDTO.getCompanyAddress());
+			existingCompany.setCompanyZip(companyAndCompanyPhotosDTO.getCompanyZip());
+			existingCompany.setCompanyCountryId(companyAndCompanyPhotosDTO.getCompanyCountryId());
+
+			// Save the updated company
+			Company updatedCompany = companyRepo.save(existingCompany);
+
+			// Check if a file is provided for updating the photo
+			if (file != null) {
+				// Handle photo update logic here
+				File tempFile = null;
+				// Creating a temporary file to store the uploaded photo
+				tempFile = File.createTempFile("temp", file.getOriginalFilename());
+				file.transferTo(tempFile);
+
+				CompanyPhotos existingCompanyPhotos = companyPhotosRepo.findByCompanyId(updatedCompany.getCompanyId());
+
+				String folderName = "company/" + existingCompany.getCompanyName() + "_"
+						+ existingCompany.getCompanyId();
+
+				deleteFilesFromFolder(basePath + "/" + folderName);
+
+				// Extracting the extension from the original file
+				String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+				// Modifying the file name with the company name and ID with extension
+				String modifiedFileName = updatedCompany.getCompanyName() + "_" + updatedCompany.getCompanyId()
+						+ extension;
+
+				if (existingCompanyPhotos != null) {
+					// Update the photo details in the companyAndCompanyPhotosDTO
+					existingCompanyPhotos.setFileName(modifiedFileName);
+					// Set the companyPhotosId in the existingCompanyPhotos object
+				}
+
+				CompanyPhotos createdCompanyPhotoObject = companyPhotosRepo.save(existingCompanyPhotos);
+
+				// Building form-data to pass in the request for uploading the file
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("filename", modifiedFileName);
+				map.add("file", new FileSystemResource(tempFile));
+				map.add("folder", folderName);
+
+				// Setting content type for the header
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+
+				// Calling the API for uploading the file
+				ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
+						String.class);
+
+				if (response.getStatusCode() != HttpStatus.OK) {
+					logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+
+					return null;
+				}
+			}
+
+			return companyAndCompanyPhotosDTO;
+		} catch (Exception e) {
+			logger.error("Error while updating company: " + e.getMessage(), e);
+			return null;
+		}
+	}
+
+	/**
+	 * Helper method to delete files from a folder.
+	 *
+	 * @param folderPath The path to the folder containing files to be deleted.
+	 */
+	private void deleteFilesFromFolder(String folderPath) {
+		File folder = new File(folderPath);
+		File[] files = folder.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (file.isFile()) {
+					file.delete();
+				}
+			}
+		} else {
+			System.out.println("Folder does not exist or is not a directory.");
 		}
 	}
 

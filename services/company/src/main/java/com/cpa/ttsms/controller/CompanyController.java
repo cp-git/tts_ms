@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,9 +32,6 @@ import com.cpa.ttsms.entity.Company;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.CompanyService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @CrossOrigin
 @RestController
@@ -56,46 +53,47 @@ public class CompanyController {
 	}
 
 	/**
-	 * Create a new company.
-	 * 
-	 * @param company The company to create.
-	 * @return The newly created company.
-	 * @throws CPException             If there was an error creating the company.
-	 * @throws JsonProcessingException
-	 * @throws JsonMappingException
+	 * Creates a new company along with company photos based on the provided
+	 * CompanyAndCompanyPhotosDTO object and an accompanying file, and generates an
+	 * appropriate response.
+	 *
+	 * @param companyAndCompanyPhotosDTO - The DTO containing company details and
+	 *                                   photos.
+	 * @param file                       - The MultipartFile containing company
+	 *                                   photos.
+	 *
+	 * @return ResponseEntity containing a CREATED status if the company was
+	 *         successfully created, otherwise returns a BAD_REQUEST response.
+	 *
+	 * @throws CPException If there is an error while creating the company or
+	 *                     generating the response.
 	 */
 	@PostMapping("/company")
-	public ResponseEntity<Object> createCompany(@RequestParam("company") String companyData,
+	public ResponseEntity<Object> createCompany(
+			@RequestPart("company") CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
 			@RequestParam("file") MultipartFile file) throws CPException {
+		// Log that a request to create a company has been received
 		logger.info("Received request to create company ");
-		System.out.println(file.getOriginalFilename());
-		// for convertin data into json object
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO = null;
-		CompanyAndCompanyPhotosDTO createCompanyAndCompanyPhotosDTO = null;
 
 		try {
+			// Call the companyService to create a company with the provided data
+			CompanyAndCompanyPhotosDTO createdCompanyAndCompanyPhotosDTO = companyService
+					.createCompany(companyAndCompanyPhotosDTO, file);
 
-			// converting string into object
-			companyAndCompanyPhotosDTO = objectMapper.readValue(companyData, CompanyAndCompanyPhotosDTO.class);
-
-			if (companyAndCompanyPhotosDTO != null) {
-
-				// If the company doesn't exist, create it.
-				createCompanyAndCompanyPhotosDTO = companyService.createCompany(companyAndCompanyPhotosDTO, file);
-
-				if (createCompanyAndCompanyPhotosDTO != null) {
-					// Return the updated companyDTO.
-					return ResponseHandler.generateResponse(createCompanyAndCompanyPhotosDTO, HttpStatus.CREATED);
-				}
+			if (createdCompanyAndCompanyPhotosDTO != null) {
+				// Generate a CREATED response with a success message
+				return ResponseHandler.generateResponse(createdCompanyAndCompanyPhotosDTO, HttpStatus.CREATED);
+			} else {
+				// Generate a BAD_REQUEST response with an error message for a failed operation
+				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "Failed to create company.");
 			}
-		} catch (Exception ex) {
-			// Log the error and throw an CPException with an error code and message.
-			logger.error("Failed to create company: " + ex.getMessage());
-			throw new CPException("err003", resourceBundle.getString("err003"));
+		} catch (Exception e) {
+			// Log any exceptions that occur during the creation process
+			logger.error(resourceBundle.getString("err003"));
+
+			// Generate an INTERNAL_SERVER_ERROR response with an error message
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 		}
-		return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 	}
 
 	/**
@@ -176,36 +174,72 @@ public class CompanyController {
 	 * @param company     the updated company object
 	 * @return the updated company object, or null if the company was not found
 	 */
+//	@PutMapping("/company/{code}")
+//	public ResponseEntity<Object> updateCompanyByCompanyCode(@RequestBody Company company,
+//			@PathVariable("code") String companyCode) throws CPException {
+//
+//		logger.info("Updating company by code : " + companyCode);
+//
+//		Company updatedCompany = null;
+//
+//		try {
+//			// Call the companyService to perform the update operation.
+//			updatedCompany = companyService.updateCompanyByCompanyCode(company, companyCode);
+//
+//			if (updatedCompany == null) {
+//				// If the company not exists, return an error response.
+//				logger.info(resourceBundle.getString("err004"));
+//				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
+//			} else {
+//				// Return the updated company.
+//				logger.info("Company updated : " + updatedCompany);
+//				return ResponseHandler.generateResponse(updatedCompany, HttpStatus.OK);
+//			}
+//
+//		} catch (Exception ex) {
+//			// If an exception occurs, log the error and throw an CPException with an error
+//			// code and message.
+//			logger.error("Failed update Company : " + ex.getMessage());
+//			throw new CPException("err004", resourceBundle.getString("err004"));
+//
+//		}
+//
+//	}
+
+	/**
+	 * Updates an existing company's information, including its logo, based on the
+	 * company code.
+	 *
+	 * This endpoint handles PUT requests to update a company's data and logo.
+	 *
+	 * @param companyAndCompanyPhotosDTO The DTO containing updated company details
+	 *                                   and logo information.
+	 * @param file                       The updated logo file for the company, or
+	 *                                   null if not updating the logo.
+	 * @param companyCode                The code of the company to update.
+	 * @return ResponseEntity containing the updated Company and logo DTO or an
+	 *         error response.
+	 */
 	@PutMapping("/company/{code}")
-	public ResponseEntity<Object> updateCompanyByCompanyCode(@RequestBody Company company,
+	public ResponseEntity<Object> updateCompanyByCompanyCode(
+			@RequestPart("company") CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
+			@RequestParam(value = "file", required = false) MultipartFile file,
 			@PathVariable("code") String companyCode) throws CPException {
 
-		logger.info("Updating company by code : " + companyCode);
+		logger.info("Updating company by code: " + companyCode);
 
-		Company updatedCompany = null;
+		// Call the service to update the company
+		CompanyAndCompanyPhotosDTO updatedCompanyDTO = companyService
+				.updateCompanyByCompanyCode(companyAndCompanyPhotosDTO, companyCode, file);
 
-		try {
-			// Call the companyService to perform the update operation.
-			updatedCompany = companyService.updateCompanyByCompanyCode(company, companyCode);
-
-			if (updatedCompany == null) {
-				// If the company not exists, return an error response.
-				logger.info(resourceBundle.getString("err004"));
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
-			} else {
-				// Return the updated company.
-				logger.info("Company updated : " + updatedCompany);
-				return ResponseHandler.generateResponse(updatedCompany, HttpStatus.OK);
-			}
-
-		} catch (Exception ex) {
-			// If an exception occurs, log the error and throw an CPException with an error
-			// code and message.
-			logger.error("Failed update Company : " + ex.getMessage());
-			throw new CPException("err004", resourceBundle.getString("err004"));
-
+		if (updatedCompanyDTO != null) {
+			// Return a success response with the updated company data
+			return ResponseHandler.generateResponse(updatedCompanyDTO, HttpStatus.OK);
+		} else {
+			// Return a not found response if the company is not found or an error occurs
+			// during update
+			return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err006");
 		}
-
 	}
 
 	/**

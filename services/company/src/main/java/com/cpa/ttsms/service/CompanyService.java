@@ -46,7 +46,20 @@ public interface CompanyService {
 	 * @param company     The updated Company object.
 	 * @return The updated Company object.
 	 */
-	Company updateCompanyByCompanyCode(Company company, String companyCode);
+	// Company updateCompanyByCompanyCode(Company company, String companyCode);
+
+	/**
+	 * Updates an existing company in the system.
+	 * 
+	 * @param companyAndCompanyPhotosDTO The DTO containing updated company details
+	 *                                   and photo information.
+	 * @param companyCode                The code of the company to update.
+	 * @param file                       The updated logo file for the company, or
+	 *                                   null if not updating the logo.
+	 * @return The updated Company object.
+	 */
+	CompanyAndCompanyPhotosDTO updateCompanyByCompanyCode(CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
+			String companyCode, MultipartFile file);
 
 	/**
 	 * Deletes a company by their code.

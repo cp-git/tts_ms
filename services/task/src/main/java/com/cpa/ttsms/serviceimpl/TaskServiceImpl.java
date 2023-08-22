@@ -7,14 +7,31 @@
 
 package com.cpa.ttsms.serviceimpl;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
@@ -22,16 +39,23 @@ import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.entity.Reason;
 import com.cpa.ttsms.entity.Status;
 import com.cpa.ttsms.entity.Task;
+import com.cpa.ttsms.entity.TaskAttachment;
 import com.cpa.ttsms.repository.PasswordRepo;
 import com.cpa.ttsms.repository.ReasonRepo;
 import com.cpa.ttsms.repository.StatusRepo;
+import com.cpa.ttsms.repository.TaskAttachmentRepo;
 import com.cpa.ttsms.repository.TaskRepo;
 import com.cpa.ttsms.service.TaskService;
 
 @Service
 public class TaskServiceImpl implements TaskService {
 
+	// Inject the value of 'file.base-path' from application.yml file
+	@Value("${file.base-path}")
+	private String basePath;
+
 	private final String REASON_API_URL = "http://localhost:8090/reason/ttsms/reason";
+	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
 
 	@Autowired
 	private TaskRepo taskRepo;
@@ -45,13 +69,16 @@ public class TaskServiceImpl implements TaskService {
 	@Autowired
 	private StatusRepo statusRepo;
 
+	@Autowired
+	private TaskAttachmentRepo taskAttachmentRepo;
+
 	private static Logger logger;
 
-//	private final RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
 
 	public TaskServiceImpl(RestTemplate restTemplate) {
 		logger = Logger.getLogger(TaskServiceImpl.class);
-//		this.restTemplate = restTemplate;
+		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -62,60 +89,95 @@ public class TaskServiceImpl implements TaskService {
 	 */
 	@Transactional
 	@Override
-	public TaskAndReasonDTO createOrUpdateTaskAndAddReason(TaskAndReasonDTO taskAndReasonDTO) {
+	public TaskAndReasonDTO createOrUpdateTaskAndAddReason(TaskAndReasonDTO taskAndReasonDTO, MultipartFile file) {
 
 		logger.debug("Entering createTask");
+		try {
 
-		Task task = new Task();
-		int taskId = taskAndReasonDTO.getTaskId();
-		// setting values in task object
-		if (taskId > 0) {
-			task.setTaskId(taskId);
-		}
-		task.setTaskName(taskAndReasonDTO.getTaskName());
-		task.setTaskDescription(taskAndReasonDTO.getTaskDescription());
-		task.setTaskCreatedBy(taskAndReasonDTO.getTaskCreatedBy());
-		task.setTaskAssignedTo(taskAndReasonDTO.getTaskAssignedTo());
-		task.setTaskStartDate(taskAndReasonDTO.getTaskStartDate());
-		task.setTaskEndDate(taskAndReasonDTO.getTaskEndDate());
-		task.setTaskActualStartDate(taskAndReasonDTO.getTaskActualStartDate());
-		task.setTaskActualEndDate(taskAndReasonDTO.getTaskActualEndDate());
-		task.setTaskStatus(taskAndReasonDTO.getTaskStatus());
-		task.setTaskParent(taskAndReasonDTO.getTaskParent());
-		task.setCompanyId(taskAndReasonDTO.getCompanyId());
+			Task task = new Task();
 
-		Task createdTask = taskRepo.save(task);
-		logger.info("created Task " + createdTask.getTaskName());
-		if (createdTask != null) {
-			// url for adding response in response table
-//			String reasonApiUrl = REASON_API_URL; // Replace with actual URL
+			// for updating need taskId, if there is no foreign key then new entry will
+			// create
+			int taskId = taskAndReasonDTO.getTaskId();
 
-			Reason reason = new Reason();
-
-			// setting values in reasonDTO object
-			reason.setReasonText(taskAndReasonDTO.getReason());
-			reason.setTaskId(createdTask.getTaskId());
-			reason.setEmployeeId(taskAndReasonDTO.getEmployeeId());
-			reason.setStatusId(taskAndReasonDTO.getTaskStatus());
-			reason.setAssignedTo(taskAndReasonDTO.getTaskAssignedTo());
-
-//			ResponseEntity<String> response = restTemplate.postForEntity(reasonApiUrl, reasonDTO, String.class);
-
-//			if (response.getStatusCode() == HttpStatus.OK) {
-//				String responseBody = response.getBody();
-//				System.out.println(responseBody);
-//				// Handle the response as needed
-//			} else {
-//				// Handle error cases
-//				System.out.println(response);
-//			}
-
-			Reason createdReason = this.reasonRepo.save(reason);
-			logger.info("created Reason " + createdReason.getReasonText());
-			if (createdReason != null) {
-				taskAndReasonDTO.setTaskId(createdTask.getTaskId());
-				return taskAndReasonDTO;
+			// setting values in task object
+			if (taskId > 0) {
+				task.setTaskId(taskId);
 			}
+			task.setTaskName(taskAndReasonDTO.getTaskName());
+			task.setTaskDescription(taskAndReasonDTO.getTaskDescription());
+			task.setTaskCreatedBy(taskAndReasonDTO.getTaskCreatedBy());
+			task.setTaskAssignedTo(taskAndReasonDTO.getTaskAssignedTo());
+			task.setTaskStartDate(taskAndReasonDTO.getTaskStartDate());
+			task.setTaskEndDate(taskAndReasonDTO.getTaskEndDate());
+			task.setTaskActualStartDate(taskAndReasonDTO.getTaskActualStartDate());
+			task.setTaskActualEndDate(taskAndReasonDTO.getTaskActualEndDate());
+			task.setTaskStatus(taskAndReasonDTO.getTaskStatus());
+			task.setTaskParent(taskAndReasonDTO.getTaskParent());
+			task.setCompanyId(taskAndReasonDTO.getCompanyId());
+
+			// adding or updating row
+			Task createdTask = taskRepo.save(task);
+
+			logger.info("created Task " + createdTask.getTaskName());
+			if (createdTask != null) {
+
+				// adding attachement file
+				TaskAttachment taskAttachment = new TaskAttachment();
+				taskAttachment.setTaskID(createdTask.getTaskId());
+				taskAttachment.setFileName(file.getOriginalFilename());
+				taskAttachment.setAttachedBy(taskAndReasonDTO.getEmployeeId());
+				taskAttachmentRepo.save(taskAttachment);
+
+				// adding reason
+				Reason reason = new Reason();
+				// setting values in reasonDTO object
+				reason.setReasonText(taskAndReasonDTO.getReason());
+				reason.setTaskId(createdTask.getTaskId());
+				reason.setEmployeeId(taskAndReasonDTO.getEmployeeId());
+				reason.setStatusId(taskAndReasonDTO.getTaskStatus());
+				reason.setAssignedTo(taskAndReasonDTO.getTaskAssignedTo());
+				Reason createdReason = this.reasonRepo.save(reason);
+
+				logger.info("created Reason " + createdReason.getReasonText());
+				if (createdReason != null) {
+					taskAndReasonDTO.setTaskId(createdTask.getTaskId());
+				}
+
+				File tempFile = null;
+
+				// converting multi part file into file
+				tempFile = File.createTempFile("temp", file.getOriginalFilename());
+				file.transferTo(tempFile);
+
+				// building form-data to pass in request for uploading file
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("filename", file.getOriginalFilename());
+				map.add("file", new FileSystemResource(tempFile));
+				map.add("folder", "task_attachement/" + createdTask.getTaskName() + "_" + createdTask.getTaskId());
+
+				// setting content type for header
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+				// building request entity using values and header
+				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+
+				// calling api for uploading file
+				ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
+						String.class);
+
+				if (response.getStatusCode() == HttpStatus.OK) {
+					return taskAndReasonDTO;
+				} else {
+
+					logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+					return null;
+				}
+
+			}
+		} catch (Exception e) {
+			logger.error("Error while processing data: " + e.getMessage(), e);
 		}
 
 		return null;
@@ -312,5 +374,63 @@ public class TaskServiceImpl implements TaskService {
 			ex.printStackTrace();
 		}
 		return taskList;
+	}
+
+	@Transactional
+	@Override
+	public List<Object> getFilesUsingTaskId(int taskId) {
+		// TODO Auto-generated method stub
+
+		Task task = taskRepo.findByTaskId(taskId);
+		List<Object> fileNames = new ArrayList<>();
+
+		String folderName = null;
+
+		if (task != null) {
+
+			folderName = "task_attachement/" + task.getTaskName() + "_" + task.getTaskId();
+			// Create a File object for the specified subdirectory
+			File directory = new File(basePath, folderName);
+
+			// Check if the subdirectory exists and is a directory
+			if (directory.exists() && directory.isDirectory()) {
+				// List all files in the subdirectory
+				File[] files = directory.listFiles();
+
+				// Iterate through the files and add file names to the list
+				if (files != null) {
+					for (File file : files) {
+						// Check if the current item is a regular file
+						if (file.isFile()) {
+							// Add the name of the file to the list
+							fileNames.add(file.getName());
+						}
+					}
+				}
+
+			}
+
+		}
+
+		return fileNames;
+	}
+
+	@Override
+	public Resource downloadFileByTaskIdAndFileName(int taskId, String fileName) {
+		Task task = taskRepo.findByTaskId(taskId);
+
+		String folderName = basePath + "/task_attachement/" + task.getTaskName() + "_" + task.getTaskId();
+
+		Path filePath = Paths.get(folderName).resolve(fileName);
+		Resource resource;
+		try {
+			resource = new UrlResource(filePath.toUri());
+			return resource;
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

@@ -10,6 +10,9 @@ package com.cpa.ttsms.service;
 
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
@@ -22,7 +25,7 @@ public interface TaskService {
 	 * @param task The Task object to be created.
 	 * @return The created Task object.
 	 */
-	TaskAndReasonDTO createOrUpdateTaskAndAddReason(TaskAndReasonDTO task);
+	TaskAndReasonDTO createOrUpdateTaskAndAddReason(TaskAndReasonDTO task, MultipartFile file);
 
 	/**
 	 * Retrieves a task by its unique ID.
@@ -75,4 +78,7 @@ public interface TaskService {
 	List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, String status, int createdBy,
 			int assignedTo, int companyId);
 
+	List<Object> getFilesUsingTaskId(int taskId);
+
+	Resource downloadFileByTaskIdAndFileName(int taskId, String fileName);
 }

@@ -7,7 +7,6 @@
 
 package com.cpa.ttsms.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -24,12 +23,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.CompanyAndCompanyPhotosDTO;
 import com.cpa.ttsms.entity.Company;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.CompanyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @CrossOrigin
 @RestController
@@ -55,33 +60,42 @@ public class CompanyController {
 	 * 
 	 * @param company The company to create.
 	 * @return The newly created company.
-	 * @throws CPException If there was an error creating the company.
+	 * @throws CPException             If there was an error creating the company.
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
 	 */
 	@PostMapping("/company")
-	public ResponseEntity<Object> createCompany(@RequestBody Company company) throws CPException {
-		logger.info("Received request to create company for code : " + company.getCompanyCode());
+	public ResponseEntity<Object> createCompany(@RequestParam("company") String companyData,
+			@RequestParam("file") MultipartFile file) throws CPException {
+		logger.info("Received request to create company ");
+		System.out.println(file.getOriginalFilename());
+		// for convertin data into json object
+		ObjectMapper objectMapper = new ObjectMapper();
 
-		Company createdCompany = null;
+		CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO = null;
+		CompanyAndCompanyPhotosDTO createCompanyAndCompanyPhotosDTO = null;
+
 		try {
 
-			// If the company doesn't exist, create it.
-			createdCompany = companyService.createCompany(company);
-//			Company toCheckCompany = companyService.getCompanyById(company.getCompanyId());
+			// converting string into object
+			companyAndCompanyPhotosDTO = objectMapper.readValue(companyData, CompanyAndCompanyPhotosDTO.class);
 
-			if (createdCompany == null) {
-				// If the company already exists, return an error response.
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
-			} else {
-				// Return the newly created company.
-				return ResponseHandler.generateResponse(createdCompany, HttpStatus.CREATED);
+			if (companyAndCompanyPhotosDTO != null) {
 
+				// If the company doesn't exist, create it.
+				createCompanyAndCompanyPhotosDTO = companyService.createCompany(companyAndCompanyPhotosDTO, file);
+
+				if (createCompanyAndCompanyPhotosDTO != null) {
+					// Return the updated companyDTO.
+					return ResponseHandler.generateResponse(createCompanyAndCompanyPhotosDTO, HttpStatus.CREATED);
+				}
 			}
-
 		} catch (Exception ex) {
 			// Log the error and throw an CPException with an error code and message.
 			logger.error("Failed to create company: " + ex.getMessage());
 			throw new CPException("err003", resourceBundle.getString("err003"));
 		}
+		return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 	}
 
 	/**

@@ -33,7 +33,7 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	private final String email_URL = "http://localhost:8090/sendMail";
+	private final String email_URL = "http://localhost:8090/email/sendMail";
 
 	private final RestTemplate restTemplate;
 

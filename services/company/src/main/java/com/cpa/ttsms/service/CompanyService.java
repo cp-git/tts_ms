@@ -9,6 +9,9 @@ package com.cpa.ttsms.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.cpa.ttsms.dto.CompanyAndCompanyPhotosDTO;
 import com.cpa.ttsms.entity.Company;
 
 public interface CompanyService {
@@ -19,7 +22,7 @@ public interface CompanyService {
 	 * @param company The Company object containing the company details.
 	 * @return The created Company object.
 	 */
-	Company createCompany(Company company);
+	CompanyAndCompanyPhotosDTO createCompany(CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO, MultipartFile file);
 
 	/**
 	 * Gets a company by their code.

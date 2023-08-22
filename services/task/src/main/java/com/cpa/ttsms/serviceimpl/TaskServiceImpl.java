@@ -122,13 +122,44 @@ public class TaskServiceImpl implements TaskService {
 			logger.info("created Task " + createdTask.getTaskName());
 			if (createdTask != null) {
 
-				// adding attachement file
-				TaskAttachment taskAttachment = new TaskAttachment();
-				taskAttachment.setTaskID(createdTask.getTaskId());
-				taskAttachment.setFileName(file.getOriginalFilename());
-				taskAttachment.setAttachedBy(taskAndReasonDTO.getEmployeeId());
-				taskAttachmentRepo.save(taskAttachment);
+				if (file != null) {
+					// adding attachement file
+					TaskAttachment taskAttachment = new TaskAttachment();
+					taskAttachment.setTaskID(createdTask.getTaskId());
+					taskAttachment.setFileName(file.getOriginalFilename());
+					taskAttachment.setAttachedBy(taskAndReasonDTO.getEmployeeId());
+					taskAttachmentRepo.save(taskAttachment);
 
+					File tempFile = null;
+
+					// converting multi part file into file
+					tempFile = File.createTempFile("temp", file.getOriginalFilename());
+					file.transferTo(tempFile);
+
+					// building form-data to pass in request for uploading file
+					MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+					map.add("filename", file.getOriginalFilename());
+					map.add("file", new FileSystemResource(tempFile));
+					map.add("folder", "task_attachement/" + createdTask.getTaskName() + "_" + createdTask.getTaskId());
+
+					// setting content type for header
+					HttpHeaders headers = new HttpHeaders();
+					headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+					// building request entity using values and header
+					HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+
+					// calling api for uploading file
+					ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
+							String.class);
+
+					if (response.getStatusCode() == HttpStatus.OK) {
+						logger.info("file uploaded");
+					} else {
+						logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+					}
+				}
+				
 				// adding reason
 				Reason reason = new Reason();
 				// setting values in reasonDTO object
@@ -144,37 +175,7 @@ public class TaskServiceImpl implements TaskService {
 					taskAndReasonDTO.setTaskId(createdTask.getTaskId());
 				}
 
-				File tempFile = null;
-
-				// converting multi part file into file
-				tempFile = File.createTempFile("temp", file.getOriginalFilename());
-				file.transferTo(tempFile);
-
-				// building form-data to pass in request for uploading file
-				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-				map.add("filename", file.getOriginalFilename());
-				map.add("file", new FileSystemResource(tempFile));
-				map.add("folder", "task_attachement/" + createdTask.getTaskName() + "_" + createdTask.getTaskId());
-
-				// setting content type for header
-				HttpHeaders headers = new HttpHeaders();
-				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-				// building request entity using values and header
-				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-
-				// calling api for uploading file
-				ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
-						String.class);
-
-				if (response.getStatusCode() == HttpStatus.OK) {
-					return taskAndReasonDTO;
-				} else {
-
-					logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
-					return null;
-				}
-
+				return taskAndReasonDTO;
 			}
 		} catch (Exception e) {
 			logger.error("Error while processing data: " + e.getMessage(), e);

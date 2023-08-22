@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.cpa.ttsms.entity.CompanyPhotos;
 
 public interface CompanyPhotosRepo extends JpaRepository<CompanyPhotos, Integer> {
+	CompanyPhotos findByCompanyId(int companyId);
 }

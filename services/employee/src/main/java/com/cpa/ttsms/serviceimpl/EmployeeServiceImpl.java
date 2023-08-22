@@ -7,6 +7,7 @@
 
 package com.cpa.ttsms.serviceimpl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,16 +17,28 @@ import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.EmailDTO;
+import com.cpa.ttsms.dto.EmployeeAndEmployeePhotosDTO;
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
+import com.cpa.ttsms.dto.EmployeePasswordAndEmployeePhotosDTO;
 //import com.cpa.ttsms.controller.EmployeeController;
 import com.cpa.ttsms.entity.Employee;
+import com.cpa.ttsms.entity.EmployeePhotos;
 import com.cpa.ttsms.entity.Password;
+import com.cpa.ttsms.repository.EmployeePhotosRepo;
 import com.cpa.ttsms.repository.EmployeeRepo;
 import com.cpa.ttsms.repository.PasswordRepo;
 import com.cpa.ttsms.service.EmployeeService;
@@ -34,14 +47,22 @@ import com.cpa.ttsms.service.EmployeeService;
 public class EmployeeServiceImpl implements EmployeeService {
 
 	private final String email_URL = "http://localhost:8090/email/sendMail";
+	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
 
 	private final RestTemplate restTemplate;
+
+	// Inject the value of 'file.base-path' from application.yml file
+	@Value("${file.base-path}")
+	private String basePath;
 
 	@Autowired
 	private EmployeeRepo employeeRepo;
 	private static Logger logger;
 
 	@Autowired
+	private EmployeePhotosRepo employeePhotosRepo;
+	@Autowired
+
 	private PasswordRepo passwordRepository;
 
 	public EmployeeServiceImpl(RestTemplate restTemplate) {
@@ -58,39 +79,39 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return The newly created Country object if successful, otherwise null.
 	 */
 
-	@Override
-	public Employee updateEmployeeByEmployeeId(Employee employee, int employeeId) {
-		// TODO Auto-generated method stub
-		logger.debug("Entering updateEmployee");
-
-		// Initialize variables
-		Employee toUpdatedEmployee = null;
-		Employee updatedEmployee = null;
-
-		// Find the existing employee based on the provided employeeId
-		toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
-		logger.info("existing Employee :: " + toUpdatedEmployee);
-
-		// Check if an employee with the given ID exists
-		if (toUpdatedEmployee != null) {
-			logger.debug("setting new data of Employee to existing Employee");
-
-			// Update the existing employee's data with the provided employee data
-			toUpdatedEmployee.setCountryId(employee.getCountryId());
-			toUpdatedEmployee.setCompanyId(employee.getCompanyId());
-			toUpdatedEmployee.setFirstName(employee.getFirstName());
-			toUpdatedEmployee.setLastName(employee.getLastName());
-			toUpdatedEmployee.setBirthDate(employee.getBirthDate());
-			toUpdatedEmployee.setEmployeeEmail(employee.getEmployeeEmail());
-
-			// Save the updated employee in the database
-			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
-
-			logger.info("updated Employee :" + updatedEmployee);
-		}
-
-		return updatedEmployee;
-	}
+//	@Override
+//	public Employee updateEmployeeByEmployeeId(Employee employee, int employeeId) {
+//		// TODO Auto-generated method stub
+//		logger.debug("Entering updateEmployee");
+//
+//		// Initialize variables
+//		Employee toUpdatedEmployee = null;
+//		Employee updatedEmployee = null;
+//
+//		// Find the existing employee based on the provided employeeId
+//		toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
+//		logger.info("existing Employee :: " + toUpdatedEmployee);
+//
+//		// Check if an employee with the given ID exists
+//		if (toUpdatedEmployee != null) {
+//			logger.debug("setting new data of Employee to existing Employee");
+//
+//			// Update the existing employee's data with the provided employee data
+//			toUpdatedEmployee.setCountryId(employee.getCountryId());
+//			toUpdatedEmployee.setCompanyId(employee.getCompanyId());
+//			toUpdatedEmployee.setFirstName(employee.getFirstName());
+//			toUpdatedEmployee.setLastName(employee.getLastName());
+//			toUpdatedEmployee.setBirthDate(employee.getBirthDate());
+//			toUpdatedEmployee.setEmployeeEmail(employee.getEmployeeEmail());
+//
+//			// Save the updated employee in the database
+//			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
+//
+//			logger.info("updated Employee :" + updatedEmployee);
+//		}
+//
+//		return updatedEmployee;
+//	}
 
 	/**
 	 * Saves the employee and their password information.
@@ -312,7 +333,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (toUpdatePassword != null) {
 			toUpdatePassword.setUsername(dto.getUsername());
-			
+
 			toUpdatePassword.setPassword(dto.getPassword());
 			updatedPassowrd = passwordRepository.save(toUpdatePassword);
 
@@ -443,6 +464,196 @@ public class EmployeeServiceImpl implements EmployeeService {
 		// TODO Auto-generated method stub
 		Password password = passwordRepository.findByUsername(username);
 		return password;
+	}
+
+	/**
+	 * Creates a new employee along with their profile photo and password.
+	 *
+	 * @param employeePasswordAndEmployeePhotosDTO The DTO containing employee data,
+	 *                                             photo information, and password.
+	 * @param file                                 The profile photo file.
+	 * @return EmployeePasswordAndEmployeePhotosDTO containing created employee data
+	 *         or null if an error occurs.
+	 */
+	@Override
+	@Transactional
+	public EmployeePasswordAndEmployeePhotosDTO createEmployee(
+			EmployeePasswordAndEmployeePhotosDTO employeePasswordAndEmployeePhotosDTO, MultipartFile file) {
+
+		// Log method entry
+		logger.debug("Entering createEmployee");
+
+		Employee createdEmployee = null;
+		File tempFile = null;
+		String extension = null;
+
+		// Create an Employee object with the provided DTO data
+		Employee employee = new Employee(employeePasswordAndEmployeePhotosDTO.getEmployeeId(),
+				employeePasswordAndEmployeePhotosDTO.getCountryId(),
+				employeePasswordAndEmployeePhotosDTO.getCompanyId(),
+				employeePasswordAndEmployeePhotosDTO.getFirstName(), employeePasswordAndEmployeePhotosDTO.getLastName(),
+				employeePasswordAndEmployeePhotosDTO.getBirthDate(),
+				employeePasswordAndEmployeePhotosDTO.getEmployeeEmail());
+
+		// Save the employee data to the database
+		createdEmployee = employeeRepo.save(employee);
+
+		try {
+			// Create a temporary file to store the uploaded profile photo
+			tempFile = File.createTempFile("temp", file.getOriginalFilename());
+			file.transferTo(tempFile);
+
+			// Extract the file extension from the original file name
+			extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+			// Modify the file name with employee name and id with extension
+			String modifiedFileName = employee.getFirstName() + "_" + employee.getLastName() + "_"
+					+ employee.getEmployeeId() + extension;
+
+			// Create an EmployeePhotos object and save it to the database
+			EmployeePhotos employeePhotos = new EmployeePhotos(employeePasswordAndEmployeePhotosDTO.getPhotoId(),
+					createdEmployee.getEmployeeId(), modifiedFileName);
+			EmployeePhotos createdEmployeePhotoObject = employeePhotosRepo.save(employeePhotos);
+
+			// Build form-data to pass in the request for uploading the file
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+			map.add("filename", modifiedFileName);
+			map.add("file", new FileSystemResource(tempFile));
+			map.add("folder", "employee/" + employee.getFirstName() + "_" + employee.getLastName() + "_"
+					+ employee.getEmployeeId());
+
+			// Set the content type for the header
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+
+			// Call an API for uploading the file (you should replace UPLOAD_FILE_URL with
+			// the actual URL)
+			ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
+
+			if (response.getStatusCode() == HttpStatus.OK) {
+				// Now, create and save the password for the employee
+				Password password = new Password(0, // Assign an appropriate value for the passwordId, or generate it as
+													// needed
+						createdEmployee.getEmployeeId(), employeePasswordAndEmployeePhotosDTO.getUsername(),
+						employeePasswordAndEmployeePhotosDTO.getPassword());
+
+				// Save the password to the database
+				passwordRepository.save(password);
+
+				// Set created IDs to the DTO
+				employeePasswordAndEmployeePhotosDTO.setPhotoId(createdEmployeePhotoObject.getEmployeePhotosId());
+				employeePasswordAndEmployeePhotosDTO.setEmployeeId(createdEmployee.getEmployeeId());
+
+				return employeePasswordAndEmployeePhotosDTO; // Return the created employee data
+			} else {
+				logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+				return null; // Return null in case of an error during file upload
+			}
+		} catch (Exception e) {
+			logger.error("Error while processing data: " + e.getMessage(), e);
+			return null; // Return null in case of any other exceptions
+		}
+	}
+
+	@Transactional
+	@Override
+	public EmployeeAndEmployeePhotosDTO updateEmployeeByEmployeeId(
+			EmployeeAndEmployeePhotosDTO employeeAndEmployeePhotosDTO, int employeeId, MultipartFile file) {
+		logger.debug("Entering updateEmployeeByEmployeeId");
+
+		// Check if the employee with the given employee Id exists
+		Employee existingEmployee = employeeRepo.findByEmployeeId(employeeId);
+
+		if (existingEmployee == null) {
+			logger.warn("Employee not found with Id: " + employeeId);
+			return null;
+		}
+
+		try {
+			// Update the Employee details
+			existingEmployee.setCountryId(employeeAndEmployeePhotosDTO.getCountryId());
+			existingEmployee.setCompanyId(employeeAndEmployeePhotosDTO.getCompanyId());
+			existingEmployee.setFirstName(employeeAndEmployeePhotosDTO.getFirstName());
+			existingEmployee.setLastName(employeeAndEmployeePhotosDTO.getLastName());
+			existingEmployee.setBirthDate(employeeAndEmployeePhotosDTO.getBirthDate());
+			existingEmployee.setEmployeeEmail(employeeAndEmployeePhotosDTO.getEmployeeEmail());
+			// Save the updated employee
+			Employee updatedEmployee = employeeRepo.save(existingEmployee);
+
+			// Check if a file is provided for updating the photo
+			if (file != null) {
+				// Handle photo update logic here
+				File tempFile = null;
+				// Creating a temporary file to store the uploaded photo
+				tempFile = File.createTempFile("temp", file.getOriginalFilename());
+				file.transferTo(tempFile);
+
+				EmployeePhotos existingEmployeePhotos = employeePhotosRepo
+						.findByEmployeeId(updatedEmployee.getEmployeeId());
+
+				String folderName = "employee/" + existingEmployee.getFirstName() + "_" + existingEmployee.getLastName()
+						+ "_" + existingEmployee.getEmployeeId();
+
+				deleteFilesFromFolder(basePath + "/" + folderName);
+
+				// Extracting the extension from the original file
+				String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+				// Modifying the file name with the firstName and lastName and ID with extension
+				String modifiedFileName = updatedEmployee.getFirstName() + "_" + updatedEmployee.getLastName() + "_"
+						+ updatedEmployee.getEmployeeId() + extension;
+
+				if (existingEmployeePhotos != null) {
+					// Update the photo details in the employeeAndEmployeePhotosDTO
+					existingEmployeePhotos.setFileName(modifiedFileName);
+					// Set the employeePhotosId in the existingEmployeePhotos object
+				}
+
+				EmployeePhotos createdEmployeePhotoObject = employeePhotosRepo.save(existingEmployeePhotos);
+				// Building form-data to pass in the request for uploading the file
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("filename", modifiedFileName);
+				map.add("file", new FileSystemResource(tempFile));
+				map.add("folder", folderName);
+
+				// Setting content type for the header
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+
+				// Calling the API for uploading the file
+				ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
+						String.class);
+
+				if (response.getStatusCode() != HttpStatus.OK) {
+					logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+
+					return null;
+				}
+			}
+			return employeeAndEmployeePhotosDTO;
+		} catch (Exception e) {
+			logger.error("Error while updating company: " + e.getMessage(), e);
+			return null;
+		}
+	}
+
+	// Helper method to delete files from a folder
+	private void deleteFilesFromFolder(String folderPath) {
+		File folder = new File(folderPath);
+		File[] files = folder.listFiles();
+		if (files != null) {
+			for (File file : files) {
+				if (file.isFile()) {
+					file.delete();
+				}
+			}
+		} else {
+			System.out.println("Folder does not exist or is not a directory.");
+		}
 	}
 
 }

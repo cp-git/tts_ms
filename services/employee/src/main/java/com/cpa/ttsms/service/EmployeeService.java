@@ -15,6 +15,7 @@ import com.cpa.ttsms.dto.EmployeeAndEmployeePhotosDTO;
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
 import com.cpa.ttsms.dto.EmployeePasswordAndEmployeePhotosDTO;
 import com.cpa.ttsms.entity.Employee;
+import com.cpa.ttsms.entity.EmployeePhotos;
 import com.cpa.ttsms.entity.Password;
 
 /**
@@ -152,4 +153,7 @@ public interface EmployeeService {
 	 * @return true if the password is updated successfully; false otherwise.
 	 */
 	boolean updatePassword(int employeeId);
+
+	EmployeePhotos getPhotosByEmployeeId(int employeeId);
+
 }

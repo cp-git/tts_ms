@@ -656,4 +656,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
+	@Override
+	public EmployeePhotos getPhotosByEmployeeId(int employeeId) {
+		// TODO Auto-generated method stub
+		return employeePhotosRepo.findByEmployeeId(employeeId);
+	}
+
 }

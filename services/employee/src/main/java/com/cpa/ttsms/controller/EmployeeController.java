@@ -7,13 +7,20 @@
 
 package com.cpa.ttsms.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +40,7 @@ import com.cpa.ttsms.dto.EmployeeAndEmployeePhotosDTO;
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
 import com.cpa.ttsms.dto.EmployeePasswordAndEmployeePhotosDTO;
 import com.cpa.ttsms.entity.Employee;
+import com.cpa.ttsms.entity.EmployeePhotos;
 import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
@@ -48,6 +56,10 @@ public class EmployeeController {
 
 	private ResourceBundle resourceBundle;
 	private static Logger logger;
+
+	// Inject the value of 'file.base-path' from application.yml file
+	@Value("${file.base-path}")
+	private String basePath;
 
 	EmployeeController() {
 		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
@@ -516,6 +528,68 @@ public class EmployeeController {
 			logger.error("Failed getting all employees: " + ex.getMessage());
 			throw new CPException("err002", "Error while retrieving all employees");
 		}
+	}
+
+	@GetMapping(value = "/employee/photos/{id}")
+	public ResponseEntity<byte[]> getEmployeePhotosByEmployeeId(@PathVariable("id") int id,
+			HttpServletResponse response) {
+		try {
+			Employee myFile;
+			myFile = employeeService.getEmployeeByEmployeeId(id);
+			System.out.println("-------------------------" + myFile);
+
+			EmployeePhotos filename;
+			filename = employeeService.getPhotosByEmployeeId(id);
+			System.out.println("***********" + filename);
+
+			String employeeNameAndId = myFile.getFirstName() + "_" + myFile.getLastName() + "_"
+					+ myFile.getEmployeeId();
+			System.out.println("//////////////////////////" + employeeNameAndId);
+
+			String photoFilename = filename.getFileName();
+			System.out.println("/////////////*******" + photoFilename);
+			// Retrieve the employee photos by employee ID from the database or any other
+			// data
+			// source
+			// For this example, we assume the photos are stored in a directory on the
+			// server
+			String folderPath = basePath + "/employee/" + employeeNameAndId + "/" + photoFilename; // Replace with the
+																									// actual folder
+																									// path
+			System.out.println(folderPath);
+			// String fileName = "company_" + id + ".jpg"; // Modify the filename format if
+			// needed
+
+			// Create a Resource object from the file
+			Resource resource = new FileSystemResource(folderPath);
+
+			if (resource.exists()) {
+				// Determine the media type (MIME type) of the file
+				String contentType = Files.probeContentType(resource.getFile().toPath());
+
+				// Set the content type in the response
+				response.setContentType(contentType);
+
+				// Read the file content into a byte array
+				byte[] photoBytes = Files.readAllBytes(resource.getFile().toPath());
+
+				// Create a ResponseEntity with the photo bytes and a 200 OK status
+				return ResponseEntity.ok(photoBytes);
+			} else {
+				// Return a 404 NOT_FOUND response if the photo does not exist
+				return ResponseEntity.notFound().build();
+			}
+		} catch (IOException e) {
+			// Handle any exceptions that may occur during file retrieval
+			e.printStackTrace();
+			// Return an INTERNAL_SERVER_ERROR response in case of an error
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@GetMapping("/employee/employeePhotos/{employeeId}")
+	public EmployeePhotos getPhotosByEmployeeId(@PathVariable int employeeId) {
+		return employeeService.getPhotosByEmployeeId(employeeId);
 	}
 
 }

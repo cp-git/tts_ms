@@ -7,12 +7,19 @@
 
 package com.cpa.ttsms.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.MediaType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,9 +33,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import com.cpa.ttsms.dto.CompanyAndCompanyPhotosDTO;
 import com.cpa.ttsms.entity.Company;
+import com.cpa.ttsms.entity.CompanyPhotos;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.CompanyService;
@@ -39,11 +48,17 @@ import com.cpa.ttsms.service.CompanyService;
 public class CompanyController {
 
 	@Autowired
-	private CompanyService companyService;;
+	private CompanyService companyService;
+	
+	
 
 	// The ResourceBundle is used to retrieve localized messages.
 	private ResourceBundle resourceBundle;
 
+	// Inject the value of 'file.base-path' from application.yml file
+	@Value("${file.base-path}")
+	private String basePath;
+	
 	// The logger is used for logging messages related to this class.
 	private static Logger logger;
 
@@ -278,5 +293,66 @@ public class CompanyController {
 			throw new CPException("err002", resourceBundle.getString("err002"));
 		}
 	}
+	/**
+     * Retrieves company photos by company ID.
+     *
+     * @param id The ID of the company for which you want to retrieve photos.
+     * @param response HttpServletResponse to set the content type.
+     * @return ResponseEntity containing the company photos as a byte array, or a NOT_FOUND response if no photos exist.
+     */
+    @GetMapping(value = "/company/photos/{id}")
+    public ResponseEntity<byte[]> getCompanyPhotosByCompanyId(@PathVariable("id") int id, HttpServletResponse response) {
+        try {
+        	Company myFile;
+   		 myFile =companyService.getCompanyByCompanyId(id);
+           System.out.println("-------------------------"+myFile);
+           
+           CompanyPhotos filename;
+           filename=companyService.getPhotosByCompanyId(id);
+           System.out.println("***********"+filename);
+           
+           String companyNameAndId=myFile.getCompanyName()+"_"+myFile.getCompanyId();
+   		System.out.println("//////////////////////////"+companyNameAndId);
+   		
+   		String photoFilename=filename.getFileName();
+   		System.out.println("/////////////*******"+photoFilename);
+            // Retrieve the company photos by company ID from the database or any other data source
+            // For this example, we assume the photos are stored in a directory on the server
+            String folderPath = basePath+"/company/"+companyNameAndId+ "/"+photoFilename; // Replace with the actual folder path
+            System.out.println(folderPath);
+           //String fileName = "company_" + id + ".jpg"; // Modify the filename format if needed
+
+            // Create a Resource object from the file
+            Resource resource = new FileSystemResource(folderPath);
+
+            if (resource.exists()) {
+                // Determine the media type (MIME type) of the file
+                String contentType = Files.probeContentType(resource.getFile().toPath());
+
+                // Set the content type in the response
+                response.setContentType(contentType);
+
+                // Read the file content into a byte array
+                byte[] photoBytes = Files.readAllBytes(resource.getFile().toPath());
+
+                // Create a ResponseEntity with the photo bytes and a 200 OK status
+                return ResponseEntity.ok(photoBytes);
+            } else {
+                // Return a 404 NOT_FOUND response if the photo does not exist
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IOException e) {
+            // Handle any exceptions that may occur during file retrieval
+            e.printStackTrace();
+            // Return an INTERNAL_SERVER_ERROR response in case of an error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    
+    @GetMapping("/company/companyPhotos/{companyId}")
+    public CompanyPhotos getPhotosByCompanyId(@PathVariable int companyId) {
+        return companyService.getPhotosByCompanyId(companyId);
+    }
 
 }

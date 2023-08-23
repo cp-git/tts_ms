@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.CompanyAndCompanyPhotosDTO;
 import com.cpa.ttsms.entity.Company;
+import com.cpa.ttsms.entity.CompanyPhotos;
 
 public interface CompanyService {
 
@@ -68,5 +69,7 @@ public interface CompanyService {
 	 * @return The number of rows affected by the delete operation.
 	 */
 	boolean deleteCompanyByCompanyCode(String companyCode);
+	
+	 CompanyPhotos getPhotosByCompanyId(int companyId);
 
 }

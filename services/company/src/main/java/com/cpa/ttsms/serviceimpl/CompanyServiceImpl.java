@@ -360,4 +360,10 @@ public class CompanyServiceImpl implements CompanyService {
 		}
 	}
 
+	@Override
+	public CompanyPhotos getPhotosByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+		 return companyPhotosRepo.findByCompanyId(companyId);
+	}
+
 }

@@ -77,15 +77,15 @@ public class TaskController {
 	 */
 	@PostMapping("/savetask")
 	public ResponseEntity<Object> createOrUpdateTaskAndAddReason(@RequestPart("task") TaskAndReasonDTO taskAndReasonDTO,
-			@RequestParam("file") MultipartFile file) throws CPException {
+			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateTaskAndAddReason");
 		logger.info("Data of creating Task: " + taskAndReasonDTO.getTaskName());
 
 		try {
+			
 			TaskAndReasonDTO createdTask = taskService.createOrUpdateTaskAndAddReason(taskAndReasonDTO, file);
-			// If the task does not exist (i.e., createdTask is not null), it has been
-			// successfully created
+		
 			if (createdTask != null) {
 				logger.info("Task created: " + createdTask.getTaskName());
 

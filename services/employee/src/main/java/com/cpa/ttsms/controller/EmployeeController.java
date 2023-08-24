@@ -160,7 +160,8 @@ public class EmployeeController {
 		}
 
 	}
-
+	
+	
 	/**
 	 * Updates an employee based on the provided employeeId and Employee object, and
 	 * generates an appropriate response.
@@ -336,6 +337,30 @@ public class EmployeeController {
 			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
 	}
+	
+	
+	@GetMapping("/companyemp/{companyId}")
+	public ResponseEntity<List<Object>> getAllCompnayEmployeeByCompanyId(@PathVariable("companyId") int companyId)
+			throws CPException {
+		
+		List<Object> employees = null;
+		try {
+			if (companyId >= 0) {
+				employees = employeeService.getAllEmployeeOfCompanyByCompanyId(companyId);
+				logger.info("Fetched all emp :" + employees);
+				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
+			} else {
+				logger.info(resourceBundle.getString("err002"));
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			logger.error("Failed getting all emp : " + ex.getMessage());
+			throw new CPException("err002", resourceBundle.getString("err002"));
+		}
+	}
+
+
+
 
 	/**
 	 * Endpoint to update an employee's password by employeeId.

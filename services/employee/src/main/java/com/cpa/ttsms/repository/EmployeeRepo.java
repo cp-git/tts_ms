@@ -35,6 +35,8 @@ public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 	@Modifying
 	@Query(value = "DELETE FROM employee WHERE id = ?1", nativeQuery = true)
 	public int deleteEmployeeByEmployeeId(int employeeId); 
+	
+	List<Employee> findByCompanyId(int companyId);
 
 
 

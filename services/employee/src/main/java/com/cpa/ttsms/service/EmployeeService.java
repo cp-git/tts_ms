@@ -155,5 +155,7 @@ public interface EmployeeService {
 	boolean updatePassword(int employeeId);
 
 	EmployeePhotos getPhotosByEmployeeId(int employeeId);
+	
+	List<Object> getAllEmployeeOfCompanyByCompanyId(int companyId);
 
 }

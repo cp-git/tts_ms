@@ -662,4 +662,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employeePhotosRepo.findByEmployeeId(employeeId);
 	}
 
+	@Override
+	public List<Object> getAllEmployeeOfCompanyByCompanyId(int companyId) {
+		List <Object> employees = null;
+		List<Employee> employee = employeeRepo.findByCompanyId(companyId);
+		employees = new ArrayList<Object>(employee);
+		return employees;
+	}
+
 }

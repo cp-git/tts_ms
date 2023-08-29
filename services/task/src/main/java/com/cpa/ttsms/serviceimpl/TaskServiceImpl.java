@@ -100,13 +100,15 @@ public class TaskServiceImpl implements TaskService {
 			// create
 			int taskId = taskAndReasonDTO.getTaskId();
 
-			// setting values in task object
-			if (taskId > 0) {
-				task.setTaskId(taskId);
-				if (!canUpdateParentTaskStatus(task)) {
-					return null;
-				}
-			}
+			 // Set values in the Task object
+	        if (taskId > 0) {
+	            task.setTaskId(taskId);
+
+	            // Check if the parent task's status can be updated
+	            if (!canUpdateParentTaskStatus(task)) {
+	                return null; // Return null if it cannot be updated
+	            }
+	        }
 			task.setTaskName(taskAndReasonDTO.getTaskName());
 			task.setTaskDescription(taskAndReasonDTO.getTaskDescription());
 			task.setTaskCreatedBy(taskAndReasonDTO.getTaskCreatedBy());
@@ -187,7 +189,6 @@ public class TaskServiceImpl implements TaskService {
 		return null;
 
 	}
-	
 	/**
 	 * Checks whether the parent task's status can be updated based on the status of
 	 * its child tasks.
@@ -197,28 +198,33 @@ public class TaskServiceImpl implements TaskService {
 	 * @return True if the parent task's status can be updated, false otherwise.
 	 */
 	private boolean canUpdateParentTaskStatus(Task parentTask) {
-		List<Task> childTasks = getAllChildTasksByParentId(parentTask.getTaskId());
+	    // Retrieve a list of child tasks for the given parent task
+	    List<Task> childTasks = getAllChildTasksByParentId(parentTask.getTaskId());
 
-		// Check the status of child tasks and their nested child tasks
-		for (Task childTask : childTasks) {
-			if (!isTaskStatusDone(childTask)) {
-				// If any child task's status is not done, parent task cannot be updated
-				return false;
-			}
-		}
+	    // Iterate through the child tasks and their nested child tasks
+	    for (Task childTask : childTasks) {
+	        // Check if the child task's status is not "Done" /"Cancel"(status 3 or 4)
+	        if (!isTaskStatusDone(childTask)) {
+	            // If any child task's status is not done/cancel, the parent task cannot be updated
+	            return false;
+	        }
+	    }
 
-		return true; // If all child tasks are done, parent task can be updated
+	    // If all child tasks are done/cancel, the parent task can be updated
+	    return true;
 	}
 
 	/**
-	 * Checks whether a task's status indicates that it is done.
+	 * Checks whether a task's status indicates that it is done/cancel.
 	 *
 	 * @param task The task to check.
-	 * @return True if the task's status is "Done," false otherwise.
+	 * @return True if the task's status is "Done/cancel," false otherwise.
 	 */
 	private boolean isTaskStatusDone(Task task) {
-		return task.getTaskStatus() == 3; // Assuming task status code 3 indicates "Done"
+	    // Check if the task's status is either 3 (Done) or 4 (Cancelled)
+	    return task.getTaskStatus() == 3 || task.getTaskStatus() == 4;
 	}
+
 
 	/**
 	 * Get a task by its ID.

@@ -103,6 +103,9 @@ public class TaskServiceImpl implements TaskService {
 			// setting values in task object
 			if (taskId > 0) {
 				task.setTaskId(taskId);
+				if (!canUpdateParentTaskStatus(task)) {
+					return null;
+				}
 			}
 			task.setTaskName(taskAndReasonDTO.getTaskName());
 			task.setTaskDescription(taskAndReasonDTO.getTaskDescription());
@@ -183,6 +186,38 @@ public class TaskServiceImpl implements TaskService {
 
 		return null;
 
+	}
+	
+	/**
+	 * Checks whether the parent task's status can be updated based on the status of
+	 * its child tasks.
+	 *
+	 * @param parentTask The parent task for which to check status update
+	 *                   feasibility.
+	 * @return True if the parent task's status can be updated, false otherwise.
+	 */
+	private boolean canUpdateParentTaskStatus(Task parentTask) {
+		List<Task> childTasks = getAllChildTasksByParentId(parentTask.getTaskId());
+
+		// Check the status of child tasks and their nested child tasks
+		for (Task childTask : childTasks) {
+			if (!isTaskStatusDone(childTask)) {
+				// If any child task's status is not done, parent task cannot be updated
+				return false;
+			}
+		}
+
+		return true; // If all child tasks are done, parent task can be updated
+	}
+
+	/**
+	 * Checks whether a task's status indicates that it is done.
+	 *
+	 * @param task The task to check.
+	 * @return True if the task's status is "Done," false otherwise.
+	 */
+	private boolean isTaskStatusDone(Task task) {
+		return task.getTaskStatus() == 3; // Assuming task status code 3 indicates "Done"
 	}
 
 	/**

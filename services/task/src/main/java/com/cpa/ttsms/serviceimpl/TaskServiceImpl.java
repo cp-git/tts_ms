@@ -105,9 +105,12 @@ public class TaskServiceImpl implements TaskService {
 	            task.setTaskId(taskId);
 
 	            // Check if the parent task's status can be updated
-	            if (!canUpdateParentTaskStatus(task)) {
-	                return null; // Return null if it cannot be updated
+	            if(isTaskStatusDoneOrCancel(taskAndReasonDTO.getTaskStatus())) {
+	            	 if (!canUpdateParentTaskStatus(task)) {
+	 	                return null; // Return null if it cannot be updated
+	 	            }
 	            }
+	           
 	        }
 			task.setTaskName(taskAndReasonDTO.getTaskName());
 			task.setTaskDescription(taskAndReasonDTO.getTaskDescription());
@@ -189,6 +192,10 @@ public class TaskServiceImpl implements TaskService {
 		return null;
 
 	}
+	private boolean isTaskStatusDoneOrCancel(int taskStatus) {
+	    return taskStatus == 3 || taskStatus == 4;
+	}
+
 	/**
 	 * Checks whether the parent task's status can be updated based on the status of
 	 * its child tasks.

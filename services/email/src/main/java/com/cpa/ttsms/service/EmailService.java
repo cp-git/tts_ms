@@ -8,6 +8,7 @@
 package com.cpa.ttsms.service;
 
 import com.cpa.ttsms.entity.Email;
+import com.cpa.ttsms.entity.TaskNotificationEmail;
 
 public interface EmailService {
 
@@ -17,5 +18,7 @@ public interface EmailService {
 	 * provided details.
 	 */
 	String sendSimpleMail(Email email);
+
+	String SendTaskNotification(TaskNotificationEmail notificationEmail);
 
 }

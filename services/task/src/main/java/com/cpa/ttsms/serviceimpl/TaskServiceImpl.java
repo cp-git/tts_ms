@@ -298,7 +298,7 @@ public class TaskServiceImpl implements TaskService {
 
 			// Create a list of recipient email addresses
 			List<String> emails = Arrays.asList(createdByEmail, assignedToEmail, assignedByEmail);
-
+			System.out.println(emails + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			// Create an EmailDTO object to send the email
 			EmailDTO emailDTO = new EmailDTO();
 			emailDTO.setRecipient(emails); // Set the recipient's email address

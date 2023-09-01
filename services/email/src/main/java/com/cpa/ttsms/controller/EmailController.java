@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cpa.ttsms.entity.Email;
+import com.cpa.ttsms.entity.TaskNotificationEmail;
 import com.cpa.ttsms.service.EmailService;
 
 @RestController
@@ -26,6 +27,13 @@ public class EmailController {
 	@PostMapping("/sendMail")
 	public String sendMail(@RequestBody Email email) {
 		String status = emailService.sendSimpleMail(email);
+
+		return status;
+	}
+
+	@PostMapping("/taskMail")
+	public String taskUpdateNotification(@RequestBody TaskNotificationEmail notficationEmail) {
+		String status = emailService.SendTaskNotification(notficationEmail);
 
 		return status;
 	}

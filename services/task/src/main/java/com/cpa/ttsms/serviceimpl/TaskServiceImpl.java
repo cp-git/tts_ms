@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -33,6 +34,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.EmailDTO;
+import com.cpa.ttsms.dto.EmployeeDTO;
+import com.cpa.ttsms.dto.StatusDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Password;
@@ -56,6 +60,10 @@ public class TaskServiceImpl implements TaskService {
 
 	private final String REASON_API_URL = "http://localhost:8090/reason/ttsms/reason";
 	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
+	private final String email_URL = "http://localhost:8090/email/taskMail";
+	private final String employee_URL = "http://localhost:8090/employee/ttsms/employee/";
+	private final String status_URL = "http://localhost:8090/status/ttsms/status/";
+	private final String task_URL = "http://localhost:8090/task/ttsms/task/";
 
 	@Autowired
 	private TaskRepo taskRepo;
@@ -100,18 +108,19 @@ public class TaskServiceImpl implements TaskService {
 			// create
 			int taskId = taskAndReasonDTO.getTaskId();
 
-			 // Set values in the Task object
-	        if (taskId > 0) {
-	            task.setTaskId(taskId);
+			// Set values in the Task object
+			if (taskId > 0) {
+				task.setTaskId(taskId);
 
-	            // Check if the parent task's status can be updated
-	            if(isTaskStatusDoneOrCancel(taskAndReasonDTO.getTaskStatus())) {
-	            	 if (!canUpdateParentTaskStatus(task)) {
-	 	                return null; // Return null if it cannot be updated
-	 	            }
-	            }
-	           
-	        }
+				// Check if the parent task's status can be updated
+				if (isTaskStatusDoneOrCancel(taskAndReasonDTO.getTaskStatus())) {
+					if (!canUpdateParentTaskStatus(task)) {
+						return null; // Return null if it cannot be updated
+					}
+				}
+				checkAssignedToAndStatusIsUpdated(taskAndReasonDTO);
+
+			}
 			task.setTaskName(taskAndReasonDTO.getTaskName());
 			task.setTaskDescription(taskAndReasonDTO.getTaskDescription());
 			task.setTaskCreatedBy(taskAndReasonDTO.getTaskCreatedBy());
@@ -167,7 +176,7 @@ public class TaskServiceImpl implements TaskService {
 						logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
 					}
 				}
-				
+
 				// adding reason
 				Reason reason = new Reason();
 				// setting values in reasonDTO object
@@ -192,8 +201,127 @@ public class TaskServiceImpl implements TaskService {
 		return null;
 
 	}
+
+	/**
+	 * Checks whether the "Assigned To" or "Task Status" fields of a task have been
+	 * updated. If updated, it sends a task update notification.
+	 *
+	 * @param taskDTO The TaskAndReasonDTO representing the current state of the
+	 *                task.
+	 * @return True if "Assigned To" or "Task Status" is updated and notification is
+	 *         sent, false otherwise.
+	 */
+	private boolean checkAssignedToAndStatusIsUpdated(TaskAndReasonDTO taskDTO) {
+		// Create a TaskAndReasonDTO object to store the current state of the task
+		TaskAndReasonDTO task = new TaskAndReasonDTO();
+
+		// Retrieve the current state of the task from the API
+		ResponseEntity<TaskAndReasonDTO> response = restTemplate.getForEntity(task_URL + taskDTO.getTaskId(),
+				TaskAndReasonDTO.class);
+		if (response.getStatusCode() == HttpStatus.OK) {
+			task = response.getBody();
+		} else {
+			logger.error("Failed to retrieve taskDTO data for task ID: " + taskDTO.getTaskId());
+		}
+
+		// Compare "Assigned To" and "Task Status" fields for updates
+		if (taskDTO.getTaskAssignedTo() != task.getTaskAssignedTo()
+				|| taskDTO.getTaskStatus() != task.getTaskStatus()) {
+			// If either "Assigned To" or "Task Status" is updated, send a task update
+			// notification
+			sendTaskUpdateNotification(taskDTO);
+			return true;
+		}
+
+		// No updates were detected
+		return false;
+	}
+
+	/**
+	 * Sends a task update notification email to relevant employees when a task's
+	 * status changes.
+	 *
+	 * @param taskAndReasonDTO The TaskAndReasonDTO containing information about the
+	 *                         task and reason for the update.
+	 * @return True if the notification was successfully sent, false otherwise.
+	 */
+	private boolean sendTaskUpdateNotification(TaskAndReasonDTO taskAndReasonDTO) {
+
+		// Collect employee IDs involved in the task update
+		List<Integer> employeeIds = Arrays.asList(taskAndReasonDTO.getTaskCreatedBy(),
+				taskAndReasonDTO.getTaskAssignedTo(), taskAndReasonDTO.getEmployeeId());
+
+		// Create a list to store the response objects
+		List<EmployeeDTO> responseBodies = new ArrayList<>();
+
+		// Loop through each employee ID and make a request to retrieve employee data
+		for (int employeeId : employeeIds) {
+			ResponseEntity<EmployeeDTO> response = restTemplate.getForEntity(employee_URL + employeeId,
+					EmployeeDTO.class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				EmployeeDTO responseBody = response.getBody();
+				responseBodies.add(responseBody);
+			} else {
+				logger.error("Failed to retrieve EmployeeDTO data for employee ID: " + employeeId);
+			}
+		}
+
+		// Create a StatusDTO object to store task status information
+		StatusDTO statusResponse = new StatusDTO();
+		int statusId = taskAndReasonDTO.getTaskStatus();
+		ResponseEntity<StatusDTO> statusResponseEntity = restTemplate.getForEntity(status_URL + statusId,
+				StatusDTO.class);
+		if (statusResponseEntity.getStatusCode() == HttpStatus.OK) {
+			statusResponse = statusResponseEntity.getBody();
+		} else {
+			logger.error("Failed to retrieve StatusDTO data for status ID: " + statusId);
+		}
+
+		// Check if there are valid response bodies
+		if (!responseBodies.isEmpty()) {
+			// Extract employee information
+			EmployeeDTO createdBy = responseBodies.get(0);
+			EmployeeDTO assignedTo = responseBodies.get(1);
+			EmployeeDTO assignedBy = responseBodies.get(2);
+
+			// Extract relevant data for the email notification
+			String createdByEmail = createdBy.getEmployeeEmail();
+			String assignedToEmail = assignedTo.getEmployeeEmail();
+			String assignedByEmail = assignedBy.getEmployeeEmail();
+			String taskName = taskAndReasonDTO.getTaskName();
+
+			// Construct the email message body
+			String msgBody = "Task name   : " + taskName + "\n" + "Task status : " + statusResponse.getStatusCode()
+					+ "\n" + "Changed by : " + assignedBy.getFirstName() + " " + assignedBy.getLastName() + "\n"
+					+ "Assigned to : " + assignedTo.getFirstName() + " " + assignedTo.getLastName() + "\n\n"
+					+ "Best regards," + "\n" + "Cloudpoint System Pvt. Ltd";
+
+			// Create a list of recipient email addresses
+			List<String> emails = Arrays.asList(createdByEmail, assignedToEmail, assignedByEmail);
+
+			// Create an EmailDTO object to send the email
+			EmailDTO emailDTO = new EmailDTO();
+			emailDTO.setRecipient(emails); // Set the recipient's email address
+			emailDTO.setMsgBody(msgBody); // Set the email's message body
+			emailDTO.setSubject("Task Update Notification Email"); // Set the email's subject
+
+			// Send the email using a REST call
+			ResponseEntity<String> emailResponse = restTemplate.postForEntity(email_URL, emailDTO, String.class);
+			if (emailResponse.getStatusCode() == HttpStatus.OK) {
+				String responseBody = emailResponse.getBody();
+				return true;
+			} else {
+				// Email sending failed
+				return false;
+			}
+		}
+
+		// No valid response bodies were obtained, so the notification cannot be sent
+		return false;
+	}
+
 	private boolean isTaskStatusDoneOrCancel(int taskStatus) {
-	    return taskStatus == 3 || taskStatus == 4;
+		return taskStatus == 3 || taskStatus == 4;
 	}
 
 	/**
@@ -205,20 +333,21 @@ public class TaskServiceImpl implements TaskService {
 	 * @return True if the parent task's status can be updated, false otherwise.
 	 */
 	private boolean canUpdateParentTaskStatus(Task parentTask) {
-	    // Retrieve a list of child tasks for the given parent task
-	    List<Task> childTasks = getAllChildTasksByParentId(parentTask.getTaskId());
+		// Retrieve a list of child tasks for the given parent task
+		List<Task> childTasks = getAllChildTasksByParentId(parentTask.getTaskId());
 
-	    // Iterate through the child tasks and their nested child tasks
-	    for (Task childTask : childTasks) {
-	        // Check if the child task's status is not "Done" /"Cancel"(status 3 or 4)
-	        if (!isTaskStatusDone(childTask)) {
-	            // If any child task's status is not done/cancel, the parent task cannot be updated
-	            return false;
-	        }
-	    }
+		// Iterate through the child tasks and their nested child tasks
+		for (Task childTask : childTasks) {
+			// Check if the child task's status is not "Done" /"Cancel"(status 3 or 4)
+			if (!isTaskStatusDone(childTask)) {
+				// If any child task's status is not done/cancel, the parent task cannot be
+				// updated
+				return false;
+			}
+		}
 
-	    // If all child tasks are done/cancel, the parent task can be updated
-	    return true;
+		// If all child tasks are done/cancel, the parent task can be updated
+		return true;
 	}
 
 	/**
@@ -228,10 +357,9 @@ public class TaskServiceImpl implements TaskService {
 	 * @return True if the task's status is "Done/cancel," false otherwise.
 	 */
 	private boolean isTaskStatusDone(Task task) {
-	    // Check if the task's status is either 3 (Done) or 4 (Cancelled)
-	    return task.getTaskStatus() == 3 || task.getTaskStatus() == 4;
+		// Check if the task's status is either 3 (Done) or 4 (Cancelled)
+		return task.getTaskStatus() == 3 || task.getTaskStatus() == 4;
 	}
-
 
 	/**
 	 * Get a task by its ID.

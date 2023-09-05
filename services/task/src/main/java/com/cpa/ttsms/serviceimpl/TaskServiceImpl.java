@@ -246,78 +246,85 @@ public class TaskServiceImpl implements TaskService {
 	 * @return True if the notification was successfully sent, false otherwise.
 	 */
 	private boolean sendTaskUpdateNotification(TaskAndReasonDTO taskAndReasonDTO) {
+	    // Collect employee IDs involved in the task update
+	    List<Integer> employeeIds = Arrays.asList(
+	            taskAndReasonDTO.getTaskCreatedBy(),
+	            taskAndReasonDTO.getTaskAssignedTo(),
+	            taskAndReasonDTO.getEmployeeId()
+	    );
 
-		// Collect employee IDs involved in the task update
-		List<Integer> employeeIds = Arrays.asList(taskAndReasonDTO.getTaskCreatedBy(),
-				taskAndReasonDTO.getTaskAssignedTo(), taskAndReasonDTO.getEmployeeId());
+	    // Create a list to store the response objects
+	    List<EmployeeDTO> responseBodies = new ArrayList<>();
 
-		// Create a list to store the response objects
-		List<EmployeeDTO> responseBodies = new ArrayList<>();
+	    // Loop through each employee ID and make a request to retrieve employee data
+	    for (int employeeId : employeeIds) {
+	        ResponseEntity<EmployeeDTO> response = restTemplate.getForEntity(employee_URL + employeeId,
+	                EmployeeDTO.class);
+	        if (response.getStatusCode() == HttpStatus.OK) {
+	            EmployeeDTO responseBody = response.getBody();
+	            responseBodies.add(responseBody);
+	        } else {
+	            logger.error("Failed to retrieve EmployeeDTO data for employee ID: " + employeeId);
+	        }
+	    }
 
-		// Loop through each employee ID and make a request to retrieve employee data
-		for (int employeeId : employeeIds) {
-			ResponseEntity<EmployeeDTO> response = restTemplate.getForEntity(employee_URL + employeeId,
-					EmployeeDTO.class);
-			if (response.getStatusCode() == HttpStatus.OK) {
-				EmployeeDTO responseBody = response.getBody();
-				responseBodies.add(responseBody);
-			} else {
-				logger.error("Failed to retrieve EmployeeDTO data for employee ID: " + employeeId);
-			}
-		}
+	    // Create a StatusDTO object to store task status information
+	    StatusDTO statusResponse = new StatusDTO();
+	    int statusId = taskAndReasonDTO.getTaskStatus();
+	    ResponseEntity<StatusDTO> statusResponseEntity = restTemplate.getForEntity(status_URL + statusId,
+	            StatusDTO.class);
+	    if (statusResponseEntity.getStatusCode() == HttpStatus.OK) {
+	        statusResponse = statusResponseEntity.getBody();
+	    } else {
+	        logger.error("Failed to retrieve StatusDTO data for status ID: " + statusId);
+	    }
 
-		// Create a StatusDTO object to store task status information
-		StatusDTO statusResponse = new StatusDTO();
-		int statusId = taskAndReasonDTO.getTaskStatus();
-		ResponseEntity<StatusDTO> statusResponseEntity = restTemplate.getForEntity(status_URL + statusId,
-				StatusDTO.class);
-		if (statusResponseEntity.getStatusCode() == HttpStatus.OK) {
-			statusResponse = statusResponseEntity.getBody();
-		} else {
-			logger.error("Failed to retrieve StatusDTO data for status ID: " + statusId);
-		}
+	    // Get the reason text from the taskAndReasonDTO
+	    String reasonText = taskAndReasonDTO.getReason(); 
 
-		// Check if there are valid response bodies
-		if (!responseBodies.isEmpty()) {
-			// Extract employee information
-			EmployeeDTO createdBy = responseBodies.get(0);
-			EmployeeDTO assignedTo = responseBodies.get(1);
-			EmployeeDTO assignedBy = responseBodies.get(2);
+	    // Check if there are valid response bodies
+	    if (!responseBodies.isEmpty()) {
+	        // Extract employee information
+	        EmployeeDTO createdBy = responseBodies.get(0);
+	        EmployeeDTO assignedTo = responseBodies.get(1);
+	        EmployeeDTO assignedBy = responseBodies.get(2);
 
-			// Extract relevant data for the email notification
-			String createdByEmail = createdBy.getEmployeeEmail();
-			String assignedToEmail = assignedTo.getEmployeeEmail();
-			String assignedByEmail = assignedBy.getEmployeeEmail();
-			String taskName = taskAndReasonDTO.getTaskName();
+	        // Extract relevant data for the email notification
+	        String createdByEmail = createdBy.getEmployeeEmail();
+	        String assignedToEmail = assignedTo.getEmployeeEmail();
+	        String assignedByEmail = assignedBy.getEmployeeEmail();
+	        String taskName = taskAndReasonDTO.getTaskName();
 
-			// Construct the email message body
-			String msgBody = "Task name   : " + taskName + "\n" + "Task status : " + statusResponse.getStatusCode()
-					+ "\n" + "Changed by : " + assignedBy.getFirstName() + " " + assignedBy.getLastName() + "\n"
-					+ "Assigned to : " + assignedTo.getFirstName() + " " + assignedTo.getLastName() + "\n\n"
-					+ "Best regards," + "\n" + "Cloudpoint System Pvt. Ltd";
+	        // Construct the email message body with reason
+	        String msgBody = "Dear User,"+"\n\n"+"Task name   : " + taskName + "\n"
+	                + "Task status  : " + statusResponse.getStatusCode() + "\n"
+	                + "Reason        : " + reasonText + "\n" 
+	                + "Assigned to : " + assignedTo.getFirstName() + " " + assignedTo.getLastName() + "\n"
+	                + "Changed by : " + assignedBy.getFirstName() + " " + assignedBy.getLastName() + "\n\n"
+	                + "Best regards," + "\n" + "TTS Admin";
 
-			// Create a list of recipient email addresses
-			List<String> emails = Arrays.asList(createdByEmail, assignedToEmail, assignedByEmail);
-			System.out.println(emails + "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-			// Create an EmailDTO object to send the email
-			EmailDTO emailDTO = new EmailDTO();
-			emailDTO.setRecipient(emails); // Set the recipient's email address
-			emailDTO.setMsgBody(msgBody); // Set the email's message body
-			emailDTO.setSubject("Task Update Notification Email"); // Set the email's subject
+	        // Create a list of recipient email addresses
+	        List<String> emails = Arrays.asList(createdByEmail, assignedToEmail, assignedByEmail);
 
-			// Send the email using a REST call
-			ResponseEntity<String> emailResponse = restTemplate.postForEntity(email_URL, emailDTO, String.class);
-			if (emailResponse.getStatusCode() == HttpStatus.OK) {
-				String responseBody = emailResponse.getBody();
-				return true;
-			} else {
-				// Email sending failed
-				return false;
-			}
-		}
+	        // Create an EmailDTO object to send the email
+	        EmailDTO emailDTO = new EmailDTO();
+	        emailDTO.setRecipient(emails); // Set the recipient's email address
+	        emailDTO.setMsgBody(msgBody); // Set the email's message body
+	        emailDTO.setSubject("Task Update Notification Email"); // Set the email's subject
 
-		// No valid response bodies were obtained, so the notification cannot be sent
-		return false;
+	        // Send the email using a REST call
+	        ResponseEntity<String> emailResponse = restTemplate.postForEntity(email_URL, emailDTO, String.class);
+	        if (emailResponse.getStatusCode() == HttpStatus.OK) {
+	            String responseBody = emailResponse.getBody();
+	            return true;
+	        } else {
+	            // Email sending failed
+	            return false;
+	        }
+	    }
+
+	    // No valid response bodies were obtained, so the notification cannot be sent
+	    return false;
 	}
 
 	private boolean isTaskStatusDoneOrCancel(int taskStatus) {

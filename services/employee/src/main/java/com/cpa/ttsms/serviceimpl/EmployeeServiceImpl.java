@@ -404,13 +404,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Password password = passwordRepository.findByEmployeeId(employeeId);
 
 		// Generate a new random password
-		String newPassword = generateRandomPassword();
+		String oldPassword = password.getPassword();
 
 		// Update the password value in the Password object
-		password.setPassword(newPassword);
+		//password.setPassword(newPassword);
 
 		// Save the updated Password object to the repository
-		passwordRepository.save(password);
+		//passwordRepository.save(password);
 
 		// Retrieve employee information based on the employee ID
 		Employee employee = employeeRepo.findByEmployeeId(employeeId);
@@ -422,9 +422,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		// Compose the email message body
 		String msgBody = "Dear " + firstName + " " + lastName + ",\n\n"
-				+ "Your new password for Task Tracking System is: " + newPassword + "\n"
+				+ "Your password for Task Tracking System is: " + oldPassword + "\n"
 				+ "Please log in and ensure the security of your account.\n\n" + "Best regards,\n"
-				+ "Cloudpoint System Pvt. Ltd";
+				+ "TTS Admin";
 
 		logger.info("Fetched Employee Email: " + employeeEmail);
 
@@ -446,18 +446,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
-	private String generateRandomPassword() {
-		// Generate a random 8-digit password
-		StringBuilder password = new StringBuilder();
-		Random random = new Random();
-
-		for (int i = 0; i < 8; i++) {
-			int digit = random.nextInt(10); // Generates a random digit between 0 and 9
-			password.append(digit);
-		}
-
-		return password.toString();
-	}
+//	private String generateRandomPassword() {
+//		// Generate a random 8-digit password
+//		StringBuilder password = new StringBuilder();
+//		Random random = new Random();
+//
+//		for (int i = 0; i < 8; i++) {
+//			int digit = random.nextInt(10); // Generates a random digit between 0 and 9
+//			password.append(digit);
+//		}
+//
+//		return password.toString();
+//	}
 
 	@Override
 	public Password getPasswordObjectByUsername(String username) {

@@ -43,7 +43,7 @@ public interface TaskService {
 	 * @return A list of parent Task objects with the specified status.
 	 * @throws IllegalArgumentException If an invalid status is provided.
 	 */
-	List<Task> getAllParentTasksByStatus(String status);
+//	List<Task> getAllParentTasksByStatus(String status);
 
 	/**
 	 * Retrieves all child tasks in the system associated with the specified

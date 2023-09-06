@@ -83,9 +83,9 @@ public class TaskController {
 		logger.info("Data of creating Task: " + taskAndReasonDTO.getTaskName());
 
 		try {
-			
+
 			TaskAndReasonDTO createdTask = taskService.createOrUpdateTaskAndAddReason(taskAndReasonDTO, file);
-		
+
 			if (createdTask != null) {
 				logger.info("Task created: " + createdTask.getTaskName());
 
@@ -164,34 +164,34 @@ public class TaskController {
 	 *               request parameter.
 	 * @return List of parent tasks with the specified status.
 	 */
-	@GetMapping("/allparenttask")
-	public ResponseEntity<Object> getAllParentTasksByStatus(@RequestParam("status") String status) {
-		// Log that the method has been entered and print the status received
-		logger.debug("Entering getAllParentTasksByStatus");
-		logger.info("Entered status: " + status);
-
-		try {
-			// Fetch all parent tasks with the specified status using the taskService
-			List<Task> parentTasks = taskService.getAllParentTasksByStatus(status);
-
-			// Log the fetched parent tasks
-			logger.info("Fetched parent tasks with status " + status + ": " + parentTasks);
-
-			// If parentTasks list is not empty, return it as a successful response
-			if (!parentTasks.isEmpty()) {
-				return ResponseHandler.generateResponse(parentTasks, HttpStatus.OK);
-			} else {
-				// If no parent tasks are found with the specified status, return NOT_FOUND
-				// status
-				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
-			}
-		} catch (Exception e) {
-			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
-			// status
-			logger.error("Error while fetching parent tasks: " + e.getMessage());
-			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
-		}
-	}
+//	@GetMapping("/allparenttask")
+//	public ResponseEntity<Object> getAllParentTasksByStatus(@RequestParam("status") String status) {
+//		// Log that the method has been entered and print the status received
+//		logger.debug("Entering getAllParentTasksByStatus");
+//		logger.info("Entered status: " + status);
+//
+//		try {
+//			// Fetch all parent tasks with the specified status using the taskService
+//			List<Task> parentTasks = taskService.getAllParentTasksByStatus(status);
+//
+//			// Log the fetched parent tasks
+//			logger.info("Fetched parent tasks with status " + status + ": " + parentTasks);
+//
+//			// If parentTasks list is not empty, return it as a successful response
+//			if (!parentTasks.isEmpty()) {
+//				return ResponseHandler.generateResponse(parentTasks, HttpStatus.OK);
+//			} else {
+//				// If no parent tasks are found with the specified status, return NOT_FOUND
+//				// status
+//				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+//			}
+//		} catch (Exception e) {
+//			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+//			// status
+//			logger.error("Error while fetching parent tasks: " + e.getMessage());
+//			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+//		}
+//	}
 
 	/**
 	 * Retrieves all child tasks with the specified parentId.

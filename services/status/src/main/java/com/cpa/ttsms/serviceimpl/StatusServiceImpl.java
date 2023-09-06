@@ -122,6 +122,7 @@ public class StatusServiceImpl implements StatusService {
 			logger.debug("setting new data of Status to exisitng Status");
 			toStatusAlreadyPresent.setStatusCode(status.getStatusCode());
 			toStatusAlreadyPresent.setStatusDescription(status.getStatusDescription());
+			toStatusAlreadyPresent.setStatusOrder(status.getStatusOrder());
 			updatedStatus = statusRepo.save(toStatusAlreadyPresent);
 
 			logger.info("updated Status :" + updatedStatus);

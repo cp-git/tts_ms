@@ -29,6 +29,9 @@ public class Status {
 	@Column(name = "description", nullable = false)
 	private String statusDescription;
 
+	@Column(name = "statusorder", nullable = false)
+	private int statusOrder;
+
 	/**
 	 * @return the statusId
 	 */
@@ -72,15 +75,31 @@ public class Status {
 	}
 
 	/**
+	 * @return the statusOrder
+	 */
+	public int getStatusOrder() {
+		return statusOrder;
+	}
+
+	/**
+	 * @param statusOrder the statusOrder to set
+	 */
+	public void setStatusOrder(int statusOrder) {
+		this.statusOrder = statusOrder;
+	}
+
+	/**
 	 * @param statusId
 	 * @param statusCode
 	 * @param statusDescription
+	 * @param statusOrder
 	 */
-	public Status(int statusId, String statusCode, String statusDescription) {
+	public Status(int statusId, String statusCode, String statusDescription, int statusOrder) {
 		super();
 		this.statusId = statusId;
 		this.statusCode = statusCode;
 		this.statusDescription = statusDescription;
+		this.statusOrder = statusOrder;
 	}
 
 	/**
@@ -94,7 +113,7 @@ public class Status {
 	@Override
 	public String toString() {
 		return "Status [statusId=" + statusId + ", statusCode=" + statusCode + ", statusDescription="
-				+ statusDescription + "]";
+				+ statusDescription + ", statusOrder=" + statusOrder + "]";
 	}
 
 }

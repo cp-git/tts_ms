@@ -107,6 +107,10 @@ public class TaskServiceImpl implements TaskService {
 			// for updating need taskId, if there is no foreign key then new entry will
 			// create
 			int taskId = taskAndReasonDTO.getTaskId();
+			int parentId = taskAndReasonDTO.getTaskParent();
+			if (parentId > 0) {
+				updateParentHavingChildIfChildIsExist(parentId);
+			}
 
 			// Set values in the Task object
 			if (taskId > 0) {
@@ -200,6 +204,11 @@ public class TaskServiceImpl implements TaskService {
 
 		return null;
 
+	}
+
+	void updateParentHavingChildIfChildIsExist(int parentId) {
+		// TODO Auto-generated method stub
+		taskRepo.updateHavingChildToTrueByParentId(parentId);
 	}
 
 	/**

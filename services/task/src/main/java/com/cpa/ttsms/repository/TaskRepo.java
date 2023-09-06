@@ -89,6 +89,10 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 	List<Task> findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskStatusAndTaskAssignedToOrderByTaskStartDate(
 			int companyId, int parentId, int createdBy, int status, int assignedTo);
 
+	@Modifying
+	@Query(value = "UPDATE public.task SET havingchild = true WHERE id = ?1", nativeQuery = true)
+	int updateHavingChildToTrueByParentId(int parentId);
+
 	/*
 	 * Fetch all parent task using status, createdBy and assignedTo, copmany id
 	 * using employee id

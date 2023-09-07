@@ -64,6 +64,9 @@ public class Task {
 	@Column(name = "parent", nullable = true)
 	private int taskParent;
 
+	@Column(name = "havingchild", nullable = true)
+	private boolean havingChild;
+
 	/**
 	 * @return the taskId
 	 */
@@ -221,15 +224,29 @@ public class Task {
 	/**
 	 * @return the taskParent
 	 */
-	public Integer getTaskParent() {
+	public int getTaskParent() {
 		return taskParent;
 	}
 
 	/**
 	 * @param taskParent the taskParent to set
 	 */
-	public void setTaskParent(Integer taskParent) {
+	public void setTaskParent(int taskParent) {
 		this.taskParent = taskParent;
+	}
+
+	/**
+	 * @return the havingChild
+	 */
+	public boolean isHavingChild() {
+		return havingChild;
+	}
+
+	/**
+	 * @param havingChild the havingChild to set
+	 */
+	public void setHavingChild(boolean havingChild) {
+		this.havingChild = havingChild;
 	}
 
 	/**
@@ -245,10 +262,11 @@ public class Task {
 	 * @param taskActualEndDate
 	 * @param companyId
 	 * @param taskParent
+	 * @param havingChild
 	 */
 	public Task(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
 			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
-			int companyId, Integer taskParent) {
+			int companyId, int taskParent, boolean havingChild) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -262,6 +280,7 @@ public class Task {
 		this.taskActualEndDate = taskActualEndDate;
 		this.companyId = companyId;
 		this.taskParent = taskParent;
+		this.havingChild = havingChild;
 	}
 
 	/**
@@ -278,7 +297,7 @@ public class Task {
 				+ ", taskCreatedBy=" + taskCreatedBy + ", taskAssignedTo=" + taskAssignedTo + ", taskStatus="
 				+ taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate=" + taskEndDate
 				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
-				+ ", companyId=" + companyId + ", taskParent=" + taskParent + "]";
+				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild + "]";
 	}
 
 }

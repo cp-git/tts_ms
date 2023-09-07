@@ -34,49 +34,7 @@ public class TaskAndReasonDTO {
 
 	private String fileName;
 
-	/**
-	 * 
-	 */
-	public TaskAndReasonDTO() {
-		super();
-	}
-
-	/**
-	 * @param taskId
-	 * @param taskName
-	 * @param taskDescription
-	 * @param taskCreatedBy
-	 * @param taskAssignedTo
-	 * @param taskStatus
-	 * @param taskStartDate
-	 * @param taskEndDate
-	 * @param taskActualStartDate
-	 * @param taskActualEndDate
-	 * @param companyId
-	 * @param taskParent
-	 * @param reason
-	 * @param employeeId
-	 */
-	public TaskAndReasonDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
-			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
-			int companyId, int taskParent, String reason, int employeeId, String fileName) {
-		super();
-		this.taskId = taskId;
-		this.taskName = taskName;
-		this.taskDescription = taskDescription;
-		this.taskCreatedBy = taskCreatedBy;
-		this.taskAssignedTo = taskAssignedTo;
-		this.taskStatus = taskStatus;
-		this.taskStartDate = taskStartDate;
-		this.taskEndDate = taskEndDate;
-		this.taskActualStartDate = taskActualStartDate;
-		this.taskActualEndDate = taskActualEndDate;
-		this.companyId = companyId;
-		this.taskParent = taskParent;
-		this.reason = reason;
-		this.employeeId = employeeId;
-		this.fileName = fileName;
-	}
+	private boolean havingChild;
 
 	/**
 	 * @return the taskId
@@ -286,6 +244,78 @@ public class TaskAndReasonDTO {
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	/**
+	 * @return the havingChild
+	 */
+	public boolean isHavingChild() {
+		return havingChild;
+	}
+
+	/**
+	 * @param havingChild the havingChild to set
+	 */
+	public void setHavingChild(boolean havingChild) {
+		this.havingChild = havingChild;
+	}
+
+	/**
+	 * @param taskId
+	 * @param taskName
+	 * @param taskDescription
+	 * @param taskCreatedBy
+	 * @param taskAssignedTo
+	 * @param taskStatus
+	 * @param taskStartDate
+	 * @param taskEndDate
+	 * @param taskActualStartDate
+	 * @param taskActualEndDate
+	 * @param companyId
+	 * @param taskParent
+	 * @param reason
+	 * @param employeeId
+	 * @param fileName
+	 * @param havingChild
+	 */
+	public TaskAndReasonDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
+			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
+			int companyId, int taskParent, String reason, int employeeId, String fileName, boolean havingChild) {
+		super();
+		this.taskId = taskId;
+		this.taskName = taskName;
+		this.taskDescription = taskDescription;
+		this.taskCreatedBy = taskCreatedBy;
+		this.taskAssignedTo = taskAssignedTo;
+		this.taskStatus = taskStatus;
+		this.taskStartDate = taskStartDate;
+		this.taskEndDate = taskEndDate;
+		this.taskActualStartDate = taskActualStartDate;
+		this.taskActualEndDate = taskActualEndDate;
+		this.companyId = companyId;
+		this.taskParent = taskParent;
+		this.reason = reason;
+		this.employeeId = employeeId;
+		this.fileName = fileName;
+		this.havingChild = havingChild;
+	}
+
+	/**
+	 * 
+	 */
+	public TaskAndReasonDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String toString() {
+		return "TaskAndReasonDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription=" + taskDescription
+				+ ", taskCreatedBy=" + taskCreatedBy + ", taskAssignedTo=" + taskAssignedTo + ", taskStatus="
+				+ taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate=" + taskEndDate
+				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
+				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", reason=" + reason + ", employeeId="
+				+ employeeId + ", fileName=" + fileName + ", havingChild=" + havingChild + "]";
 	}
 
 }

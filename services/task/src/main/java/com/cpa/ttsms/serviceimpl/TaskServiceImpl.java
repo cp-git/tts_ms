@@ -135,6 +135,7 @@ public class TaskServiceImpl implements TaskService {
 			task.setTaskActualEndDate(taskAndReasonDTO.getTaskActualEndDate());
 			task.setTaskStatus(taskAndReasonDTO.getTaskStatus());
 			task.setTaskParent(taskAndReasonDTO.getTaskParent());
+
 			task.setCompanyId(taskAndReasonDTO.getCompanyId());
 
 			// adding or updating row
@@ -208,6 +209,7 @@ public class TaskServiceImpl implements TaskService {
 
 	void updateParentHavingChildIfChildIsExist(int parentId) {
 		// TODO Auto-generated method stub
+		System.out.println("*******************************8888888888888888888888888888888" + parentId);
 		taskRepo.updateHavingChildToTrueByParentId(parentId);
 	}
 

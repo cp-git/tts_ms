@@ -134,6 +134,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setCompanyId(dto.getCompanyId());
 		employee.setFirstName(dto.getFirstName());
 		employee.setLastName(dto.getLastName());
+		employee.setAdmin(dto.isAdmin());
 
 //	    // Parse the date string from the DTO and set it as the employee's birth date
 //	    Date dob;
@@ -233,6 +234,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setCompanyId(emp.getCompanyId());
 				dto.setFirstName(emp.getFirstName());
 				dto.setLastName(emp.getLastName());
+				dto.setAdmin(emp.isAdmin());
 				// Format dob as a String (assuming it's already in Date format in the entity)
 				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				dto.setPasswordId(password.getPasswordId());
@@ -325,6 +327,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			toUpdatedEmployee.setLastName(dto.getLastName());
 			// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
 			toUpdatedEmployee.setEmployeeEmail(dto.getEmployeeEmail());
+			toUpdatedEmployee.setAdmin(dto.isAdmin());
 
 			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
 
@@ -356,13 +359,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		logger.debug("Entering getAllCountries");
 
 		List<Employee> employees = employeeRepo.findAll(); // Retrieve all active countries from the database.
-		logger.info("Fetched all active countries: " + employees);
+		logger.info("Fetched all: " + employees);
 
 		// Create a new list to store objects
 		List<Object> objects = new ArrayList<>(employees); // Convert the list of Country objects to a list of generic
 															// Objects.
 
-		logger.info("Fetched all active countries: " + employees);
+		logger.info("Fetched all " + employees);
 		return objects; // Return the list of generic Objects.
 	}
 
@@ -493,7 +496,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeePasswordAndEmployeePhotosDTO.getCompanyId(),
 				employeePasswordAndEmployeePhotosDTO.getFirstName(), employeePasswordAndEmployeePhotosDTO.getLastName(),
 				employeePasswordAndEmployeePhotosDTO.getBirthDate(),
-				employeePasswordAndEmployeePhotosDTO.getEmployeeEmail());
+				employeePasswordAndEmployeePhotosDTO.getEmployeeEmail(),
+				employeePasswordAndEmployeePhotosDTO.isAdmin());
+		
 
 		// Save the employee data to the database
 		createdEmployee = employeeRepo.save(employee);

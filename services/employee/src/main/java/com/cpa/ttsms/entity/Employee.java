@@ -49,6 +49,9 @@ public class Employee {
 
 	@Column(name = "email")
 	private String employeeEmail;
+	
+	@Column(name = "isadmin")
+	private boolean admin;
 
 	public int getEmployeeId() {
 		return employeeId;
@@ -106,8 +109,16 @@ public class Employee {
 		this.employeeEmail = employeeEmail;
 	}
 
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
 	public Employee(int employeeId, int countryId, int companyId, String firstName, String lastName, Date birthDate,
-			String employeeEmail) {
+			String employeeEmail, boolean admin) {
 		super();
 		this.employeeId = employeeId;
 		this.countryId = countryId;
@@ -116,6 +127,7 @@ public class Employee {
 		this.lastName = lastName;
 		this.birthDate = birthDate;
 		this.employeeEmail = employeeEmail;
+		this.admin = admin;
 	}
 
 	public Employee() {
@@ -127,9 +139,9 @@ public class Employee {
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", countryId=" + countryId + ", companyId=" + companyId
 				+ ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate
-				+ ", employeeEmail=" + employeeEmail + "]";
+				+ ", employeeEmail=" + employeeEmail + ", admin=" + admin + "]";
 	}
-	
+
 	
 
 }

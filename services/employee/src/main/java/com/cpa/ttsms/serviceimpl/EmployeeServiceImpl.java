@@ -584,6 +584,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			existingEmployee.setLastName(employeeAndEmployeePhotosDTO.getLastName());
 			existingEmployee.setBirthDate(employeeAndEmployeePhotosDTO.getBirthDate());
 			existingEmployee.setEmployeeEmail(employeeAndEmployeePhotosDTO.getEmployeeEmail());
+			existingEmployee.setAdmin(employeeAndEmployeePhotosDTO.isAdmin());
 			// Save the updated employee
 			Employee updatedEmployee = employeeRepo.save(existingEmployee);
 

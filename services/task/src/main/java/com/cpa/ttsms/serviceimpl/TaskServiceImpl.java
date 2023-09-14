@@ -136,6 +136,7 @@ public class TaskServiceImpl implements TaskService {
 			task.setTaskActualEndDate(taskAndReasonDTO.getTaskActualEndDate());
 			task.setTaskStatus(taskAndReasonDTO.getTaskStatus());
 			task.setTaskParent(taskAndReasonDTO.getTaskParent());
+			task.setHavingChild(taskAndReasonDTO.isHavingChild());
 
 			task.setCompanyId(taskAndReasonDTO.getCompanyId());
 

@@ -224,7 +224,7 @@ public class CountryController {
 	}
 
 	@GetMapping("/country/countryId/{id}")
-	public ResponseEntity<Object> getCountryCountryId(@PathVariable("id") int countryId) throws CPException {
+	public ResponseEntity<Object> getCountryByCountryId(@PathVariable("id") int countryId) throws CPException {
 		logger.debug("Entering getCountryBycode");
 		logger.info("Entered country code: " + countryId);
 

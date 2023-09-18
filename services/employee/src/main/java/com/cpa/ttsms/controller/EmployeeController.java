@@ -612,22 +612,51 @@ public class EmployeeController {
 		return employeeService.getPhotosByEmployeeId(employeeId);
 	}
 
+	/**
+	 * Retrieves a list of employees and their passwords based on the provided
+	 * companyId and generates an appropriate response.
+	 *
+	 * @param companyId - The ID of the company for which employees and passwords
+	 *                  are retrieved.
+	 *
+	 * @return ResponseEntity containing the list of employees and passwords with a
+	 *         200 OK status if found, otherwise returns a NOT_FOUND response.
+	 *
+	 * @throws CPException If there is an error while fetching the employees or
+	 *                     generating the response.
+	 */
 	@GetMapping("/comEmpPwd/{companyId}")
 	public ResponseEntity<List<Object>> getAllCompnayEmployeeAndPasswordByCompanyId(
 			@PathVariable("companyId") int companyId) throws CPException {
 
+		// Initialize a list to store employee data.
 		List<Object> employees = null;
 		try {
+			// Check if the companyId is a valid non-negative integer.
 			if (companyId >= 0) {
+				// Call a service method to fetch all employees and their passwords by
+				// companyId.
 				employees = employeeService.getAllEmployeeAndPasswordByCompanyId(companyId);
-				logger.info("Fetched all emp :" + employees);
+
+				// Log a message indicating that employees were successfully fetched.
+				logger.info("Fetched all employees: " + employees);
+
+				// Generate a response with the list of employees and a HTTP status code of 200
+				// (OK).
 				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
 			} else {
+				// Log an error message indicating an invalid companyId.
 				logger.info(resourceBundle.getString("err002"));
+
+				// Generate a response with a HTTP status code of 404 (Not Found) and an error
+				// message.
 				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
 			}
 		} catch (Exception ex) {
-			logger.error("Failed getting all emp : " + ex.getMessage());
+			// Log an error message if an exception occurs during the process.
+			logger.error("Failed getting all employees: " + ex.getMessage());
+
+			// Throw a custom exception with an error code and message.
 			throw new CPException("err002", resourceBundle.getString("err002"));
 		}
 	}

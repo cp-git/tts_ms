@@ -31,4 +31,6 @@ public interface CountryService {
 	// Deletes a country from the database using its unique country code.
 	public int deleteCountryByCountryCode(int countryCode);
 
+	public Country getCountryByCountryId(int countryId);
+
 }

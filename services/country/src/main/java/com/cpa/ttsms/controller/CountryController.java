@@ -82,8 +82,6 @@ public class CountryController {
 			throw new CPException("err003", "Error while creating country");
 		}
 	}
-	
-	
 
 	/**
 	 * Retrieve a country by its unique country code.
@@ -122,7 +120,7 @@ public class CountryController {
 	/**
 	 * Fetch all active countries from the Country table.
 	 *
-	 * @return A list containing all the  Country objects.
+	 * @return A list containing all the Country objects.
 	 * @throws CPException If there was an error retrieving the countries.
 	 */
 	@GetMapping("/country/allcountry")
@@ -198,8 +196,8 @@ public class CountryController {
 	 * @throws CPException If there was an error updating the country.
 	 */
 	@PutMapping("/country/{code}")
-	public ResponseEntity<Object> updateCountryByCountryCode(@RequestBody Country country, @PathVariable("code") int code)
-			throws CPException {
+	public ResponseEntity<Object> updateCountryByCountryCode(@RequestBody Country country,
+			@PathVariable("code") int code) throws CPException {
 		logger.debug("Entering updateCountry");
 		logger.info("Entered  updateCountry :" + country);
 
@@ -222,6 +220,33 @@ public class CountryController {
 			// Log and throw a custom exception for error response.
 			logger.error("Failed update Country: " + ex.getMessage());
 			throw new CPException("err004", "Error while updating country");
+		}
+	}
+
+	@GetMapping("/country/countryId/{id}")
+	public ResponseEntity<Object> getCountryByCountryId(@PathVariable("id") int countryId) throws CPException {
+		logger.debug("Entering getCountryBycode");
+		logger.info("Entered country code: " + countryId);
+
+		Country country = null;
+		try {
+			// Retrieve the country by country ID from the service layer.
+			country = countryService.getCountryByCountryId(countryId);
+			logger.info("Fetched Country: " + country);
+
+			if (country != null) {
+				// If the country is found, generate a success response with the found country.
+				logger.debug("Country fetched, generating response");
+				return ResponseHandler.generateResponse(country, HttpStatus.OK);
+			} else {
+				// If the country is not found, generate an error response.
+				logger.debug("Country not found");
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed getting country: " + ex.getMessage());
+			throw new CPException("err001", "Error while retrieving country");
 		}
 	}
 }

@@ -34,4 +34,5 @@ public interface CountryRepo extends JpaRepository<Country, Integer> {
 	@Query(value = "DELETE FROM country WHERE code = ?", nativeQuery = true)
 	public int deleteCountryByCode(int countryCode);
 
+	public Country findByCountryId(int countryId);
 }

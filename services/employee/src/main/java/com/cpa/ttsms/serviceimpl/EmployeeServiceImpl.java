@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -410,10 +409,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String oldPassword = password.getPassword();
 
 		// Update the password value in the Password object
-		//password.setPassword(newPassword);
+		// password.setPassword(newPassword);
 
 		// Save the updated Password object to the repository
-		//passwordRepository.save(password);
+		// passwordRepository.save(password);
 
 		// Retrieve employee information based on the employee ID
 		Employee employee = employeeRepo.findByEmployeeId(employeeId);
@@ -424,9 +423,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String lastName = employee.getLastName();
 
 		// Compose the email message body
-		String msgBody = "Dear " + firstName + " " + lastName + ",\n\n"
-				+ "Your password for Task Tracking System is: " + oldPassword + "\n"
-				+ "Please log in and ensure the security of your account.\n\n" + "Best regards,\n"
+		String msgBody = "Dear " + firstName + " " + lastName + ",\n\n" + "Your password for Task Tracking System is: "
+				+ oldPassword + "\n" + "Please log in and ensure the security of your account.\n\n" + "Best regards,\n"
 				+ "TTS Admin";
 
 		logger.info("Fetched Employee Email: " + employeeEmail);
@@ -498,7 +496,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeePasswordAndEmployeePhotosDTO.getBirthDate(),
 				employeePasswordAndEmployeePhotosDTO.getEmployeeEmail(),
 				employeePasswordAndEmployeePhotosDTO.isAdmin());
-		
 
 		// Save the employee data to the database
 		createdEmployee = employeeRepo.save(employee);
@@ -670,10 +667,46 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public List<Object> getAllEmployeeOfCompanyByCompanyId(int companyId) {
-		List <Object> employees = null;
+		List<Object> employees = null;
 		List<Employee> employee = employeeRepo.findByCompanyId(companyId);
 		employees = new ArrayList<Object>(employee);
 		return employees;
+	}
+
+	@Override
+	public List<Object> getAllEmployeeAndPasswordByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub
+
+		List<Object> employeePasswordDTOList = new ArrayList<>();
+		List<Employee> employees = employeeRepo.findByCompanyId(companyId);
+
+		for (Employee emp : employees) {
+			// Find the associated password by employeeId
+			Password password = passwordRepository.findByEmployeeId(emp.getEmployeeId());
+			if (password != null) {
+				// If password exists, populate the EmployeeAndPasswordDTO object
+				EmployeeAndPasswordDTO dto = new EmployeeAndPasswordDTO();
+				dto.setEmployeeId(emp.getEmployeeId());
+				dto.setCountryId(emp.getCountryId());
+				dto.setCompanyId(emp.getCompanyId());
+				dto.setFirstName(emp.getFirstName());
+				dto.setLastName(emp.getLastName());
+				dto.setAdmin(emp.isAdmin());
+				// Format dob as a String (assuming it's already in Date format in the entity)
+				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				dto.setPasswordId(password.getPasswordId());
+				dto.setBirthDate(emp.getBirthDate());
+				// dto.setBirthDate(emp.getBirthDate().toString());
+				dto.setEmployeeEmail(emp.getEmployeeEmail());
+				dto.setUsername(password.getUsername());
+				dto.setPassword(password.getPassword());
+
+				employeePasswordDTOList.add(dto);
+			}
+		}
+
+		return employeePasswordDTOList;
 	}
 
 }

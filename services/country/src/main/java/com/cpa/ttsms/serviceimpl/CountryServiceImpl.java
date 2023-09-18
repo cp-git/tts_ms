@@ -139,4 +139,16 @@ public class CountryServiceImpl implements CountryService {
 		return count; // Return the count of deleted records.
 	}
 
+	@Override
+	public Country getCountryByCountryId(int countryId) {
+		// TODO Auto-generated method stub
+		logger.debug("Entering getCountryById");
+
+		Country country = countryRepo.findByCountryId(countryId); // Retrieve the country from the database by
+																	// country ID.
+		logger.info("Found Country: " + country);
+
+		return country; // Return the found country object.
+	}
+
 }

@@ -110,6 +110,7 @@
 		<module>services/reason</module>
 		<module>tools/CodeGenerator</module>
 		<module>services/email</module>
+		<module>services/authlogin</module>
 		<module>services/uploadfile</module>
 	</modules>
 </project>

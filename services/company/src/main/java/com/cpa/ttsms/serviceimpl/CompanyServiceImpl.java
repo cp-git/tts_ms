@@ -39,7 +39,7 @@ import com.cpa.ttsms.service.CompanyService;
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
-	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
+	private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
 
 	// Inject the value of 'file.base-path' from application.yml file
 	@Value("${file.base-path}")

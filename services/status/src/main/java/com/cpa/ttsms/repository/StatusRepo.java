@@ -8,6 +8,8 @@
 
 package com.cpa.ttsms.repository;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,5 +33,10 @@ public interface StatusRepo extends JpaRepository<Status, Integer> {
 
 	// Retrieves a status by their code
 	public Status findByStatusCode(String statusCode);
+
+	// Retrieve statuses by companyId
+	List<Status> findByCompanyId(int companyId);
+
+	public Status findByStatusCodeAndCompanyId(String statusCode, int companyId);
 
 }

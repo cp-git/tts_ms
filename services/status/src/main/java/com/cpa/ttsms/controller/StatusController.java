@@ -117,6 +117,25 @@ public class StatusController {
 		}
 	}
 
+	@GetMapping("/statuses/{companyId}")
+	public ResponseEntity<List<Status>> getStatusesByCompanyId(@PathVariable("companyId") int companyId)
+			throws CPException {
+		logger.info("Received request to retrieve statuses for company with ID: " + companyId);
+		try {
+			List<Status> statuses = statusService.getStatusesByCompanyId(companyId);
+			if (statuses.isEmpty()) {
+				logger.warn("No statuses found for company with ID: " + companyId);
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			} else {
+				logger.info("Retrieved statuses for company with ID: " + companyId);
+				return new ResponseEntity<>(statuses, HttpStatus.OK);
+			}
+		} catch (Exception ex) {
+			logger.error("Failed to retrieve statuses for company with ID: " + companyId + ": " + ex.getMessage());
+			throw new CPException("err006", resourceBundle.getString("err006"));
+		}
+	}
+
 	/**
 	 * 
 	 * This method handles the GET request to retrieve all status

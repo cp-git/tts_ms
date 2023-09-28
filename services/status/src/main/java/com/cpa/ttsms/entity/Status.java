@@ -32,6 +32,18 @@ public class Status {
 	@Column(name = "statusorder", nullable = false)
 	private int statusOrder;
 
+	@Column(name = "companyid", nullable = false)
+	private int companyId;
+
+	@Column(name = "actualstartdate", nullable = false)
+	private boolean actualStartDate;
+
+	@Column(name = "actualenddate", nullable = false)
+	private boolean actualEndDate;
+
+	@Column(name = "finalstatus", nullable = false)
+	private boolean finalStatus;
+
 	/**
 	 * @return the statusId
 	 */
@@ -89,17 +101,85 @@ public class Status {
 	}
 
 	/**
+	 * @return the companyId
+	 */
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	/**
+	 * @param companyId the companyId to set
+	 */
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
+	/**
+	 * @return the actualStartDate
+	 */
+	public boolean isActualStartDate() {
+		return actualStartDate;
+	}
+
+	/**
+	 * @param actualStartDate the actualStartDate to set
+	 */
+	public void setActualStartDate(boolean actualStartDate) {
+		this.actualStartDate = actualStartDate;
+	}
+
+	/**
+	 * @return the actualEndDate
+	 */
+	public boolean isActualEndDate() {
+		return actualEndDate;
+	}
+
+	/**
+	 * @param actualEndDate the actualEndDate to set
+	 */
+	public void setActualEndDate(boolean actualEndDate) {
+		this.actualEndDate = actualEndDate;
+	}
+
+	/**
+	 * @return the finalStatus
+	 */
+	public boolean isFinalStatus() {
+		return finalStatus;
+	}
+
+	/**
+	 * @param finalStatus the finalStatus to set
+	 */
+	public void setFinalStatus(boolean finalStatus) {
+		this.finalStatus = finalStatus;
+	}
+
+	/**
 	 * @param statusId
 	 * @param statusCode
 	 * @param statusDescription
 	 * @param statusOrder
+	 * @param companyId
+	 * @param startDate
+	 * @param endDate
+	 * @param actualStartDate
+	 * @param actualEndDate
+	 * @param finalStatus
 	 */
-	public Status(int statusId, String statusCode, String statusDescription, int statusOrder) {
+	public Status(int statusId, String statusCode, String statusDescription, int statusOrder, int companyId,
+			boolean actualStartDate, boolean actualEndDate, boolean finalStatus) {
 		super();
 		this.statusId = statusId;
 		this.statusCode = statusCode;
 		this.statusDescription = statusDescription;
 		this.statusOrder = statusOrder;
+		this.companyId = companyId;
+
+		this.actualStartDate = actualStartDate;
+		this.actualEndDate = actualEndDate;
+		this.finalStatus = finalStatus;
 	}
 
 	/**
@@ -113,7 +193,8 @@ public class Status {
 	@Override
 	public String toString() {
 		return "Status [statusId=" + statusId + ", statusCode=" + statusCode + ", statusDescription="
-				+ statusDescription + ", statusOrder=" + statusOrder + "]";
+				+ statusDescription + ", statusOrder=" + statusOrder + ", companyId=" + companyId + ", actualStartDate="
+				+ actualStartDate + ", actualEndDate=" + actualEndDate + ", finalStatus=" + finalStatus + "]";
 	}
 
 }

@@ -105,7 +105,7 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 	public List<Task> findByCompanyIdAndTaskParentAndTaskStatusInAndTaskAssignedToOrderByTaskStartDate(int companyId,
 			int parentId, List<Integer> statusIds, int assignedTo);
 
-	
+	public List<Task> findByTaskAssignedToOrTaskCreatedBy(int assingedTo , int createdBy);
 
 	/*
 	 * Fetch all parent task using status, createdBy and assignedTo, copmany id

@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
@@ -364,5 +365,32 @@ public class TaskController {
 		}
 
 	}
+	
+	/**
+	 * Controller endpoint to retrieve a list of ParentAndChildTaskDTO objects representing tasks created and assigned by the specified employee.
+	 * 
+	 * @param employeeId The ID of the employee for whom tasks are to be retrieved.
+	 * @return A list containing a ParentAndChildTaskDTO object representing parent tasks and their child tasks created and assigned by the specified employee.
+	 * @throws IllegalArgumentException If the provided employee ID is invalid or if no tasks are found for the specified employee.
+	 */
+	@GetMapping("/created/{employeeId}")
+	public ResponseEntity<Object> getAllTaskCreatedByMeAndAssignToMe(@PathVariable int employeeId) {
+	
+		try {
+	        // Retrieve tasks created and assigned by the specified employee using the service method
+	        List<ParentAndChildTaskDTO> taskList = taskService.getAllTaskCreatedByMeAndAssignToMe(employeeId);
+	        //return taskList;
+	        if(!taskList.isEmpty()) {
+	        	return ResponseHandler.generateResponse(taskList, HttpStatus.OK);
+	        }else {
+	        	return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+	        }
+		}catch (Exception e){
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
+		}
+	       
+	  
+	}
+
 
 }

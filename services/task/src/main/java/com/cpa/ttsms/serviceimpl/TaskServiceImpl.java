@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.EmailDTO;
 import com.cpa.ttsms.dto.EmployeeDTO;
+import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.StatusDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
@@ -609,6 +610,45 @@ public class TaskServiceImpl implements TaskService {
 
 		return null;
 	}
+
+	/**
+	 * Retrieves a list of ParentAndChildTaskDTO objects in the system that are both created and assigned by the specified employee.
+	 * 
+	 * @param employeeId The ID of the employee for whom tasks are to be retrieved.
+	 * @return A list containing a ParentAndChildTaskDTO object representing parent tasks and their child tasks created and assigned by the specified employee.
+	 * @throws IllegalArgumentException If the provided employee ID is invalid or if no tasks are found for the specified employee.
+	 */
+	@Override
+	public List<ParentAndChildTaskDTO> getAllTaskCreatedByMeAndAssignToMe(int employeeId) {
+	   
+	    
+	    // TODO: Implementation to retrieve tasks created and assigned by the specified employee
+	    int createdBy = employeeId;
+	    int assignedBy = employeeId;
+
+	    // Fetch all tasks assigned or created by the specified employee
+	    List<Task> allTasks = taskRepo.findByTaskAssignedToOrTaskCreatedBy(createdBy, assignedBy);
+	    
+	    // Extract parent task IDs from the list of all tasks
+	    List<Integer> parentTaskIds = allTasks.stream().filter(task -> task.getTaskParent() == 0).map(Task::getTaskId)
+	            .collect(Collectors.toList());
+	    
+	    // Fetch parent tasks using parent task IDs
+	    List<Task> parentTaskList = new ArrayList<>();
+	    List<ParentAndChildTaskDTO> parentAndChildDTOs = new ArrayList<>();
+	    for (Integer parentId : parentTaskIds) {
+	        Task parentTask = taskRepo.findByTaskId(parentId);
+	        parentTaskList.add(parentTask);
+	    }
+	    
+	    // Create a ParentAndChildTaskDTO object and add it to the list
+	    ParentAndChildTaskDTO dto = new ParentAndChildTaskDTO(parentTaskList, allTasks);
+	    parentAndChildDTOs.add(dto);
+	    
+
+	    return parentAndChildDTOs;
+	}
+
 
 	
 }

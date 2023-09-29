@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
@@ -81,4 +82,13 @@ public interface TaskService {
 	List<Object> getFilesUsingTaskId(int taskId);
 
 	Resource downloadFileByTaskIdAndFileName(int taskId, String fileName);
+	
+	/**
+	 * Retrieves a list of ParentAndChildTaskDTO objects in the system that are both created and assigned by the specified employee.
+	 * 
+	 * @param employeeId The ID of the employee for whom tasks are to be retrieved.
+	 * @return A list of ParentAndChildTaskDTO objects created and assigned by the specified employee.
+	 * @throws IllegalArgumentException If the provided employee ID is invalid or if no tasks are found for the specified employee.
+	 */
+	List<ParentAndChildTaskDTO>getAllTaskCreatedByMeAndAssignToMe(int employeeId);
 }

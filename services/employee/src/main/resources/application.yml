@@ -11,7 +11,14 @@ spring.datasource:
   password: Pass1word
   
 server:
-  port : 8090
+  port : 8080
   
 file:
   base-path: D:/TTS
+  
+email:
+  url: http://localhost:8080/email/sendMail
+  
+upload:
+  file:
+    url: http://localhost:8080/uploadfile/ttsms/upload

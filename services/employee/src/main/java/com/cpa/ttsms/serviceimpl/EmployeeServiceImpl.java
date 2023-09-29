@@ -45,8 +45,14 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	private final String email_URL = "http://localhost:8090/email/sendMail";
-	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
+	//private final String email_URL = "http://localhost:8080/email/sendMail";
+	//private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
+	
+	@Value("${email.url}")
+    private String email_URL;
+
+    @Value("${upload.file.url}")
+    private String UPLOAD_FILE_URL;
 
 	private final RestTemplate restTemplate;
 

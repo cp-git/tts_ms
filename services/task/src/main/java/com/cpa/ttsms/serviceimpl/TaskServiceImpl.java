@@ -59,12 +59,31 @@ public class TaskServiceImpl implements TaskService {
 	@Value("${file.base-path}")
 	private String basePath;
 
-	private final String REASON_API_URL = "http://localhost:8090/reason/ttsms/reason";
-	private final String UPLOAD_FILE_URL = "http://localhost:8090/uploadfile/ttsms/upload";
-	private final String email_URL = "http://localhost:8090/email/taskMail";
-	private final String employee_URL = "http://localhost:8090/employee/ttsms/employee/";
-	private final String status_URL = "http://localhost:8090/status/ttsms/status/";
-	private final String task_URL = "http://localhost:8090/task/ttsms/task/";
+//	private final String REASON_API_URL = "http://localhost:8080/reason/ttsms/reason";
+//	private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
+//	private final String email_URL = "http://localhost:8080/email/taskMail";
+//	private final String employee_URL = "http://localhost:8080/employee/ttsms/employee/";
+//	private final String status_URL = "http://localhost:8080/status/ttsms/status/";
+//	private final String task_URL = "http://localhost:8080/task/ttsms/task/";
+	
+	
+	 @Value("${external-services.reason-api-url}")
+	    private String REASON_API_URL;
+
+	    @Value("${external-services.upload-file-url}")
+	    private String UPLOAD_FILE_URL;
+
+	    @Value("${external-services.email-url}")
+	    private String email_URL;
+
+	    @Value("${external-services.employee-url}")
+	    private String employee_URL;
+
+	    @Value("${external-services.status-url}")
+	    private String status_URL;
+
+	    @Value("${external-services.task-url}")
+	    private String task_URL;
 
 	@Autowired
 	private TaskRepo taskRepo;

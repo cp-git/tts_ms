@@ -11,7 +11,16 @@ spring.datasource:
   password: Pass1word
   
 server:
-  port : 8090
+  port : 8080
   
 file:
   base-path: D:/TTS
+  
+  # Define the URLs for external services
+external-services:
+  reason-api-url: http://localhost:8080/reason/ttsms/reason
+  upload-file-url: http://localhost:8080/uploadfile/ttsms/upload
+  email-url: http://localhost:8080/email/taskMail
+  employee-url: http://localhost:8080/employee/ttsms/employee/
+  status-url: http://localhost:8080/status/ttsms/status/
+  task-url: http://localhost:8080/task/ttsms/task/

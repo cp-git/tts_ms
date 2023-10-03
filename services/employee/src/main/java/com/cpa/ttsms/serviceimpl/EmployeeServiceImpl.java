@@ -45,14 +45,15 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	//private final String email_URL = "http://localhost:8080/email/sendMail";
-	//private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
-	
-	@Value("${email.url}")
-    private String email_URL;
+	// private final String email_URL = "http://localhost:8080/email/sendMail";
+	// private final String UPLOAD_FILE_URL =
+	// "http://localhost:8080/uploadfile/ttsms/upload";
 
-    @Value("${upload.file.url}")
-    private String UPLOAD_FILE_URL;
+	@Value("${email.url}")
+	private String email_URL;
+
+	@Value("${upload.file.url}")
+	private String UPLOAD_FILE_URL;
 
 	private final RestTemplate restTemplate;
 
@@ -505,60 +506,70 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		// Save the employee data to the database
 		createdEmployee = employeeRepo.save(employee);
-
+		logger.info("created employee : " + createdEmployee.toString());
 		try {
-			// Create a temporary file to store the uploaded profile photo
-			tempFile = File.createTempFile("temp", file.getOriginalFilename());
-			file.transferTo(tempFile);
+			EmployeePhotos createdEmployeePhotoObject = null;
+			if (file != null) {
+				// Create a temporary file to store the uploaded profile photo
+				tempFile = File.createTempFile("temp", file.getOriginalFilename());
+				file.transferTo(tempFile);
 
-			// Extract the file extension from the original file name
-			extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+				// Extract the file extension from the original file name
+				extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 
-			// Modify the file name with employee name and id with extension
-			String modifiedFileName = employee.getFirstName() + "_" + employee.getLastName() + "_"
-					+ employee.getEmployeeId() + extension;
+				// Modify the file name with employee name and id with extension
+				String modifiedFileName = employee.getFirstName() + "_" + employee.getLastName() + "_"
+						+ employee.getEmployeeId() + extension;
 
-			// Create an EmployeePhotos object and save it to the database
-			EmployeePhotos employeePhotos = new EmployeePhotos(employeePasswordAndEmployeePhotosDTO.getPhotoId(),
-					createdEmployee.getEmployeeId(), modifiedFileName);
-			EmployeePhotos createdEmployeePhotoObject = employeePhotosRepo.save(employeePhotos);
+				// Create an EmployeePhotos object and save it to the database
+				EmployeePhotos employeePhotos = new EmployeePhotos(employeePasswordAndEmployeePhotosDTO.getPhotoId(),
+						createdEmployee.getEmployeeId(), modifiedFileName);
+				createdEmployeePhotoObject = employeePhotosRepo.save(employeePhotos);
 
-			// Build form-data to pass in the request for uploading the file
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-			map.add("filename", modifiedFileName);
-			map.add("file", new FileSystemResource(tempFile));
-			map.add("folder", "employee/" + employee.getFirstName() + "_" + employee.getLastName() + "_"
-					+ employee.getEmployeeId());
+				logger.info("photos object : " + createdEmployeePhotoObject);
+				// Build form-data to pass in the request for uploading the file
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("filename", modifiedFileName);
+				map.add("file", new FileSystemResource(tempFile));
+				map.add("folder", "employee/" + employee.getFirstName() + "_" + employee.getLastName() + "_"
+						+ employee.getEmployeeId());
 
-			// Set the content type for the header
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+				logger.info("for uploading file : " + map);
+				// Set the content type for the header
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 
-			// Call an API for uploading the file (you should replace UPLOAD_FILE_URL with
-			// the actual URL)
-			ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
-
-			if (response.getStatusCode() == HttpStatus.OK) {
-				// Now, create and save the password for the employee
-				Password password = new Password(0, // Assign an appropriate value for the passwordId, or generate it as
-													// needed
-						createdEmployee.getEmployeeId(), employeePasswordAndEmployeePhotosDTO.getUsername(),
-						employeePasswordAndEmployeePhotosDTO.getPassword());
-
-				// Save the password to the database
-				passwordRepository.save(password);
-
-				// Set created IDs to the DTO
-				employeePasswordAndEmployeePhotosDTO.setPhotoId(createdEmployeePhotoObject.getEmployeePhotosId());
-				employeePasswordAndEmployeePhotosDTO.setEmployeeId(createdEmployee.getEmployeeId());
-
-				return employeePasswordAndEmployeePhotosDTO; // Return the created employee data
+				// Call an API for uploading the file (you should replace UPLOAD_FILE_URL with
+				// the actual URL)
+//			ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
 			} else {
-				logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
-				return null; // Return null in case of an error during file upload
+				EmployeePhotos employeePhotos = new EmployeePhotos(employeePasswordAndEmployeePhotosDTO.getPhotoId(),
+						createdEmployee.getEmployeeId(), "pic.jpg");
+				createdEmployeePhotoObject = employeePhotosRepo.save(employeePhotos);
 			}
+//			logger.info("response : " + response);
+//			if (response.getStatusCode() == HttpStatus.OK) {
+			// Now, create and save the password for the employee
+			Password password = new Password(0, // Assign an appropriate value for the passwordId, or generate it as
+												// needed
+					createdEmployee.getEmployeeId(), employeePasswordAndEmployeePhotosDTO.getUsername(),
+					employeePasswordAndEmployeePhotosDTO.getPassword());
+
+			logger.info("password created : " + password);
+			// Save the password to the database
+			passwordRepository.save(password);
+
+			// Set created IDs to the DTO
+			employeePasswordAndEmployeePhotosDTO.setPhotoId(createdEmployeePhotoObject.getEmployeePhotosId());
+			employeePasswordAndEmployeePhotosDTO.setEmployeeId(createdEmployee.getEmployeeId());
+
+			return employeePasswordAndEmployeePhotosDTO; // Return the created employee data
+//			} else {
+//				logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+//				return null; // Return null in case of an error during file upload
+//			}
 		} catch (Exception e) {
 			logger.error("Error while processing data: " + e.getMessage(), e);
 			return null; // Return null in case of any other exceptions

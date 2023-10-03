@@ -86,7 +86,7 @@ public class EmployeeController {
 	@PostMapping("/employee")
 	public ResponseEntity<Object> createEmployee(
 			@RequestPart("employee") EmployeePasswordAndEmployeePhotosDTO employeePasswordAndEmployeePhotosDTO,
-			@RequestParam("file") MultipartFile file) throws CPException {
+			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
 		// Log the entry of the method
 		logger.debug("Entering createEmployee");
 

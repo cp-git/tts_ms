@@ -6,7 +6,7 @@ spring.jpa:
 
 spring.datasource:
   driverClassName: org.postgresql.Driver
-  url: jdbc:postgresql://localhost:5432/tts
+  url: jdbc:postgresql://44.193.95.50:5432/tts
   username: postgres
   password: password
   
@@ -15,6 +15,6 @@ server:
   
 file:
   base-path: /var/lib/TTS
-  upload-url: http://localhost:8080/uploadfile/ttsms/upload
+  upload-url: http://44.193.95.50:8080/uploadfile/ttsms/upload
   
 

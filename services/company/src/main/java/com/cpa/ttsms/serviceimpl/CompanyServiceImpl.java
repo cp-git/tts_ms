@@ -90,7 +90,8 @@ public class CompanyServiceImpl implements CompanyService {
 		createdCompany = companyRepo.save(company);
 
 		try {
-
+			CompanyPhotos createdCompanyPhotoObject=null;
+			if(file!=null) {
 			tempFile = File.createTempFile("temp", file.getOriginalFilename());
 			file.transferTo(tempFile);
 
@@ -103,7 +104,7 @@ public class CompanyServiceImpl implements CompanyService {
 			// adding data of company photo in table
 			CompanyPhotos companyPhotos = new CompanyPhotos(companyAndCompanyPhotosDTO.getPhotoId(),
 					company.getCompanyId(), modifiedFileName);
-			CompanyPhotos createdCompanyPhotoObject = companyPhotosRepo.save(companyPhotos);
+			createdCompanyPhotoObject = companyPhotosRepo.save(companyPhotos);
 
 			// building form-data to pass in request for uploading file
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
@@ -118,20 +119,28 @@ public class CompanyServiceImpl implements CompanyService {
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 
 			// calling api for uploading file
-			ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
+//			ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
 
-			if (response.getStatusCode() == HttpStatus.OK) {
+//			if (response.getStatusCode() == HttpStatus.OK) {
 
 				// setting created ids to dto s
 				companyAndCompanyPhotosDTO.setPhotoId(createdCompanyPhotoObject.getCompanyPhotosId());
 				companyAndCompanyPhotosDTO.setCompanyId(createdCompany.getCompanyId());
-
-				return companyAndCompanyPhotosDTO;
-			} else {
-
-				logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
-				return null;
 			}
+			else {
+				// adding data of company photo in table
+				CompanyPhotos companyPhotos = new CompanyPhotos(companyAndCompanyPhotosDTO.getPhotoId(),
+						company.getCompanyId(), "logo.jpg");
+				createdCompanyPhotoObject = companyPhotosRepo.save(companyPhotos);
+			}
+				return companyAndCompanyPhotosDTO;
+//			} else {
+//
+//				logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+//				return null;
+//			}
+			
+			
 		} catch (Exception e) {
 
 			logger.error("Error while processing data: " + e.getMessage(), e);

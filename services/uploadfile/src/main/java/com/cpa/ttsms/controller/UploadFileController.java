@@ -58,11 +58,14 @@ public class UploadFileController {
 			@RequestParam("file") MultipartFile file, @RequestParam("folder") String folderName) throws CPException {
 		try {
 			boolean isFileCreated = false;
-
+			logger.info("path : " + basePath+" " + folderName+" " + fileName+" " + file);
 			isFileCreated = uploadFileService.uploadFile(basePath, folderName, fileName, file);
+			
 			if (isFileCreated) {
+				logger.info("file created");
 				return ResponseHandler.generateResponse(HttpStatus.OK, "msg001");
 			} else {
+				logger.info("file not created");
 				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err001");
 			}
 		} catch (Exception ex) {

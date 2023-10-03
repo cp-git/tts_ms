@@ -86,7 +86,7 @@ public class CompanyController {
 	@PostMapping("/company")
 	public ResponseEntity<Object> createCompany(
 			@RequestPart("company") CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
-			@RequestParam("file") MultipartFile file) throws CPException {
+			@RequestParam(value= "file", required = false) MultipartFile file) throws CPException {
 		// Log that a request to create a company has been received
 		logger.info("Received request to create company ");
 

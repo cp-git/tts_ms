@@ -14,26 +14,33 @@ import com.cpa.ttsms.service.UploadFileService;
 @Service
 public class UploadFileServiceImpl implements UploadFileService {
 
-	@Override
-	public boolean uploadFile(String basePath, String folderName, String fileName, MultipartFile file) {
-		// TODO Auto-generated method stub
-		try {
-			String uploadSubDir = folderName;
+    @Override
+    public boolean uploadFile(String basePath, String folderName, String fileName, MultipartFile file) {
+        try {
+            // Define the subdirectory where the file will be uploaded
+            String uploadSubDir = folderName;
 
-			File uploadDir = new File(basePath, uploadSubDir);
-			if (!uploadDir.exists()) {
-				uploadDir.mkdirs();
-			}
+            // Create a File object representing the directory where the file will be uploaded
+            File uploadDir = new File(basePath, uploadSubDir);
 
-			Path filePath = Path.of(uploadDir.getAbsolutePath(), fileName);
-			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            // If the directory does not exist, create it
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();
+            }
 
-			return true;
-		} catch (IOException ex) {
-			ex.printStackTrace();
+            // Create a Path object representing the complete file path
+            Path filePath = Path.of(uploadDir.getAbsolutePath(), fileName);
 
-		}
-		return false;
-	}
+            // Copy the content of the uploaded file to the specified file path, replacing if it already exists
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
+            // Return true to indicate that the file was successfully uploaded
+            return true;
+        } catch (IOException ex) {
+            // If an IOException occurs during the file upload, print the exception details
+            ex.printStackTrace();
+        }
+        // Return false to indicate that the file upload was not successful
+        return false;
+    }
 }

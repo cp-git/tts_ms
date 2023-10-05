@@ -88,40 +88,41 @@ public class CompanyServiceImpl implements CompanyService {
 				companyAndCompanyPhotosDTO.getCompanyZip(), companyAndCompanyPhotosDTO.getCompanyCountryId());
 
 		createdCompany = companyRepo.save(company);
-
+		logger.info("created company : " + company.toString());
 		try {
 
 			tempFile = File.createTempFile("temp", file.getOriginalFilename());
+			logger.info("file : " + file.getOriginalFilename());
 			file.transferTo(tempFile);
-
+			logger.info("multipart file transfered to file object");
 			// extracting extension from original file
 			extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-
+			logger.info("extension : " + extension);
 			// modifying file name with company name and id with extesnion
 			String modifiedFileName = company.getCompanyName() + "_" + company.getCompanyId() + extension;
-
+			logger.info("modifiedFileName : " + modifiedFileName);
 			// adding data of company photo in table
 			CompanyPhotos companyPhotos = new CompanyPhotos(companyAndCompanyPhotosDTO.getPhotoId(),
 					company.getCompanyId(), modifiedFileName);
 			CompanyPhotos createdCompanyPhotoObject = companyPhotosRepo.save(companyPhotos);
-
+			logger.info("createdCompanyPhotoObject : " + createdCompanyPhotoObject);
 			// building form-data to pass in request for uploading file
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 			map.add("filename", modifiedFileName);
 			map.add("file", new FileSystemResource(tempFile));
 			map.add("folder", "company/" + company.getCompanyName() + "_" + company.getCompanyId());
-
+			logger.info("map : " + map);
 			// seeting content type for header
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+			logger.info("headers : " + headers);
 			HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-
+			logger.info("requestEntity : ");
 			// calling api for uploading file
 			ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
-
+			logger.info("response : " + response.getStatusCode());
 			if (response.getStatusCode() == HttpStatus.OK) {
-
+				logger.info("inside  : " + response.getStatusCode());
 				// setting created ids to dto s
 				companyAndCompanyPhotosDTO.setPhotoId(createdCompanyPhotoObject.getCompanyPhotosId());
 				companyAndCompanyPhotosDTO.setCompanyId(createdCompany.getCompanyId());

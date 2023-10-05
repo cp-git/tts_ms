@@ -8,13 +8,13 @@ spring.datasource:
   driverClassName: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/tts
   username: postgres
-  password: Pass1word
+  password: password
   
 server:
   port : 8080
   
 file:
-  base-path: D:/TTS
+  base-path: /home/ubuntu/TTS
   
 email:
   url: http://localhost:8080/email/sendMail

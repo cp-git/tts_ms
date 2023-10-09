@@ -1,3 +1,8 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
 spring.jpa:
   database: POSTGRESQL
   hibernate.ddl-auto: update
@@ -14,7 +19,7 @@ server:
   port : 8080
   
 file:
-  base-path: /home/ubuntu/TTS
+  base-path: /demo/tts
   
   # Define the URLs for external services
 external-services:

@@ -1,3 +1,4 @@
+
 spring.jpa:
   database: POSTGRESQL
   hibernate.ddl-auto: update
@@ -14,7 +15,7 @@ server:
   port : 8080
   
 file:
-  base-path: /home/ubuntu/TTS
+  base-path: /demo/tts
   
 email:
   url: http://localhost:8080/email/sendMail

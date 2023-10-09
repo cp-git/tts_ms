@@ -20,5 +20,5 @@ server:
   port: 8080
   
 file:
-  base-path: /home/ubuntu/TTS
+  base-path: /demo/tts
 

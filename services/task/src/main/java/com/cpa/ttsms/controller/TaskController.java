@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
@@ -285,38 +286,43 @@ public class TaskController {
 	 */
 	@GetMapping("/allparent")
 	public ResponseEntity<Object> findTasksByStatusAndCreatorAndAssigneeOfCompanyByEmployeeId(
-	    @RequestParam("parentid") int parentId,
-	    @RequestParam("status") List<String> statuses, // Accept a list of statuses
-	    @RequestParam("createdby") int createdBy,
-	    @RequestParam("assignedto") int assignedTo,
-	    @RequestParam("companyid") int companyId) {
+			@RequestParam("parentid") int parentId, @RequestParam("status") List<String> statuses, // Accept a list of
+																									// statuses
+			@RequestParam("createdby") int createdBy, @RequestParam("assignedto") int assignedTo,
+			@RequestParam("companyid") int companyId) {
 
-	    // Log that the method has been entered and print the statuses, createdBy, assignedTo received
-	    logger.debug("Entering findTasksByStatusAndCreatorAndAssigneeOfCompanyByemployeeId");
-	    logger.info("Entered statuses/createdBy/assignedTo: " + statuses + "/" + createdBy + "/" + assignedTo + "/" + companyId);
+		// Log that the method has been entered and print the statuses, createdBy,
+		// assignedTo received
+		logger.debug("Entering findTasksByStatusAndCreatorAndAssigneeOfCompanyByemployeeId");
+		logger.info("Entered statuses/createdBy/assignedTo: " + statuses + "/" + createdBy + "/" + assignedTo + "/"
+				+ companyId);
 
-	    List<Task> parentTasks = null;
-	    try {
-	        // Fetch parent tasks with the specified statuses, createdBy, assignedTo using the taskService
-	        parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId, statuses, createdBy, assignedTo, companyId);
+		List<Task> parentTasks = null;
+		try {
+			// Fetch parent tasks with the specified statuses, createdBy, assignedTo using
+			// the taskService
+			parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId, statuses,
+					createdBy, assignedTo, companyId);
 
-	        // Log the fetched parent tasks
-	        logger.info("Fetched parent tasks with statuses/createdBy/assignedTo: " + statuses + "/" + createdBy + "/" + assignedTo + "/" + companyId + ": " + parentTasks);
+			// Log the fetched parent tasks
+			logger.info("Fetched parent tasks with statuses/createdBy/assignedTo: " + statuses + "/" + createdBy + "/"
+					+ assignedTo + "/" + companyId + ": " + parentTasks);
 
-	        // If parentTasks list is not empty, return it as a successful response
-	        if (parentTasks != null) {
-	            return ResponseHandler.generateResponse(parentTasks, HttpStatus.OK);
-	        } else {
-	            // If no parent tasks are found with the specified statuses, return NOT_FOUND status
-	            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
-	        }
-	    } catch (Exception e) {
-	        // If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR status
-	        logger.error("Error while fetching parent tasks: " + e.getMessage());
-	        return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
-	    }
+			// If parentTasks list is not empty, return it as a successful response
+			if (parentTasks != null) {
+				return ResponseHandler.generateResponse(parentTasks, HttpStatus.OK);
+			} else {
+				// If no parent tasks are found with the specified statuses, return NOT_FOUND
+				// status
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
 	}
-
 
 	// Get a list of files by type
 	@GetMapping("/task/getfiles")
@@ -360,6 +366,34 @@ public class TaskController {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
+		}
+
+	}
+
+	/**
+	 * Controller endpoint to retrieve a list of ParentAndChildTaskDTO objects
+	 * representing tasks created and assigned by the specified employee.
+	 * 
+	 * @param employeeId The ID of the employee for whom tasks are to be retrieved.
+	 * @return A list containing a ParentAndChildTaskDTO object representing parent
+	 *         tasks and their child tasks created and assigned by the specified
+	 *         employee.
+	 */
+	@GetMapping("/created/{employeeId}")
+	public ResponseEntity<Object> getAllTaskCreatedByMeAndAssignToMe(@PathVariable int employeeId) {
+
+		try {
+			// Retrieve tasks created and assigned by the specified employee using the
+			// service method
+			ParentAndChildTaskDTO taskList = taskService.getAllTaskCreatedByMeAndAssignToMe(employeeId);
+			// return taskList;
+			if (taskList != null) {
+				return ResponseHandler.generateResponse(taskList, HttpStatus.OK);
+			} else {
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
 		}
 

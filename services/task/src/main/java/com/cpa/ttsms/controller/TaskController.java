@@ -286,22 +286,22 @@ public class TaskController {
 	@GetMapping("/allparent")
 	public ResponseEntity<Object> findTasksByStatusAndCreatorAndAssigneeOfCompanyByEmployeeId(
 	    @RequestParam("parentid") int parentId,
-	    @RequestParam("status") List<String> statuses, // Accept a list of statuses
+	    @RequestParam("statusIds") List<Integer> statusIds, // Accept a list of statusIds
 	    @RequestParam("createdby") int createdBy,
 	    @RequestParam("assignedto") int assignedTo,
 	    @RequestParam("companyid") int companyId) {
 
 	    // Log that the method has been entered and print the statuses, createdBy, assignedTo received
 	    logger.debug("Entering findTasksByStatusAndCreatorAndAssigneeOfCompanyByemployeeId");
-	    logger.info("Entered statuses/createdBy/assignedTo: " + statuses + "/" + createdBy + "/" + assignedTo + "/" + companyId);
+	    logger.info("Entered statuses/createdBy/assignedTo: " + statusIds + "/" + createdBy + "/" + assignedTo + "/" + companyId);
 
 	    List<Task> parentTasks = null;
 	    try {
 	        // Fetch parent tasks with the specified statuses, createdBy, assignedTo using the taskService
-	        parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId, statuses, createdBy, assignedTo, companyId);
+	        parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId, statusIds, createdBy, assignedTo, companyId);
 
 	        // Log the fetched parent tasks
-	        logger.info("Fetched parent tasks with statuses/createdBy/assignedTo: " + statuses + "/" + createdBy + "/" + assignedTo + "/" + companyId + ": " + parentTasks);
+	        logger.info("Fetched parent tasks with statuses/createdBy/assignedTo: " + statusIds + "/" + createdBy + "/" + assignedTo + "/" + companyId + ": " + parentTasks);
 
 	        // If parentTasks list is not empty, return it as a successful response
 	        if (parentTasks != null) {

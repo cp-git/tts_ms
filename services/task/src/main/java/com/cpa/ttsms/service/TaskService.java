@@ -75,7 +75,9 @@ public interface TaskService {
 	 *         assignedTo..
 	 * @throws IllegalArgumentException If an invalid status is provided.
 	 */
-	List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, List<String> statuses, int createdBy,
+//	List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, List<String> statuses, int createdBy,
+//			int assignedTo, int companyId);
+	List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, List<Integer> statusIds, int createdBy,
 			int assignedTo, int companyId);
 
 	List<Object> getFilesUsingTaskId(int taskId);

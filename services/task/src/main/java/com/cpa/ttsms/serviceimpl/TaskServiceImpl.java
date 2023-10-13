@@ -230,7 +230,7 @@ public class TaskServiceImpl implements TaskService {
 
 	void updateParentHavingChildIfChildIsExist(int parentId) {
 		// TODO Auto-generated method stub
-		System.out.println("*******************************8888888888888888888888888888888" + parentId);
+		//System.out.println("*******************************8888888888888888888888888888888" + parentId);
 		taskRepo.updateHavingChildToTrueByParentId(parentId);
 	}
 
@@ -504,7 +504,8 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	
-	public List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, List<String> statuses, int createdBy, int assignedTo, int companyId) {
+	@Override
+	public List<Task> findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(int parentId, List<Integer> statusIds, int createdBy, int assignedTo, int companyId) {
 
 	    List<Task> taskList = null;
 
@@ -512,7 +513,7 @@ public class TaskServiceImpl implements TaskService {
 	        // Created by all
 	        if (createdBy == 0) {
 	            // Check if statuses contain "ALL"
-	            if (statuses.contains("ALL")) {
+	        	 if (statusIds.contains(0)) {
 	                // Checks assigned to 0 means all
 	                if (assignedTo == 0) {
 	                    // Get all tasks by company id and parent id
@@ -522,10 +523,10 @@ public class TaskServiceImpl implements TaskService {
 	                    taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskAssignedToOrderByTaskStartDate(companyId, parentId, assignedTo);
 	                }
 	            } else {
-	                // Statuses contain specific values
-	                List<Integer> statusIds = statuses.stream()
-	                        .map(status -> statusRepo.findByStatusCodeIgnoreCase(status).getStatusId())
-	                        .collect(Collectors.toList());
+//	                // Statuses contain specific values
+//	                List<Integer> statusIds = statuses.stream()
+//	                        .map(status -> statusRepo.findByStatusCodeIgnoreCase(status).getStatusId())
+//	                        .collect(Collectors.toList());
 
 	                // Checks assigned to 0 means all
 	                if (assignedTo == 0) {
@@ -540,7 +541,7 @@ public class TaskServiceImpl implements TaskService {
 	        // For created by me
 	        else {
 	            // Check if statuses contain "ALL"
-	            if (statuses.contains("ALL")) {
+	            if (statusIds.contains(0)) {
 	                // Checks assigned to is 0 means all
 	                if (assignedTo == 0) {
 	                    // Task by company id, parent id, and created by
@@ -549,11 +550,11 @@ public class TaskServiceImpl implements TaskService {
 	                    // Task by company id, parent id, created by, and assigned to
 	                    taskList = taskRepo.findByCompanyIdAndTaskParentAndTaskCreatedByAndTaskAssignedToOrderByTaskStartDate(companyId, parentId, createdBy, assignedTo);
 	                }
-	            } else {
-	                // Statuses contain specific values
-	                List<Integer> statusIds = statuses.stream()
-	                        .map(status -> statusRepo.findByStatusCodeIgnoreCase(status).getStatusId())
-	                        .collect(Collectors.toList());
+            } else {
+//	                // Statuses contain specific values
+//	                List<Integer> statusIds = statuses.stream()
+//	                        .map(status -> statusRepo.findByStatusCodeIgnoreCase(status).getStatusId())
+//	                        .collect(Collectors.toList());
 
 	                // Checks assigned to is 0 means all
 	                if (assignedTo == 0) {
@@ -577,21 +578,23 @@ public class TaskServiceImpl implements TaskService {
 		// TODO Auto-generated method stub
 
 		Task task = taskRepo.findByTaskId(taskId);
+		
 		List<Object> fileNames = new ArrayList<>();
 
 		String folderName = null;
-
+		
 		if (task != null) {
 
 			folderName = "task_attachement/" + task.getTaskName() + "_" + task.getTaskId();
+			
 			// Create a File object for the specified subdirectory
 			File directory = new File(basePath, folderName);
-
+			
 			// Check if the subdirectory exists and is a directory
 			if (directory.exists() && directory.isDirectory()) {
 				// List all files in the subdirectory
 				File[] files = directory.listFiles();
-
+				
 				// Iterate through the files and add file names to the list
 				if (files != null) {
 					for (File file : files) {
@@ -599,6 +602,7 @@ public class TaskServiceImpl implements TaskService {
 						if (file.isFile()) {
 							// Add the name of the file to the list
 							fileNames.add(file.getName());
+							
 						}
 					}
 				}

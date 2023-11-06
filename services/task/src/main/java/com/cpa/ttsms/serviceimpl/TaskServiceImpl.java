@@ -45,6 +45,7 @@ import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.entity.Reason;
+import com.cpa.ttsms.entity.Status;
 import com.cpa.ttsms.entity.Task;
 import com.cpa.ttsms.entity.TaskAttachment;
 import com.cpa.ttsms.repository.PasswordRepo;
@@ -120,7 +121,7 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public TaskAndReasonDTO createOrUpdateTaskAndAddReason(TaskAndReasonDTO taskAndReasonDTO, MultipartFile file) {
 
-		logger.debug("Entering createTask");
+		logger.info("Entering createTask");
 		try {
 
 			Task task = new Task();
@@ -135,15 +136,21 @@ public class TaskServiceImpl implements TaskService {
 
 			// Set values in the Task object
 			if (taskId > 0) {
+				logger.info("Task id greator than 0");
 				task.setTaskId(taskId);
-
+				Status taskStatus = statusRepo.findById(taskAndReasonDTO.getTaskStatus());
+				logger.info("status " + taskStatus);
 				// Check if the parent task's status can be updated
-				if (isTaskStatusDoneOrCancel(taskAndReasonDTO.getTaskStatus())) {
+				if (isTaskStatusDoneOrCancel(taskStatus)) {
+					logger.info("task status is done/cancelled");
 					if (!canUpdateParentTaskStatus(task)) {
+						logger.info("can update parenttaskstatus");
 						return null; // Return null if it cannot be updated
 					}
 				}
+				logger.info("before");
 				checkAssignedToAndStatusIsUpdated(taskAndReasonDTO);
+				logger.info("after");
 
 			}
 			task.setTaskName(taskAndReasonDTO.getTaskName());
@@ -356,8 +363,9 @@ public class TaskServiceImpl implements TaskService {
 		return false;
 	}
 
-	private boolean isTaskStatusDoneOrCancel(int taskStatus) {
-		return taskStatus == 3 || taskStatus == 4;
+	private boolean isTaskStatusDoneOrCancel(Status taskStatus) {
+		return (taskStatus.isActualStartDate() == true && taskStatus.isActualEndDate() == true
+				&& taskStatus.isFinalStatus() == true);
 	}
 
 	/**
@@ -371,11 +379,11 @@ public class TaskServiceImpl implements TaskService {
 	private boolean canUpdateParentTaskStatus(Task parentTask) {
 		// Retrieve a list of child tasks for the given parent task
 		List<Task> childTasks = getAllChildTasksByParentId(parentTask.getTaskId());
-
-		// Iterate through the child tasks and their nested child tasks
+		logger.info("all child tasks " + childTasks); // Iterate through the child tasks and their nested child tasks
 		for (Task childTask : childTasks) {
-			// Check if the child task's status is not "Done" /"Cancel"(status 3 or 4)
-			if (!isTaskStatusDone(childTask)) {
+			// Check if the child task's status is not "Done" /"Cancel"
+			Status taskStatus = statusRepo.findById(childTask.getTaskStatus());
+			if (!isTaskStatusDone(taskStatus)) {
 				// If any child task's status is not done/cancel, the parent task cannot be
 				// updated
 				return false;
@@ -392,9 +400,10 @@ public class TaskServiceImpl implements TaskService {
 	 * @param task The task to check.
 	 * @return True if the task's status is "Done/cancel," false otherwise.
 	 */
-	private boolean isTaskStatusDone(Task task) {
-		// Check if the task's status is either 3 (Done) or 4 (Cancelled)
-		return task.getTaskStatus() == 3 || task.getTaskStatus() == 4;
+	private boolean isTaskStatusDone(Status taskStatus) {
+		// Check if the task's status is either (Done) or (Cancelled)
+		return (taskStatus.isActualStartDate() == true && taskStatus.isActualEndDate() == true
+				&& taskStatus.isFinalStatus() == true);
 	}
 
 	/**

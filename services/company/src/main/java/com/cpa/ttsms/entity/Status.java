@@ -190,7 +190,8 @@ public class Status {
 	@Override
 	public String toString() {
 		return "Status [statusId=" + statusId + ", statusCode=" + statusCode + ", statusDescription="
-				+ statusDescription + ", statusOrder=" + statusOrder + "]";
+				+ statusDescription + ", statusOrder=" + statusOrder + ", companyId=" + companyId + ", actualStartDate="
+				+ actualStartDate + ", actualEndDate=" + actualEndDate + ", finalStatus=" + finalStatus + "]";
 	}
 
 }

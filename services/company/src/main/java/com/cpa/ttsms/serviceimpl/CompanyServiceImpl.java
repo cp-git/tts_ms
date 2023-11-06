@@ -9,7 +9,9 @@ package com.cpa.ttsms.serviceimpl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -32,18 +34,22 @@ import com.cpa.ttsms.dto.CompanyAndCompanyPhotosDTO;
 //import com.cpa.ttsms.controller.CompanyController;
 import com.cpa.ttsms.entity.Company;
 import com.cpa.ttsms.entity.CompanyPhotos;
+import com.cpa.ttsms.entity.Status;
 import com.cpa.ttsms.repository.CompanyPhotosRepo;
 import com.cpa.ttsms.repository.CompanyRepo;
+import com.cpa.ttsms.repository.StatusRepo;
 import com.cpa.ttsms.service.CompanyService;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
-	//private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
-	
-	// Inject the value of 'file.upload-url' from application.properties or application.yml
-    @Value("${file.upload-url}")
-    private String UPLOAD_FILE_URL;
+	// private final String UPLOAD_FILE_URL =
+	// "http://localhost:8080/uploadfile/ttsms/upload";
+
+	// Inject the value of 'file.upload-url' from application.properties or
+	// application.yml
+	@Value("${file.upload-url}")
+	private String UPLOAD_FILE_URL;
 
 	// Inject the value of 'file.base-path' from application.yml file
 	@Value("${file.base-path}")
@@ -51,6 +57,9 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	private CompanyRepo companyRepo;
+
+	@Autowired
+	private StatusRepo statusRepo;
 
 	@Autowired
 	private CompanyPhotosRepo companyPhotosRepo;
@@ -89,6 +98,12 @@ public class CompanyServiceImpl implements CompanyService {
 
 		createdCompany = companyRepo.save(company);
 		logger.info("created company : " + company.toString());
+
+		// Insert the status records after successfully creating a company
+		if (createdCompany != null) {
+			insertStatusRecords(createdCompany.getCompanyId());
+		}
+
 		try {
 
 			tempFile = File.createTempFile("temp", file.getOriginalFilename());
@@ -368,7 +383,39 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public CompanyPhotos getPhotosByCompanyId(int companyId) {
 		// TODO Auto-generated method stub
-		 return companyPhotosRepo.findByCompanyId(companyId);
+		return companyPhotosRepo.findByCompanyId(companyId);
+	}
+
+	private void insertStatusRecords(int companyId) {
+		// Define the status codes and their corresponding status orders
+		Map<String, Integer> statusOrderMap = new HashMap<>();
+		statusOrderMap.put("Created", 1);
+		statusOrderMap.put("In-progress", 2);
+		statusOrderMap.put("Done", 3);
+		statusOrderMap.put("Cancelled", 4);
+
+		// You can insert the statuses using a loop or individually, depending on your
+		// requirements.
+		String[] statusCodes = { "Created", "In-progress", "Done", "Cancelled" };
+		for (String statusCode : statusCodes) {
+			// Create a new status record and set its properties
+			Status status = new Status();
+			status.setStatusCode(statusCode);
+			status.setStatusDescription("Description for " + statusCode);
+			status.setStatusOrder(statusOrderMap.get(statusCode)); // Set the status order
+			status.setCompanyId(companyId);
+
+			if (statusCode.equals("In-progress")) {
+				status.setActualStartDate(true);
+			} else if (statusCode.equals("Done") || statusCode.equals("Cancelled")) {
+				status.setActualStartDate(true);
+				status.setActualEndDate(true);
+				status.setFinalStatus(true);
+			}
+
+			// Save the status record to the database
+			statusRepo.save(status);
+		}
 	}
 
 }

@@ -19,7 +19,7 @@ server:
   port : 8080
   
 file:
-  base-path: /demo/tts
+  base-path: D:/demo/tts
   
   # Define the URLs for external services
 external-services:

@@ -19,4 +19,5 @@ public interface StatusRepo extends JpaRepository<Status, Integer> {
 	// Retrieves a status by their statusId
 	public Status findByStatusCodeIgnoreCase(String statusCode);
 
+	public Status findById(int id);
 }

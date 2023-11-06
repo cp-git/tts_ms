@@ -55,4 +55,5 @@ public interface StatusService {
 	 */
 	boolean deleteStatusByStatusId(int statusId);
 
+	List<Status> getStatusesByCompanyId(int companyId);
 }

@@ -86,6 +86,7 @@ public class TaskController {
 		try {
 
 			TaskAndReasonDTO createdTask = taskService.createOrUpdateTaskAndAddReason(taskAndReasonDTO, file);
+			logger.info("createdTask " + createdTask);
 
 			if (createdTask != null) {
 				logger.info("Task created: " + createdTask.getTaskName());

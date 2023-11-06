@@ -40,16 +40,21 @@ public class StatusServiceImpl implements StatusService {
 	@Override
 	public Status createStatus(Status status) {
 		logger.debug("Entering createStatus");
-		Status createdStatus = null;
-		// Check if the status already exists in the repository.
-		Status existingStatus = statusRepo.findByStatusCode(status.getStatusCode());
 
-		if (existingStatus == null) {
-			// If the status does not already exist, create it.
-			createdStatus = statusRepo.save(status);
+		// Check if a status with the same statusCode and companyId already exists
+		Status existingStatus = statusRepo.findByStatusCodeAndCompanyId(status.getStatusCode(), status.getCompanyId());
+
+		if (existingStatus != null) {
+			logger.warn("Status with the same statusCode and companyId already exists.");
+			return null; // Return null to indicate that the creation was not successful.
+		}
+
+		Status createdStatus = statusRepo.save(status);
+
+		if (createdStatus != null) {
 			logger.info("Status created successfully for code :" + status.getStatusCode());
 		} else {
-			logger.warn("Status already exists with code :" + status.getStatusCode());
+			logger.error("Failed to create status for code :" + status.getStatusCode());
 		}
 
 		return createdStatus;
@@ -123,6 +128,10 @@ public class StatusServiceImpl implements StatusService {
 			toStatusAlreadyPresent.setStatusCode(status.getStatusCode());
 			toStatusAlreadyPresent.setStatusDescription(status.getStatusDescription());
 			toStatusAlreadyPresent.setStatusOrder(status.getStatusOrder());
+			toStatusAlreadyPresent.setActualStartDate(status.isActualStartDate());
+			toStatusAlreadyPresent.setActualEndDate(status.isActualEndDate());
+			toStatusAlreadyPresent.setFinalStatus(status.isFinalStatus());
+
 			updatedStatus = statusRepo.save(toStatusAlreadyPresent);
 
 			logger.info("updated Status :" + updatedStatus);
@@ -151,6 +160,11 @@ public class StatusServiceImpl implements StatusService {
 			logger.warn("Status not found or could not be deleted with statusId : " + statusId);
 			return false;
 		}
+	}
+
+	@Override
+	public List<Status> getStatusesByCompanyId(int companyId) {
+		return statusRepo.findByCompanyId(companyId);
 	}
 
 }

@@ -399,5 +399,45 @@ public class TaskController {
 		}
 
 	}
+	
+	@GetMapping("/tasks/created-and-assigned/{employeeId}")
+	public ResponseEntity<Object> getAllParentTaskCreatedByMeAndAssignToMe(@PathVariable int employeeId) {
+
+		try {
+			// Retrieve tasks created and assigned by the specified employee using the
+			// service method
+			List<Task> taskList = taskService.getAllParentTaskCreatedByMeAndAssignToMe(employeeId);
+			// return taskList;
+			if (taskList != null) {
+				return ResponseHandler.generateResponse(taskList, HttpStatus.OK);
+			} else {
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
+		}
+
+	}
+
+	@GetMapping("/child/created-and-assigned/{employeeId}/taskid/{taskId}")
+	public ResponseEntity<Object> getAllChildTasksCreatedByMeAndAssignToMe(@PathVariable int employeeId,
+			@PathVariable int taskId) {
+
+		try {
+			// Retrieve tasks created and assigned by the specified employee using the
+			// service method
+			System.out.println(employeeId + "/*/*/*/**/*/*/*/*/*/*/*/*/*/*/*" + taskId);
+			List<Task> taskList = taskService.getAllChildTaskAssignToOrCreatedByMeByParentId(employeeId, taskId);
+			// return taskList;
+			if (taskList != null) {
+				return ResponseHandler.generateResponse(taskList, HttpStatus.OK);
+			} else {
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
+		}
+
+	}
 
 }

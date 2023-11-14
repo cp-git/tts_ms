@@ -700,4 +700,63 @@ public class TaskServiceImpl implements TaskService {
 		// Returning the merged set
 		return mergedSet;
 	}
+	
+	@Override
+	public List<Task> getAllParentTaskCreatedByMeAndAssignToMe(int employeeId) {
+		// TODO Auto-generated method stub
+		int createdBy = employeeId;
+		int assignedBy = employeeId;
+
+		List<Task> allTasks = taskRepo.findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDesc(createdBy, assignedBy);
+		System.out.println(allTasks + "*******************************************");
+		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
+				// filtering
+				.filter(parentId -> parentId != null && parentId != 0) // Filter out null parent task IDs, if any
+				.collect(Collectors.toSet());
+
+		Set<Integer> parentTaskIdsSet2 = allTasks.stream().filter(task -> task.getTaskParent() == 0)
+				.map(Task::getTaskId).collect(Collectors.toSet());
+		System.out.println(parentTaskIdsSet1 + "&&&&&&&&&&&&&&&" + parentTaskIdsSet2);
+		List<Task> parentTaskList = new ArrayList<>();
+		Set<Integer> parentTaskIds = mergeSet(parentTaskIdsSet1, parentTaskIdsSet2);
+		for (Integer parentId : parentTaskIds) {
+
+			Task parentTask = taskRepo.findByTaskId(parentId);
+			parentTaskList.add(parentTask);
+		}
+
+		return parentTaskList;
+	}
+
+	
+	@Override
+	public List<Task> getAllChildTaskAssignToOrCreatedByMeByParentId(int employeeId, int taskId) {
+		// TODO Auto-generated method stub
+
+		List<Task> childTasks = taskRepo.findByTaskParent(taskId);
+
+		// List<Task> parentCreatedByMeAbleToSeeAllChildTask =taskRepo.f
+		List<Integer> childTaskIds1 = childTasks.stream().filter(task -> task.getTaskCreatedBy() == employeeId)
+				.map(Task::getTaskId).collect(Collectors.toList());
+		List<Integer> childTaskIds2 = childTasks.stream().filter(task -> task.getTaskAssignedTo() == employeeId)
+				.map(Task::getTaskId).collect(Collectors.toList());
+
+		Set<Integer> mergedTaskIds = new HashSet<>();
+		mergedTaskIds.addAll(childTaskIds1);
+		mergedTaskIds.addAll(childTaskIds2);
+
+		List<Task> childTaskList = new ArrayList<>();
+		for (Integer parentId : mergedTaskIds) {
+			Task parentTask = taskRepo.findByTaskId(parentId);
+			childTaskList.add(parentTask);
+		}
+		Task parentTask = taskRepo.findByTaskId(taskId);
+
+		if (parentTask != null && parentTask.getTaskCreatedBy() == employeeId) {
+			// If the parent task is created by the employee, return it
+			return childTasks;
+		}
+
+		return childTaskList;
+	}
 }

@@ -17,6 +17,7 @@ import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
+import com.cpa.ttsms.entity.TaskAttachment;
 
 public interface TaskService {
 
@@ -100,4 +101,11 @@ public interface TaskService {
 	List<Task> getAllParentTaskCreatedByMeAndAssignToMe(int employeeId);
 
 	List<Task> getAllChildTaskAssignToOrCreatedByMeByParentId(int employeeId, int taskId);
+	
+	//List<TaskAttachment> uploadFileForTask (int taskId , int employeeId , List<MultipartFile> file);
+
+//	List<TaskAttachment> uploadFilesForTask(int taskId, int employeeId, List<MultipartFile> files);
+	 TaskAttachment uploadFileForTask(int taskId, int employeeId, MultipartFile file);
+	 
+	 List<TaskAttachment> uploadMultipleFiles(int taskId , int employeeId , List<MultipartFile> files);
 }

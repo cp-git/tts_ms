@@ -20,5 +20,5 @@ server:
   port: 8080
   
 file:
-  base-path: D:/demo/tts
+  base-path: D:/TTS
 

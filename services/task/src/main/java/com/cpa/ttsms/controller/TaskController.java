@@ -37,6 +37,7 @@ import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.Task;
+import com.cpa.ttsms.entity.TaskAttachment;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.TaskService;
@@ -58,6 +59,7 @@ public class TaskController {
 	// Inject the value of 'file.base-path' from application.yml file
 	@Value("${file.base-path}")
 	private String basePath;
+	
 
 	TaskController() {
 		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
@@ -439,5 +441,69 @@ public class TaskController {
 		}
 
 	}
+	
+//	@PostMapping("/{taskId}/upload/{employeeId}")
+//	public ResponseEntity<String> uploadFilesForTask(
+//	        @PathVariable int taskId,
+//	        @PathVariable int employeeId,
+//	        @RequestParam("files") List<MultipartFile> files) {
+//	    
+//	    try {
+//	        List<TaskAttachment> responses = taskService.uploadFilesForTask(taskId, employeeId, files);
+//
+//	        if (responses != null && !responses.isEmpty()) {
+//	            return new ResponseEntity<>("Files uploaded successfully", HttpStatus.OK);
+//	        } else {
+//	            return new ResponseEntity<>("No files uploaded", HttpStatus.BAD_REQUEST);
+//	        }
+//
+//	    } catch (Exception e) {
+//	        return new ResponseEntity<>("Error uploading files: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//	    }
+//	}
+	
+	
+	 @PostMapping("/{taskId}/upload/{employeeId}")
+	    public ResponseEntity<String> uploadFileForTask(
+	            @PathVariable int taskId,
+	            @PathVariable int employeeId,
+	            @RequestParam("file") MultipartFile file) {
+	        
+	        try {
+	            TaskAttachment response = taskService.uploadFileForTask(taskId, employeeId, file);
 
+	            if (response !=null) {
+	                return new ResponseEntity<>("File uploaded successfully", HttpStatus.OK);
+	            } else {
+	                return  null;
+	            }
+
+	        } catch (Exception e) {
+	            return new ResponseEntity<>("Error uploading file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	        }
+	    }
+	 
+	 
+	 @PostMapping("/{taskId}/uploadMulti/{employeeId}")
+	 public ResponseEntity<String> uploadFilesForTask(
+	         @PathVariable int taskId,
+	         @PathVariable int employeeId,
+	         @RequestParam("files") List<MultipartFile> files) {
+
+	     try {
+	         List<TaskAttachment> responses = taskService.uploadMultipleFiles(taskId, employeeId, files);
+
+	         if (responses != null && !responses.isEmpty()) {
+	             System.out.println("here");
+	             return new ResponseEntity<>("\"Files uploaded successfully\"", HttpStatus.OK);
+	         } else {
+	             System.out.println("else");
+	             return new ResponseEntity<>("\"No files uploaded\"", HttpStatus.BAD_REQUEST);
+	         }
+
+	     } catch (Exception e) {
+	         return new ResponseEntity<>("\"Error uploading files: " + e.getMessage() + "\"", HttpStatus.INTERNAL_SERVER_ERROR);
+	     }
+	 }
+ 
 }

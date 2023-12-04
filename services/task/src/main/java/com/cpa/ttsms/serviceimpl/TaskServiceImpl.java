@@ -63,12 +63,16 @@ public class TaskServiceImpl implements TaskService {
 	@Value("${file.base-path}")
 	private String basePath;
 
-//	private final String REASON_API_URL = "http://localhost:8080/reason/ttsms/reason";
-//	private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
-//	private final String email_URL = "http://localhost:8080/email/taskMail";
-//	private final String employee_URL = "http://localhost:8080/employee/ttsms/employee/";
-//	private final String status_URL = "http://localhost:8080/status/ttsms/status/";
-//	private final String task_URL = "http://localhost:8080/task/ttsms/task/";
+	// private final String REASON_API_URL =
+	// "http://localhost:8080/reason/ttsms/reason";
+	// private final String UPLOAD_FILE_URL =
+	// "http://localhost:8080/uploadfile/ttsms/upload";
+	// private final String email_URL = "http://localhost:8080/email/taskMail";
+	// private final String employee_URL =
+	// "http://localhost:8080/employee/ttsms/employee/";
+	// private final String status_URL =
+	// "http://localhost:8080/status/ttsms/status/";
+	// private final String task_URL = "http://localhost:8080/task/ttsms/task/";
 
 	@Value("${external-services.reason-api-url}")
 	private String REASON_API_URL;
@@ -429,26 +433,26 @@ public class TaskServiceImpl implements TaskService {
 	 * @return The list of parent tasks with the specified status.
 	 * @throws IllegalArgumentException If an invalid status is provided.
 	 */
-//	@Override
-//	public List<Task> getAllParentTasksByStatus(String status) {
-//		// Switch statement to handle different status values and fetch corresponding
-//		// tasks
-//		switch (status.toLowerCase()) {
-//		// If status is "created", fetch all parent tasks with status "Created"
-//		case "created":
-//			return taskRepo.findByTaskParentIsNullAndTaskStatus("CREATED");
-//		// If status is "done", fetch all parent tasks with status "Done"
-//		case "done":
-//			return taskRepo.findByTaskParentIsNullAndTaskStatus("DONE");
-//		// If status is "inprogress", fetch all parent tasks with status not in
-//		// "Created" or "Done"
-//		case "inprogress":
-//			return taskRepo.findByTaskParentIsNullAndTaskStatusNotIn("CREATED", "DONE");
-//		// If an invalid status is provided, throw an exception
-//		default:
-//			throw new IllegalArgumentException("Invalid status provided.");
-//		}
-//	}
+	// @Override
+	// public List<Task> getAllParentTasksByStatus(String status) {
+	// // Switch statement to handle different status values and fetch corresponding
+	// // tasks
+	// switch (status.toLowerCase()) {
+	// // If status is "created", fetch all parent tasks with status "Created"
+	// case "created":
+	// return taskRepo.findByTaskParentIsNullAndTaskStatus("CREATED");
+	// // If status is "done", fetch all parent tasks with status "Done"
+	// case "done":
+	// return taskRepo.findByTaskParentIsNullAndTaskStatus("DONE");
+	// // If status is "inprogress", fetch all parent tasks with status not in
+	// // "Created" or "Done"
+	// case "inprogress":
+	// return taskRepo.findByTaskParentIsNullAndTaskStatusNotIn("CREATED", "DONE");
+	// // If an invalid status is provided, throw an exception
+	// default:
+	// throw new IllegalArgumentException("Invalid status provided.");
+	// }
+	// }
 
 	/**
 	 * Get all child tasks of a parent task with a specific ID.
@@ -596,33 +600,32 @@ public class TaskServiceImpl implements TaskService {
 	@Transactional
 	@Override
 	public List<Object> getFilesUsingTaskId(int taskId) {
-	    Task task = taskRepo.findByTaskId(taskId);
-	    List<Object> fileNames = new ArrayList<>();
-	    String folderName = null;
+		Task task = taskRepo.findByTaskId(taskId);
+		List<Object> fileNames = new ArrayList<>();
+		String folderName = null;
 
-	    if (task != null) {
-	        folderName = "task_attachment/" + task.getTaskName() + "_" + task.getTaskId();
-	        File directory = new File(basePath, folderName);
+		if (task != null) {
+			folderName = "task_attachment/" + task.getTaskName() + "_" + task.getTaskId();
+			File directory = new File(basePath, folderName);
 
-	        if (directory.exists() && directory.isDirectory()) {
-	            File[] files = directory.listFiles();
+			if (directory.exists() && directory.isDirectory()) {
+				File[] files = directory.listFiles();
 
-	            if (files != null) {
-	                // Sort files based on their last modified date
-	                Arrays.sort(files, Comparator.comparingLong(File::lastModified).reversed());
+				if (files != null) {
+					// Sort files based on their last modified date
+					Arrays.sort(files, Comparator.comparingLong(File::lastModified).reversed());
 
-	                for (File file : files) {
-	                    if (file.isFile()) {
-	                        fileNames.add(file.getName());
-	                    }
-	                }
-	            }
-	        }
-	    }
+					for (File file : files) {
+						if (file.isFile()) {
+							fileNames.add(file.getName());
+						}
+					}
+				}
+			}
+		}
 
-	    return fileNames;
+		return fileNames;
 	}
-
 
 	@Override
 	public Resource downloadFileByTaskIdAndFileName(int taskId, String fileName) {
@@ -650,8 +653,9 @@ public class TaskServiceImpl implements TaskService {
 		int assignedBy = employeeId;
 		List<Task> allTasks = taskRepo.findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDesc(createdBy, assignedBy);
 
-//		List<Integer> parentTaskIds = allTasks.stream().filter(task -> task.getTaskParent() == 0).map(Task::getTaskId)
-//				.collect(Collectors.toList());
+		// List<Integer> parentTaskIds = allTasks.stream().filter(task ->
+		// task.getTaskParent() == 0).map(Task::getTaskId)
+		// .collect(Collectors.toList());
 
 		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
 																					// filtering
@@ -693,7 +697,7 @@ public class TaskServiceImpl implements TaskService {
 		// Returning the merged set
 		return mergedSet;
 	}
-	
+
 	@Override
 	public List<Task> getAllParentTaskCreatedByMeAndAssignToMe(int employeeId) {
 		// TODO Auto-generated method stub
@@ -721,7 +725,6 @@ public class TaskServiceImpl implements TaskService {
 		return parentTaskList;
 	}
 
-	
 	@Override
 	public List<Task> getAllChildTaskAssignToOrCreatedByMeByParentId(int employeeId, int taskId) {
 		// TODO Auto-generated method stub
@@ -753,149 +756,147 @@ public class TaskServiceImpl implements TaskService {
 		return childTaskList;
 	}
 
-	
-//	public List<TaskAttachment> uploadFilesForTask(int taskId, int employeeId, List<MultipartFile> files) {
-//	    List<TaskAttachment> responses = new ArrayList<>();
-//
-//	    try {
-//	        Task task = taskRepo.findByTaskId(taskId);
-//
-//	        if (task != null) {
-//	            for (MultipartFile file : files) {
-//	                TaskAttachment taskAttachment = new TaskAttachment();
-//	                taskAttachment.setTaskID(taskId);
-//	                taskAttachment.setFileName(file.getOriginalFilename());
-//	                taskAttachment.setAttachedBy(task.getTaskCreatedBy());
-//	                taskAttachmentRepo.save(taskAttachment);
-//
-//	                File tempFile = File.createTempFile("temp", file.getOriginalFilename());
-//	                file.transferTo(tempFile);
-//
-//	                MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-//	                map.add("filename", file.getOriginalFilename());
-//	                map.add("file", new FileSystemResource(tempFile));
-//	                map.add("folder", "task_attachment/" + task.getTaskName() + "_" + task.getTaskId());
-//
-//	                HttpHeaders headers = new HttpHeaders();
-//	                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//
-//	                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-//
-//	                ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
-//
-//	                if (response.getStatusCode() == HttpStatus.OK) {
-//	                    logger.info("File uploaded: " + file.getOriginalFilename());
-//	                    responses.add(taskAttachment);
-//	                } else {
-//	                    logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
-//	                }
-//	            }
-//	        } else {
-//	            logger.error("Error while processing data: Task not found");
-//	        }
-//	    } catch (Exception e) {
-//	        logger.error("Error while processing data: " + e.getMessage(), e);
-//	    }
-//
-//	    return responses;
-//	}
-	
+	// public List<TaskAttachment> uploadFilesForTask(int taskId, int employeeId,
+	// List<MultipartFile> files) {
+	// List<TaskAttachment> responses = new ArrayList<>();
+	//
+	// try {
+	// Task task = taskRepo.findByTaskId(taskId);
+	//
+	// if (task != null) {
+	// for (MultipartFile file : files) {
+	// TaskAttachment taskAttachment = new TaskAttachment();
+	// taskAttachment.setTaskID(taskId);
+	// taskAttachment.setFileName(file.getOriginalFilename());
+	// taskAttachment.setAttachedBy(task.getTaskCreatedBy());
+	// taskAttachmentRepo.save(taskAttachment);
+	//
+	// File tempFile = File.createTempFile("temp", file.getOriginalFilename());
+	// file.transferTo(tempFile);
+	//
+	// MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+	// map.add("filename", file.getOriginalFilename());
+	// map.add("file", new FileSystemResource(tempFile));
+	// map.add("folder", "task_attachment/" + task.getTaskName() + "_" +
+	// task.getTaskId());
+	//
+	// HttpHeaders headers = new HttpHeaders();
+	// headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+	//
+	// HttpEntity<MultiValueMap<String, Object>> requestEntity = new
+	// HttpEntity<>(map, headers);
+	//
+	// ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL,
+	// requestEntity, String.class);
+	//
+	// if (response.getStatusCode() == HttpStatus.OK) {
+	// logger.info("File uploaded: " + file.getOriginalFilename());
+	// responses.add(taskAttachment);
+	// } else {
+	// logger.error("Error uploading data to remote microservice: " +
+	// response.getStatusCodeValue());
+	// }
+	// }
+	// } else {
+	// logger.error("Error while processing data: Task not found");
+	// }
+	// } catch (Exception e) {
+	// logger.error("Error while processing data: " + e.getMessage(), e);
+	// }
+	//
+	// return responses;
+	// }
+
 	public TaskAttachment uploadFileForTask(int taskId, int employeeId, MultipartFile file) {
 		// TODO Auto-generated method stub
-		 try {
-	            Task task = taskRepo.findByTaskId(taskId);
+		try {
+			Task task = taskRepo.findByTaskId(taskId);
 
-	            if (task != null) {
-	         
-	                TaskAttachment taskAttachment = new TaskAttachment();
-	                taskAttachment.setTaskID(taskId);
-	                taskAttachment.setFileName(file.getOriginalFilename());
-	                taskAttachment.setAttachedBy(task.getTaskCreatedBy());
-	                taskAttachmentRepo.save(taskAttachment);
+			if (task != null) {
 
-	                File tempFile = File.createTempFile("temp", file.getOriginalFilename());
-	                file.transferTo(tempFile);
+				TaskAttachment taskAttachment = new TaskAttachment();
+				taskAttachment.setTaskID(taskId);
+				taskAttachment.setFileName(file.getOriginalFilename());
+				taskAttachment.setAttachedBy(task.getTaskCreatedBy());
+				taskAttachmentRepo.save(taskAttachment);
 
-	                MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-	                map.add("filename", file.getOriginalFilename());
-	                map.add("file", new FileSystemResource(tempFile));
-	                map.add("folder", "task_attachement/" + task.getTaskName() + "_" + task.getTaskId());
+				File tempFile = File.createTempFile("temp", file.getOriginalFilename());
+				file.transferTo(tempFile);
 
-	                HttpHeaders headers = new HttpHeaders();
-	                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+				map.add("filename", file.getOriginalFilename());
+				map.add("file", new FileSystemResource(tempFile));
+				map.add("folder", "task_attachement/" + task.getTaskName() + "_" + task.getTaskId());
 
-	                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+				HttpHeaders headers = new HttpHeaders();
+				headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-	                ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
+				HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 
-	                if (response.getStatusCode() == HttpStatus.OK) {
-						logger.info("file uploaded");
-					} else {
-						logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
-					}
-	            } else {
-	            	logger.error("Error while processing data: " );
-	            }
-	        } catch (Exception e) {
-	        	logger.error("Error while processing data: " + e.getMessage(), e);
-	        }
+				ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
+						String.class);
+
+				if (response.getStatusCode() == HttpStatus.OK) {
+					logger.info("file uploaded");
+				} else {
+					logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+				}
+			} else {
+				logger.error("Error while processing data: ");
+			}
+		} catch (Exception e) {
+			logger.error("Error while processing data: " + e.getMessage(), e);
+		}
 		return null;
 	}
 
 	@Override
 	public List<TaskAttachment> uploadMultipleFiles(int taskId, int employeeId, List<MultipartFile> files) {
 		// TODO Auto-generated method stub
-		  List<TaskAttachment> responses = new ArrayList<>();
+		List<TaskAttachment> responses = new ArrayList<>();
 
-		    try {
-		        Task task = taskRepo.findByTaskId(taskId);
+		try {
+			Task task = taskRepo.findByTaskId(taskId);
 
-		        if (task != null) {
-		            for (MultipartFile file : files) {
-		                TaskAttachment taskAttachment = new TaskAttachment();
-		                taskAttachment.setTaskID(taskId);
-		                taskAttachment.setFileName(file.getOriginalFilename());
-		                taskAttachment.setAttachedBy(task.getTaskCreatedBy());
-		                taskAttachmentRepo.save(taskAttachment);
+			if (task != null) {
+				for (MultipartFile file : files) {
+					TaskAttachment taskAttachment = new TaskAttachment();
+					taskAttachment.setTaskID(taskId);
+					taskAttachment.setFileName(file.getOriginalFilename());
+					taskAttachment.setAttachedBy(task.getTaskCreatedBy());
+					taskAttachmentRepo.save(taskAttachment);
 
-		                File tempFile = File.createTempFile("temp", file.getOriginalFilename());
-		                file.transferTo(tempFile);
+					File tempFile = File.createTempFile("temp", file.getOriginalFilename());
+					file.transferTo(tempFile);
 
-		                MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-		                map.add("filename", file.getOriginalFilename());
-		                map.add("file", new FileSystemResource(tempFile));
-		                map.add("folder", "task_attachment/" + task.getTaskName() + "_" + task.getTaskId());
+					MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+					map.add("filename", file.getOriginalFilename());
+					map.add("file", new FileSystemResource(tempFile));
+					map.add("folder", "task_attachment/" + task.getTaskName() + "_" + task.getTaskId());
 
-		                HttpHeaders headers = new HttpHeaders();
-		                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+					HttpHeaders headers = new HttpHeaders();
+					headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-		                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+					HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
 
-		                ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity, String.class);
+					ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
+							String.class);
 
-		                if (response.getStatusCode() == HttpStatus.OK) {
-		                    logger.info("File uploaded: " + file.getOriginalFilename());
-		                    responses.add(taskAttachment);
-		                } else {
-		                    logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
-		                }
-		            }
-		        } else {
-		            logger.error("Error while processing data: Task not found");
-		        }
-		    } catch (Exception e) {
-		        logger.error("Error while processing data: " + e.getMessage(), e);
-		    }
+					if (response.getStatusCode() == HttpStatus.OK) {
+						logger.info("File uploaded: " + file.getOriginalFilename());
+						responses.add(taskAttachment);
+					} else {
+						logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+					}
+				}
+			} else {
+				logger.error("Error while processing data: Task not found");
+			}
+		} catch (Exception e) {
+			logger.error("Error while processing data: " + e.getMessage(), e);
+		}
 
-		    return responses;
+		return responses;
 	}
-
-	
-
-
-
-	
-
-	
 
 }

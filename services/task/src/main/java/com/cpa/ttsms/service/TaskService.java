@@ -45,7 +45,7 @@ public interface TaskService {
 	 * @return A list of parent Task objects with the specified status.
 	 * @throws IllegalArgumentException If an invalid status is provided.
 	 */
-//	List<Task> getAllParentTasksByStatus(String status);
+	// List<Task> getAllParentTasksByStatus(String status);
 
 	/**
 	 * Retrieves all child tasks in the system associated with the specified
@@ -96,16 +96,17 @@ public interface TaskService {
 	 *                                  employee.
 	 */
 	ParentAndChildTaskDTO getAllTaskCreatedByMeAndAssignToMe(int employeeId);
-	
 
 	List<Task> getAllParentTaskCreatedByMeAndAssignToMe(int employeeId);
 
 	List<Task> getAllChildTaskAssignToOrCreatedByMeByParentId(int employeeId, int taskId);
-	
-	//List<TaskAttachment> uploadFileForTask (int taskId , int employeeId , List<MultipartFile> file);
 
-//	List<TaskAttachment> uploadFilesForTask(int taskId, int employeeId, List<MultipartFile> files);
-	 TaskAttachment uploadFileForTask(int taskId, int employeeId, MultipartFile file);
-	 
-	 List<TaskAttachment> uploadMultipleFiles(int taskId , int employeeId , List<MultipartFile> files);
+	// List<TaskAttachment> uploadFileForTask (int taskId , int employeeId ,
+	// List<MultipartFile> file);
+
+	// List<TaskAttachment> uploadFilesForTask(int taskId, int employeeId,
+	// List<MultipartFile> files);
+	TaskAttachment uploadFileForTask(int taskId, int employeeId, MultipartFile file);
+
+	List<TaskAttachment> uploadMultipleFiles(int taskId, int employeeId, List<MultipartFile> files);
 }

@@ -700,4 +700,39 @@ public class TaskServiceImpl implements TaskService {
 		// Returning the merged set
 		return mergedSet;
 	}
+
+	@Override
+	public ParentAndChildTaskDTO getAllParentTasksByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+		List<Task> allTasks = taskRepo.findByCompanyId(companyId);
+
+//		List<Integer> parentTaskIds = allTasks.stream().filter(task -> task.getTaskParent() == 0).map(Task::getTaskId)
+//				.collect(Collectors.toList());
+
+		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
+																					// filtering
+				.filter(parentId -> parentId != null && parentId != 0) // Filter out null parent task IDs, if any
+				.collect(Collectors.toSet());
+
+		Set<Integer> parentTaskIdsSet2 = allTasks.stream().filter(task -> task.getTaskParent() == 0)
+				.map(Task::getTaskId).collect(Collectors.toSet());
+
+		List<Task> parentTaskList = new ArrayList<Task>();
+
+		List<ParentAndChildTaskDTO> parentAndChildDTOs = new ArrayList<>();
+
+		Set<Integer> parentTaskIds = mergeSet(parentTaskIdsSet1, parentTaskIdsSet2);
+
+		for (Integer parentId : parentTaskIds) {
+
+			Task parentTask = taskRepo.findByTaskId(parentId);
+			parentTaskList.add(parentTask);
+		}
+
+		ParentAndChildTaskDTO dto = new ParentAndChildTaskDTO(parentTaskList, allTasks); // Set childTasks as null or an
+																							// empty list
+		parentAndChildDTOs.add(dto);
+		System.out.println(dto);
+		return dto;
+	}
 }

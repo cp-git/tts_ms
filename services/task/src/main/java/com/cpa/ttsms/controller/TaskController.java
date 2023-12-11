@@ -400,4 +400,34 @@ public class TaskController {
 
 	}
 
+	@GetMapping("/allparents")
+	public ResponseEntity<Object> getAllParentTasksByCompanyId(@RequestParam("companyid") int companyId) {
+
+		// Log that the method has been entered and print the statuses, createdBy,
+		// assignedTo received
+		logger.debug("Entering getAllParentTasksByCompanyId");
+		
+		ParentAndChildTaskDTO parentTasks = null;
+		try {
+			parentTasks = taskService.getAllParentTasksByCompanyId(companyId);
+
+			// Log the fetched parent tasks
+			logger.info("Fetched parent tasks :  " + parentTasks);
+
+			// If parentTasks list is not empty, return it as a successful response
+			if (parentTasks != null) {
+				return ResponseHandler.generateResponse(parentTasks, HttpStatus.OK);
+			} else {
+				// If no parent tasks are found with the specified statuses, return NOT_FOUND
+				// status
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
 }

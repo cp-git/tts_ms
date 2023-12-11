@@ -3,7 +3,7 @@ package com.cpa.ttsms.dto;
 import java.util.Date;
 
 public class EmployeeAndPasswordDTO {
-	
+
 	private int employeeId;
 
 	private int countryId;
@@ -23,8 +23,10 @@ public class EmployeeAndPasswordDTO {
 	private String username;
 
 	private String password;
-	
+
 	private boolean admin;
+
+	private boolean showAllTasks;
 
 	public int getEmployeeId() {
 		return employeeId;
@@ -114,8 +116,23 @@ public class EmployeeAndPasswordDTO {
 		this.admin = admin;
 	}
 
+	/**
+	 * @return the showAllTasks
+	 */
+	public boolean getShowAllTasks() {
+		return showAllTasks;
+	}
+
+	/**
+	 * @param showAllTasks the showAllTasks to set
+	 */
+	public void setShowAllTasks(boolean showAllTasks) {
+		this.showAllTasks = showAllTasks;
+	}
+
 	public EmployeeAndPasswordDTO(int employeeId, int countryId, int companyId, String firstName, String lastName,
-			Date birthDate, String employeeEmail, int passwordId, String username, String password, boolean admin) {
+			Date birthDate, String employeeEmail, int passwordId, String username, String password, boolean admin,
+			boolean showAllTasks) {
 		super();
 		this.employeeId = employeeId;
 		this.countryId = countryId;
@@ -128,6 +145,7 @@ public class EmployeeAndPasswordDTO {
 		this.username = username;
 		this.password = password;
 		this.admin = admin;
+		this.showAllTasks = showAllTasks;
 	}
 
 	public EmployeeAndPasswordDTO() {
@@ -140,9 +158,7 @@ public class EmployeeAndPasswordDTO {
 		return "EmployeeAndPasswordDTO [employeeId=" + employeeId + ", countryId=" + countryId + ", companyId="
 				+ companyId + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate
 				+ ", employeeEmail=" + employeeEmail + ", passwordId=" + passwordId + ", username=" + username
-				+ ", password=" + password + ", admin=" + admin + "]";
+				+ ", password=" + password + ", admin=" + admin + ", showAllTasks=" + showAllTasks + "]";
 	}
 
-	
-	
 }

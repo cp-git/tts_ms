@@ -20,8 +20,10 @@ public class EmployeeAndEmployeePhotosDTO {
 	private int photoId;
 
 	private String photoFilename;
-	
+
 	private boolean admin;
+
+	private boolean showAllTasks;
 
 	public int getEmployeeId() {
 		return employeeId;
@@ -103,8 +105,23 @@ public class EmployeeAndEmployeePhotosDTO {
 		this.admin = admin;
 	}
 
+	/**
+	 * @return the showAllTasks
+	 */
+	public boolean getShowAllTasks() {
+		return showAllTasks;
+	}
+
+	/**
+	 * @param showAllTasks the showAllTasks to set
+	 */
+	public void setShowAllTasks(boolean showAllTasks) {
+		this.showAllTasks = showAllTasks;
+	}
+
 	public EmployeeAndEmployeePhotosDTO(int employeeId, int countryId, int companyId, String firstName, String lastName,
-			Date birthDate, String employeeEmail, int photoId, String photoFilename, boolean admin) {
+			Date birthDate, String employeeEmail, int photoId, String photoFilename, boolean admin,
+			boolean showAllTasks) {
 		super();
 		this.employeeId = employeeId;
 		this.countryId = countryId;
@@ -116,6 +133,7 @@ public class EmployeeAndEmployeePhotosDTO {
 		this.photoId = photoId;
 		this.photoFilename = photoFilename;
 		this.admin = admin;
+		this.showAllTasks = showAllTasks;
 	}
 
 	public EmployeeAndEmployeePhotosDTO() {
@@ -128,10 +146,7 @@ public class EmployeeAndEmployeePhotosDTO {
 		return "EmployeeAndEmployeePhotosDTO [employeeId=" + employeeId + ", countryId=" + countryId + ", companyId="
 				+ companyId + ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate
 				+ ", employeeEmail=" + employeeEmail + ", photoId=" + photoId + ", photoFilename=" + photoFilename
-				+ ", admin=" + admin + "]";
+				+ ", admin=" + admin + ", showAllTasks=" + showAllTasks + "]";
 	}
-
-	
-	
 
 }

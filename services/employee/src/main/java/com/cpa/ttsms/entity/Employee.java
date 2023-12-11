@@ -16,11 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -43,15 +38,18 @@ public class Employee {
 	@Column(name = "lastname")
 	private String lastName;
 
-	
 	@Column(name = "dob")
 	private Date birthDate;
 
 	@Column(name = "email")
 	private String employeeEmail;
-	
+
 	@Column(name = "isadmin")
 	private boolean admin;
+
+	// boolean value for checking user has permission for view all task or not
+	@Column(name = "showAllTasks")
+	private boolean showAllTasks;
 
 	public int getEmployeeId() {
 		return employeeId;
@@ -117,8 +115,22 @@ public class Employee {
 		this.admin = admin;
 	}
 
+	/**
+	 * @return the showAllTasks
+	 */
+	public boolean getShowAllTasks() {
+		return showAllTasks;
+	}
+
+	/**
+	 * @param showAllTasks the showAllTasks to set
+	 */
+	public void setShowAllTasks(boolean showAllTasks) {
+		this.showAllTasks = showAllTasks;
+	}
+
 	public Employee(int employeeId, int countryId, int companyId, String firstName, String lastName, Date birthDate,
-			String employeeEmail, boolean admin) {
+			String employeeEmail, boolean admin, boolean showAllTasks) {
 		super();
 		this.employeeId = employeeId;
 		this.countryId = countryId;
@@ -128,6 +140,7 @@ public class Employee {
 		this.birthDate = birthDate;
 		this.employeeEmail = employeeEmail;
 		this.admin = admin;
+		this.showAllTasks = showAllTasks;
 	}
 
 	public Employee() {
@@ -139,9 +152,7 @@ public class Employee {
 	public String toString() {
 		return "Employee [employeeId=" + employeeId + ", countryId=" + countryId + ", companyId=" + companyId
 				+ ", firstName=" + firstName + ", lastName=" + lastName + ", birthDate=" + birthDate
-				+ ", employeeEmail=" + employeeEmail + ", admin=" + admin + "]";
+				+ ", employeeEmail=" + employeeEmail + ", admin=" + admin + ", showAllTasks=" + showAllTasks + "]";
 	}
-
-	
 
 }

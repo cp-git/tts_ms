@@ -45,14 +45,15 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	//private final String email_URL = "http://localhost:8080/email/sendMail";
-	//private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
-	
-	@Value("${email.url}")
-    private String email_URL;
+	// private final String email_URL = "http://localhost:8080/email/sendMail";
+	// private final String UPLOAD_FILE_URL =
+	// "http://localhost:8080/uploadfile/ttsms/upload";
 
-    @Value("${upload.file.url}")
-    private String UPLOAD_FILE_URL;
+	@Value("${email.url}")
+	private String email_URL;
+
+	@Value("${upload.file.url}")
+	private String UPLOAD_FILE_URL;
 
 	private final RestTemplate restTemplate;
 
@@ -140,6 +141,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setFirstName(dto.getFirstName());
 		employee.setLastName(dto.getLastName());
 		employee.setAdmin(dto.isAdmin());
+		employee.setShowAllTasks(dto.getShowAllTasks());
 
 //	    // Parse the date string from the DTO and set it as the employee's birth date
 //	    Date dob;
@@ -240,6 +242,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setFirstName(emp.getFirstName());
 				dto.setLastName(emp.getLastName());
 				dto.setAdmin(emp.isAdmin());
+				dto.setShowAllTasks(emp.getShowAllTasks());
 				// Format dob as a String (assuming it's already in Date format in the entity)
 				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				dto.setPasswordId(password.getPasswordId());
@@ -333,6 +336,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
 			toUpdatedEmployee.setEmployeeEmail(dto.getEmployeeEmail());
 			toUpdatedEmployee.setAdmin(dto.isAdmin());
+			toUpdatedEmployee.setShowAllTasks(dto.getShowAllTasks());
 
 			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
 
@@ -500,8 +504,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeePasswordAndEmployeePhotosDTO.getCompanyId(),
 				employeePasswordAndEmployeePhotosDTO.getFirstName(), employeePasswordAndEmployeePhotosDTO.getLastName(),
 				employeePasswordAndEmployeePhotosDTO.getBirthDate(),
-				employeePasswordAndEmployeePhotosDTO.getEmployeeEmail(),
-				employeePasswordAndEmployeePhotosDTO.isAdmin());
+				employeePasswordAndEmployeePhotosDTO.getEmployeeEmail(), employeePasswordAndEmployeePhotosDTO.isAdmin(),
+				employeePasswordAndEmployeePhotosDTO.getShowAllTasks());
 
 		// Save the employee data to the database
 		createdEmployee = employeeRepo.save(employee);
@@ -588,6 +592,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 			existingEmployee.setBirthDate(employeeAndEmployeePhotosDTO.getBirthDate());
 			existingEmployee.setEmployeeEmail(employeeAndEmployeePhotosDTO.getEmployeeEmail());
 			existingEmployee.setAdmin(employeeAndEmployeePhotosDTO.isAdmin());
+
+			existingEmployee.setShowAllTasks(employeeAndEmployeePhotosDTO.getShowAllTasks());
 			// Save the updated employee
 			Employee updatedEmployee = employeeRepo.save(existingEmployee);
 
@@ -699,6 +705,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setFirstName(emp.getFirstName());
 				dto.setLastName(emp.getLastName());
 				dto.setAdmin(emp.isAdmin());
+				dto.setShowAllTasks(emp.getShowAllTasks());
 				// Format dob as a String (assuming it's already in Date format in the entity)
 				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				dto.setPasswordId(password.getPasswordId());

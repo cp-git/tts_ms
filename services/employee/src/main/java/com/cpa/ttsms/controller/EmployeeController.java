@@ -230,7 +230,7 @@ public class EmployeeController {
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			@PathVariable("employeeId") int employeeId) throws CPException {
 
-		logger.info("Updating employee by id: " + employeeId);
+		logger.info("Updating employee by id: " + employeeAndEmployeePhotosDTO);
 
 		// Call the service to update the employee
 		EmployeeAndEmployeePhotosDTO updatedEmployeeDTO = employeeService

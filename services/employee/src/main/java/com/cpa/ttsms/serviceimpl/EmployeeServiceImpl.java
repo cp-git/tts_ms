@@ -141,7 +141,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setFirstName(dto.getFirstName());
 		employee.setLastName(dto.getLastName());
 		employee.setAdmin(dto.isAdmin());
-		employee.setShowAllTasks(dto.getShowAllTasks());
+		employee.setShowAllTasks(dto.isShowAllTasks());
+		employee.setOnBench(dto.isOnBench());
 
 //	    // Parse the date string from the DTO and set it as the employee's birth date
 //	    Date dob;
@@ -155,6 +156,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		employee.setBirthDate(dto.getBirthDate());
 		employee.setEmployeeEmail(dto.getEmployeeEmail());
+
 		// Save the employee in the database
 		Employee createdEmployee = employeeRepo.save(employee);
 
@@ -242,7 +244,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setFirstName(emp.getFirstName());
 				dto.setLastName(emp.getLastName());
 				dto.setAdmin(emp.isAdmin());
-				dto.setShowAllTasks(emp.getShowAllTasks());
+				dto.setShowAllTasks(emp.isShowAllTasks());
 				// Format dob as a String (assuming it's already in Date format in the entity)
 				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				dto.setPasswordId(password.getPasswordId());
@@ -336,7 +338,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 			// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
 			toUpdatedEmployee.setEmployeeEmail(dto.getEmployeeEmail());
 			toUpdatedEmployee.setAdmin(dto.isAdmin());
-			toUpdatedEmployee.setShowAllTasks(dto.getShowAllTasks());
+			toUpdatedEmployee.setShowAllTasks(dto.isShowAllTasks());
+			toUpdatedEmployee.setOnBench(dto.isOnBench());
 
 			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
 
@@ -505,9 +508,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeePasswordAndEmployeePhotosDTO.getFirstName(), employeePasswordAndEmployeePhotosDTO.getLastName(),
 				employeePasswordAndEmployeePhotosDTO.getBirthDate(),
 				employeePasswordAndEmployeePhotosDTO.getEmployeeEmail(), employeePasswordAndEmployeePhotosDTO.isAdmin(),
-				employeePasswordAndEmployeePhotosDTO.getShowAllTasks());
+				employeePasswordAndEmployeePhotosDTO.isShowAllTasks(),
+				employeePasswordAndEmployeePhotosDTO.isOnBench());
 
 		// Save the employee data to the database
+
 		createdEmployee = employeeRepo.save(employee);
 
 		try {
@@ -594,6 +599,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 			existingEmployee.setAdmin(employeeAndEmployeePhotosDTO.isAdmin());
 
 			existingEmployee.setShowAllTasks(employeeAndEmployeePhotosDTO.getShowAllTasks());
+			System.out.println(existingEmployee.toString());
+			existingEmployee.setOnBench(employeeAndEmployeePhotosDTO.isOnBench());
 			// Save the updated employee
 			Employee updatedEmployee = employeeRepo.save(existingEmployee);
 
@@ -705,7 +712,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setFirstName(emp.getFirstName());
 				dto.setLastName(emp.getLastName());
 				dto.setAdmin(emp.isAdmin());
-				dto.setShowAllTasks(emp.getShowAllTasks());
+				dto.setShowAllTasks(emp.isShowAllTasks());
+				dto.setOnBench(emp.isOnBench());
 				// Format dob as a String (assuming it's already in Date format in the entity)
 				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				dto.setPasswordId(password.getPasswordId());

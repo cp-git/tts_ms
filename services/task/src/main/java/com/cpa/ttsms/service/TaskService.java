@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
@@ -95,6 +96,14 @@ public interface TaskService {
 	 *                                  employee.
 	 */
 	ParentAndChildTaskDTO getAllTaskCreatedByMeAndAssignToMe(int employeeId);
-	
+
 	ParentAndChildTaskDTO getAllParentTasksByCompanyId(int companyId);
+
+	/**
+	 * Creates a new task in the system.
+	 * 
+	 * @param task The Task object to be created.
+	 * @return The created Task object.
+	 */
+	InternalExternalTaskDTO createOrUpdateTask(InternalExternalTaskDTO task, MultipartFile file);
 }

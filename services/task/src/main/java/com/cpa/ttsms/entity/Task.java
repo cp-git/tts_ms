@@ -14,7 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -67,6 +66,9 @@ public class Task {
 
 	@Column(name = "havingchild", nullable = true)
 	private boolean havingChild;
+
+	@Column(name = "placementid", nullable = false)
+	private int placementId;
 
 	/**
 	 * @return the taskId
@@ -249,7 +251,21 @@ public class Task {
 	public void setHavingChild(boolean havingChild) {
 		this.havingChild = havingChild;
 	}
-	
+
+	/**
+	 * @return the placementId
+	 */
+	public int getPlacementId() {
+		return placementId;
+	}
+
+	/**
+	 * @param placementId the placementId to set
+	 */
+	public void setPlacementId(int placementId) {
+		this.placementId = placementId;
+	}
+
 	/**
 	 * @param taskId
 	 * @param taskName
@@ -267,7 +283,7 @@ public class Task {
 	 */
 	public Task(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
 			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
-			int companyId, int taskParent, boolean havingChild) {
+			int companyId, int taskParent, boolean havingChild, int placementId) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -282,6 +298,7 @@ public class Task {
 		this.companyId = companyId;
 		this.taskParent = taskParent;
 		this.havingChild = havingChild;
+		this.placementId = placementId;
 	}
 
 	/**
@@ -298,7 +315,8 @@ public class Task {
 				+ ", taskCreatedBy=" + taskCreatedBy + ", taskAssignedTo=" + taskAssignedTo + ", taskStatus="
 				+ taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate=" + taskEndDate
 				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
-				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild + "]";
+				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild
+				+ ", placementId=" + placementId + "]";
 	}
 
 }

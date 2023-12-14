@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
@@ -406,7 +407,7 @@ public class TaskController {
 		// Log that the method has been entered and print the statuses, createdBy,
 		// assignedTo received
 		logger.debug("Entering getAllParentTasksByCompanyId");
-		
+
 		ParentAndChildTaskDTO parentTasks = null;
 		try {
 			parentTasks = taskService.getAllParentTasksByCompanyId(companyId);
@@ -427,6 +428,55 @@ public class TaskController {
 			// status
 			logger.error("Error while fetching parent tasks: " + e.getMessage());
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
+	/**
+	 * Creates a new task in the system based on the provided Task object.
+	 *
+	 * @param task The Task object representing the task to be created.
+	 * @return ResponseEntity containing the created Task object and HTTP status
+	 *         CREATED if successful. If the task with the provided task name
+	 *         already exists, returns an error ResponseEntity with HTTP status
+	 *         INTERNAL_SERVER_ERROR and an error message "err003".
+	 * @throws CPException If an exception occurs during task creation, a custom
+	 *                     CPException is thrown with the error code "err003" and
+	 *                     the localized error message from the resource bundle.
+	 */
+	@PostMapping("/addtask")
+	public ResponseEntity<Object> createOrUpdateTask(
+			@RequestPart("task") InternalExternalTaskDTO internalExternalTaskDTO,
+			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+		// Log that the method has been entered and print task details
+		logger.debug("Entering createOrUpdateTask");
+		logger.info("Data of creating Task: " + internalExternalTaskDTO.getTaskName());
+
+		try {
+
+			InternalExternalTaskDTO createdTask = taskService.createOrUpdateTask(internalExternalTaskDTO, file);
+			logger.info("createdTask " + createdTask);
+
+			if (createdTask != null) {
+				logger.info("Task created: " + createdTask.getTaskName());
+
+				// Return a successful response with the created task and HTTP status CREATED
+				return ResponseHandler.generateResponse(createdTask, HttpStatus.CREATED);
+
+			} else {
+				// If the task with the provided task name already exists, return an error
+				// response
+				// with HTTP status INTERNAL_SERVER_ERROR and an error message "err003"
+				logger.error(resourceBundle.getString("err003"));
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+			}
+
+		} catch (Exception ex) {
+			// If an exception occurs during task creation, log the error and throw a custom
+			// CPException
+			// with the error message "err003" and the localized error message from the
+			// resource bundle.
+			logger.error("Failed Task creation: " + ex.getMessage());
+			throw new CPException("err003", resourceBundle.getString("err003"));
 		}
 	}
 

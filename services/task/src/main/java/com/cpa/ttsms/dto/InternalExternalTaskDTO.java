@@ -68,6 +68,8 @@ public class InternalExternalTaskDTO {
 
 	private String jobLink;
 
+	private int candidateId;
+
 	private String candidateName; // Name of the candidate we are hiring or the person who is on the bench
 
 	private String candidateCompany; // Name of the company for the candidate
@@ -742,6 +744,14 @@ public class InternalExternalTaskDTO {
 		this.placementId = placementId;
 	}
 
+	public int getCandidateId() {
+		return candidateId;
+	}
+
+	public void setCandidateId(int candidateId) {
+		this.candidateId = candidateId;
+	}
+
 	@Override
 	public String toString() {
 		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
@@ -755,10 +765,10 @@ public class InternalExternalTaskDTO {
 				+ ", jobLocationId=" + jobLocationId + ", jobReferenceNumber=" + jobReferenceNumber + ", taxTypeId="
 				+ taxTypeId + ", rate=" + rate + ", recruiterName=" + recruiterName + ", recruiterEmail="
 				+ recruiterEmail + ", recruiterPhone=" + recruiterPhone + ", jobSubmissionPortalId="
-				+ jobSubmissionPortalId + ", datePosted=" + datePosted + ", jobLink=" + jobLink + ", candidateName="
-				+ candidateName + ", candidateCompany=" + candidateCompany + ", companyAddress=" + companyAddress
-				+ ", hrName=" + hrName + ", hrEmail=" + hrEmail + ", hrPhone=" + hrPhone + ", visaId=" + visaId
-				+ ", placementId=" + placementId + "]";
+				+ jobSubmissionPortalId + ", datePosted=" + datePosted + ", jobLink=" + jobLink + ", candidateId="
+				+ candidateId + ", candidateName=" + candidateName + ", candidateCompany=" + candidateCompany
+				+ ", companyAddress=" + companyAddress + ", hrName=" + hrName + ", hrEmail=" + hrEmail + ", hrPhone="
+				+ hrPhone + ", visaId=" + visaId + ", placementId=" + placementId + "]";
 	}
 
 }

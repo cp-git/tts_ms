@@ -956,12 +956,10 @@ public class TaskServiceImpl implements TaskService {
 					if (internalExternalTaskDTO.getInternalId() > 0) {
 						internalTask.setInternalId(internalExternalTaskDTO.getInternalId());
 					}
-					internalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
+					internalTask.setCandidateId(internalExternalTaskDTO.getCandidateId());
 					internalTask.setHiringCompanyName(internalExternalTaskDTO.getHiringCompanyName());
 					internalTask.setJobPortalId(internalExternalTaskDTO.getJobPortalId());
 					internalTask.setJobTitle(internalExternalTaskDTO.getJobTitle());
-					internalTask.setCandidateName(internalExternalTaskDTO.getHiringCompanyName());
-					internalTask.setCandidateName(internalExternalTaskDTO.getJobTitle());
 					internalTask.setExperienceRequired(internalExternalTaskDTO.getExperienceRequired());
 					internalTask.setJobLocationId(internalExternalTaskDTO.getJobLocationId());
 					internalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());

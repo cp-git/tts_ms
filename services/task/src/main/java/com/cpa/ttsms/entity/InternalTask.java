@@ -18,8 +18,8 @@ public class InternalTask {
 	@Column(name = "internalid")
 	private int internalId;
 
-	@Column(name = "candidatename")
-	private String candidateName;
+	@Column(name = "internalcandidateid")
+	private int candidateId;
 
 	@Column(name = "jobportalid")
 	private int jobPortalId; // Foreign key of table "jobportal"
@@ -95,13 +95,13 @@ public class InternalTask {
 	 * @param jobLink
 	 * @param visaId
 	 */
-	public InternalTask(int internalId, String candidateName, int jobPortalId, String hiringCompanyName,
-			String jobTitle, int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId,
-			float rate, String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
+	public InternalTask(int internalId, int candidateId, int jobPortalId, String hiringCompanyName, String jobTitle,
+			int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId, float rate,
+			String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
 			Date datePosted, String jobLink, int visaId, int taskId) {
 		super();
 		this.internalId = internalId;
-		this.candidateName = candidateName;
+		this.candidateId = candidateId;
 		this.jobPortalId = jobPortalId;
 		this.hiringCompanyName = hiringCompanyName;
 		this.jobTitle = jobTitle;
@@ -137,15 +137,15 @@ public class InternalTask {
 	/**
 	 * @return the candidateName
 	 */
-	public String getCandidateName() {
-		return candidateName;
+	public int getCandidateId() {
+		return candidateId;
 	}
 
 	/**
 	 * @param candidateName the candidateName to set
 	 */
-	public void setCandidateName(String candidateName) {
-		this.candidateName = candidateName;
+	public void setCandidateId(int candidateId) {
+		this.candidateId = candidateId;
 	}
 
 	/**

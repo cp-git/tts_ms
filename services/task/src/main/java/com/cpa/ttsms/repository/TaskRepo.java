@@ -118,4 +118,10 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 //			int employeeId);
 	
 	public List<Task> findByCompanyId(int companyId);
+	
+	@Query(value="Select concat(ts) from task ts,externaltask et where assignedto=?1 OR createdby=?2 AND ts.id=et.taskid",nativeQuery=true)
+	public List<Task> findByTaskByCreatedByAndAssignedTo(int taskAssignedTo,int taskCreatedBy);
+	
+	@Query(value="SELECT * FROM task t1 INNER JOIN task t2 on t1.parent = t2.id AND t2.id=?1",nativeQuery=true)
+	public List<Task> findChildTaskByParentId(int taskId);
 }

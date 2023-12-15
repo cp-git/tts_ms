@@ -336,7 +336,7 @@ public class TaskController {
 			fileNames = taskService.getFilesUsingTaskId(taskId);
 			if (fileNames.size() > 0) {
 
-				return ResponseHandler.generateListResponse(fileNames, HttpStatus.OK);
+				return ResponseHandler.generateListResponse1(fileNames, HttpStatus.OK);
 			} else {
 				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err008");
 			}
@@ -382,22 +382,24 @@ public class TaskController {
 	 *         employee.
 	 */
 	@GetMapping("/created/{employeeId}")
-	public ResponseEntity<Object> getAllTaskCreatedByMeAndAssignToMe(@PathVariable int employeeId) {
+	public List<Task> getAllTaskCreatedByMeAndAssignToMe(@PathVariable int employeeId) {
 
+		List<Task> taskList = null;
 		try {
 			// Retrieve tasks created and assigned by the specified employee using the
 			// service method
-			ParentAndChildTaskDTO taskList = taskService.getAllTaskCreatedByMeAndAssignToMe(employeeId);
+			 taskList = taskService.getAllTaskCreatedByMeAndAssignToMe(employeeId);
 			// return taskList;
 			if (taskList != null) {
-				return ResponseHandler.generateResponse(taskList, HttpStatus.OK);
+				System.out.println("Data Feteched...");
 			} else {
-				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+				System.out.println("Not Found");
 			}
 		} catch (Exception e) {
-			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err008");
+			System.out.println("Internal Error");
 		}
-
+		return taskList;
+		
 	}
 
 	@GetMapping("/allparents")
@@ -410,6 +412,7 @@ public class TaskController {
 		ParentAndChildTaskDTO parentTasks = null;
 		try {
 			parentTasks = taskService.getAllParentTasksByCompanyId(companyId);
+			System.out.println("Parent Task..."+parentTasks);
 
 			// Log the fetched parent tasks
 			logger.info("Fetched parent tasks :  " + parentTasks);
@@ -429,5 +432,57 @@ public class TaskController {
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
 		}
 	}
+	
+	
+	// Get a list of files by type
+		@GetMapping("/task/getfilesbyids/{taskAssignedTo}/{taskCreatedBy}")
+		public List<Task> getFilesByAssignTOAndCreatedBy(@PathVariable("taskAssignedTo") int taskAssignedTo,@PathVariable("taskCreatedBy") int taskCreatedBy) {
+			// Create a list to store file names
+			List<Task> fileNames = new ArrayList<>();
+
+			logger.info("inside getFilesByTaskId");
+			try {
+				fileNames = taskService.getAllChildTasksByAssignedAndCreatedBy(taskAssignedTo,taskCreatedBy);
+				System.out.println(fileNames);
+				if (fileNames.size() > 0) {
+					
+					System.out.println(fileNames);
+				} else {
+					System.out.println("failed...");
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				logger.error("error to get files using task id");
+				System.out.println("Not Found...");
+			}
+			return fileNames;
+		}
+		
+
+		// Get a list of files by type
+			@GetMapping("/task/getChildByParentId/{taskId}")
+			public List<Task> getFilesByAssignTOAndCreatedBy(@PathVariable("taskId") int taskId) {
+				// Create a list to store file names
+				List<Task> fileNames = new ArrayList<>();
+
+				logger.info("inside getFilesByTaskId");
+				try {
+					fileNames = taskService.getAllChildTaskByParentId(taskId);
+					System.out.println(fileNames);
+					if (fileNames.size() > 0) {
+						
+						System.out.println(fileNames);
+					} else {
+						System.out.println("failed...");
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					logger.error("error to get files using task id");
+					System.out.println("Not Found...");
+				}
+				return fileNames;
+			}
+		
+		
 
 }

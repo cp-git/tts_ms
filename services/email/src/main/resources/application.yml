@@ -18,5 +18,5 @@ spring.datasource:
   password: password
   
 server:
-  port : 8080
+  port : 8090
   

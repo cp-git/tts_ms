@@ -651,40 +651,14 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public ParentAndChildTaskDTO getAllTaskCreatedByMeAndAssignToMe(int employeeId) {
+	public List<Task> getAllTaskCreatedByMeAndAssignToMe(int employeeId) {
 		// TODO Auto-generated method stub
 		int createdBy = employeeId;
 		int assignedBy = employeeId;
-		List<Task> allTasks = taskRepo.findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDesc(createdBy, assignedBy);
+		List<Task> allTasks = taskRepo.findByTaskByCreatedByAndAssignedTo(createdBy, assignedBy);
 
-//		List<Integer> parentTaskIds = allTasks.stream().filter(task -> task.getTaskParent() == 0).map(Task::getTaskId)
-//				.collect(Collectors.toList());
-
-		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
-																					// filtering
-				.filter(parentId -> parentId != null && parentId != 0) // Filter out null parent task IDs, if any
-				.collect(Collectors.toSet());
-
-		Set<Integer> parentTaskIdsSet2 = allTasks.stream().filter(task -> task.getTaskParent() == 0)
-				.map(Task::getTaskId).collect(Collectors.toSet());
-
-		List<Task> parentTaskList = new ArrayList<Task>();
-
-		List<ParentAndChildTaskDTO> parentAndChildDTOs = new ArrayList<>();
-
-		Set<Integer> parentTaskIds = mergeSet(parentTaskIdsSet1, parentTaskIdsSet2);
-
-		for (Integer parentId : parentTaskIds) {
-
-			Task parentTask = taskRepo.findByTaskId(parentId);
-			parentTaskList.add(parentTask);
-		}
-
-		ParentAndChildTaskDTO dto = new ParentAndChildTaskDTO(parentTaskList, allTasks); // Set childTasks as null or an
-																							// empty list
-		parentAndChildDTOs.add(dto);
-		System.out.println(dto);
-		return dto;
+//		
+		return allTasks;
 	}
 
 	public static <T> Set<T> mergeSet(Set<T> a, Set<T> b) {
@@ -734,5 +708,18 @@ public class TaskServiceImpl implements TaskService {
 		parentAndChildDTOs.add(dto);
 		System.out.println(dto);
 		return dto;
+	}
+
+	@Override
+	public List<Task> getAllChildTasksByAssignedAndCreatedBy(int taskAssignedTo, int taskCreatedBy) {
+		// TODO Auto-generated method stub
+		
+		return taskRepo.findByTaskByCreatedByAndAssignedTo(taskAssignedTo, taskCreatedBy);
+	}
+
+	@Override
+	public List<Task> getAllChildTaskByParentId(int taskId) {
+		// TODO Auto-generated method stub
+		return taskRepo.findChildTaskByParentId(taskId);
 	}
 }

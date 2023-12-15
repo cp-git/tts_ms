@@ -94,7 +94,11 @@ public interface TaskService {
 	 *                                  no tasks are found for the specified
 	 *                                  employee.
 	 */
-	ParentAndChildTaskDTO getAllTaskCreatedByMeAndAssignToMe(int employeeId);
+	List<Task> getAllTaskCreatedByMeAndAssignToMe(int employeeId);
 	
 	ParentAndChildTaskDTO getAllParentTasksByCompanyId(int companyId);
+	
+	List<Task> getAllChildTasksByAssignedAndCreatedBy(int taskAssignedTo,int taskCreatedBy);
+	
+	List<Task> getAllChildTaskByParentId(int taskId);
 }

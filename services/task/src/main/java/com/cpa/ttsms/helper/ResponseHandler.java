@@ -17,6 +17,8 @@ import java.util.ResourceBundle;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.cpa.ttsms.entity.Task;
+
 public class ResponseHandler {
 
 	/**
@@ -85,9 +87,14 @@ public class ResponseHandler {
 	 * @description : This method generating object of ResponseEntity with a list of
 	 *              object and status code.
 	 */
-	public static ResponseEntity<List<Object>> generateListResponse(List<Object> list, HttpStatus status) {
+	public static ResponseEntity<List<Object>> generateListResponse1(List<Object> list, HttpStatus status) {
 
 		return new ResponseEntity<List<Object>>(list, status);
+	}
+
+	public static ResponseEntity<List<Object>> generateListResponse(List<Task> fileNames, HttpStatus ok) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -2,6 +2,11 @@ package com.cpa.ttsms.dto;
 
 import java.util.Date;
 
+import com.cpa.ttsms.entity.ExternalTask;
+import com.cpa.ttsms.entity.InternalTask;
+import com.cpa.ttsms.entity.Task;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class InternalExternalTaskDTO {
 
 	private int taskId;
@@ -16,12 +21,16 @@ public class InternalExternalTaskDTO {
 
 	private int taskStatus;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date taskStartDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date taskEndDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date taskActualStartDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date taskActualEndDate;
 
 	private int companyId;
@@ -64,6 +73,7 @@ public class InternalExternalTaskDTO {
 
 	private int jobSubmissionPortalId; // Foreign key of portal id
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date datePosted;
 
 	private String jobLink;
@@ -91,6 +101,82 @@ public class InternalExternalTaskDTO {
 	 */
 	public InternalExternalTaskDTO() {
 		super();
+	}
+
+	public InternalExternalTaskDTO(Task task, InternalTask internalTask) {
+		this.taskId = task.getTaskId();
+		this.taskName = task.getTaskName();
+		this.taskDescription = task.getTaskDescription();
+		this.taskCreatedBy = task.getTaskCreatedBy();
+		this.taskAssignedTo = task.getTaskAssignedTo();
+		this.taskStatus = task.getTaskStatus();
+		this.taskStartDate = task.getTaskStartDate();
+		this.taskEndDate = task.getTaskEndDate();
+		this.taskActualStartDate = task.getTaskActualStartDate();
+		this.taskActualEndDate = task.getTaskActualEndDate();
+		this.companyId = task.getCompanyId();
+		this.taskParent = task.getTaskParent();
+		this.havingChild = task.isHavingChild();
+		this.placementId = task.getPlacementId();
+
+		this.internalId = internalTask.getInternalId();
+		this.candidateId = internalTask.getCandidateId();
+		this.jobPortalId = internalTask.getJobPortalId();
+		this.hiringCompanyName = internalTask.getHiringCompanyName();
+		this.jobTitle = internalTask.getJobTitle();
+		this.experienceRequired = internalTask.getExperienceRequired();
+		this.jobLocationId = internalTask.getJobLocationId();
+		this.jobReferenceNumber = internalTask.getJobReferenceNumber();
+		this.taxTypeId = internalTask.getTaxTypeId();
+		this.rate = internalTask.getRate();
+		this.recruiterName = internalTask.getRecruiterName();
+		this.recruiterEmail = internalTask.getRecruiterEmail();
+		this.recruiterPhone = internalTask.getRecruiterPhone();
+		this.jobSubmissionPortalId = internalTask.getJobSubmissionPortalId();
+		this.datePosted = internalTask.getDatePosted();
+		this.jobLink = internalTask.getJobLink();
+//		this.visaId = internalTask.getVisaId();
+	}
+
+	public InternalExternalTaskDTO(Task task, ExternalTask externalTask) {
+		this.taskId = task.getTaskId();
+		this.taskName = task.getTaskName();
+		this.taskDescription = task.getTaskDescription();
+		this.taskCreatedBy = task.getTaskCreatedBy();
+		this.taskAssignedTo = task.getTaskAssignedTo();
+		this.taskStatus = task.getTaskStatus();
+		this.taskStartDate = task.getTaskStartDate();
+		this.taskEndDate = task.getTaskEndDate();
+		this.taskActualStartDate = task.getTaskActualStartDate();
+		this.taskActualEndDate = task.getTaskActualEndDate();
+		this.companyId = task.getCompanyId();
+		this.taskParent = task.getTaskParent();
+		this.havingChild = task.isHavingChild();
+		this.placementId = task.getPlacementId();
+
+		this.externalId = externalTask.getExternalId();
+//		this.candidateName = externalTask.getCandidateName();
+//		this.candidateCompany = externalTask.getCandidateCompany();
+//		this.companyAddress = externalTask.getCompanyAddress();
+//		this.hrName = externalTask.getHrName();
+//		this.hrEmail = externalTask.getHrEmail();
+//		this.hrPhone = externalTask.getHrPhone();
+
+		this.jobPortalId = externalTask.getJobPortalId();
+		this.hiringCompanyName = externalTask.getHiringCompanyName();
+		this.jobTitle = externalTask.getJobTitle();
+		this.experienceRequired = externalTask.getExperienceRequired();
+		this.jobLocationId = externalTask.getJobLocationId();
+		this.jobReferenceNumber = externalTask.getJobReferenceNumber();
+		this.taxTypeId = externalTask.getTaxTypeId();
+		this.rate = externalTask.getRate();
+		this.recruiterName = externalTask.getRecruiterName();
+		this.recruiterEmail = externalTask.getRecruiterEmail();
+		this.recruiterPhone = externalTask.getRecruiterPhone();
+		this.jobSubmissionPortalId = externalTask.getJobSubmissionPortalId();
+		this.datePosted = externalTask.getDatePosted();
+		this.jobLink = externalTask.getJobLink();
+		this.visaId = externalTask.getVisaId();
 	}
 
 	/**

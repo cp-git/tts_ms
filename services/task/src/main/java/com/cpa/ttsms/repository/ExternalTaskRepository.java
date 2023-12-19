@@ -8,4 +8,5 @@ import com.cpa.ttsms.entity.ExternalTask;
 @Repository
 public interface ExternalTaskRepository extends JpaRepository<ExternalTask, Integer> {
 
+	public ExternalTask findByTaskId(int taskId);
 }

@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "internaltask")
 public class InternalTask {
@@ -57,6 +59,7 @@ public class InternalTask {
 	@Column(name = "jobsubmissionportalid")
 	private int jobSubmissionPortalId; // Foreign key of portal id
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "dateposted")
 	private Date datePosted;
 

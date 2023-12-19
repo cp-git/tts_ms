@@ -1011,8 +1011,7 @@ public class TaskServiceImpl implements TaskService {
 
 				}
 
-				if (file != null && ((externalCreatedTask != null && externalCreatedTask.getExternalId() <= 0)
-						|| (internalCreatedTask != null && internalCreatedTask.getInternalId() <= 0))) {
+				if (file != null && (externalCreatedTask != null || internalCreatedTask != null)) {
 					// adding attachement file
 					TaskAttachment taskAttachment = new TaskAttachment();
 					taskAttachment.setTaskID(createdTask.getTaskId());
@@ -1073,5 +1072,52 @@ public class TaskServiceImpl implements TaskService {
 
 		return null;
 
+	}
+
+	/**
+	 * Get a task by its ID.
+	 *
+	 * @param id The ID of the task to retrieve.
+	 * @return The retrieved Task object, or null if not found.
+	 */
+	@Override
+	public InternalExternalTaskDTO getInternalOrExternalTaskByTaskId(int id) {
+		logger.debug("Entering getTaskById");
+
+		Task task = taskRepo.findByTaskId(id);
+		InternalExternalTaskDTO internalExternalTaskDTO = null;
+		InternalTask internalTask = null;
+		ExternalTask externalTask = null;
+
+		try {
+			if (task != null) {
+
+				internalTask = internalTaskRepo.findByTaskId(task.getTaskId());
+				if (internalTask != null) {
+					internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask);
+				} else {
+//					externalTask = externalTaskRepo.findByTaskId(task.getTaskId());
+//					if (externalTask != null) {
+//						internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
+//					}
+				}
+
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
+
+//		if (task.getPlacementId() == INTERNAL_PLACEMENT_ID) {
+//			InternalTask internalTask = internalTaskRepo.findByTaskId(id);
+//			internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask);
+//
+//		} else if (task.getPlacementId() == EXTERNAL_PLACEMENT_ID) {
+//			ExternalTask externalTask = externalTaskRepo.findByTaskId(id);
+//			internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
+//		}
+
+		logger.info("Founded internalExternalTaskDTO: " + internalExternalTaskDTO);
+		return internalExternalTaskDTO;
 	}
 }

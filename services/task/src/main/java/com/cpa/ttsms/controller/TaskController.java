@@ -77,6 +77,9 @@ public class TaskController {
 	 *                     CPException is thrown with the error code "err003" and
 	 *                     the localized error message from the resource bundle.
 	 */
+
+	// this api is re-writtem with endpoint addtask because we added internal or
+	// external task data
 	@PostMapping("/savetask")
 	public ResponseEntity<Object> createOrUpdateTaskAndAddReason(@RequestPart("task") TaskAndReasonDTO taskAndReasonDTO,
 			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
@@ -477,6 +480,53 @@ public class TaskController {
 			// resource bundle.
 			logger.error("Failed Task creation: " + ex.getMessage());
 			throw new CPException("err003", resourceBundle.getString("err003"));
+		}
+	}
+
+	/**
+	 * Endpoint to get a task and internal or external task by its ID.
+	 *
+	 * @param id The ID of the task to retrieve, received as a path variable.
+	 * @return ResponseEntity with the fetched Task object if it exists, or
+	 *         ResponseEntity with HTTP status NOT_FOUND if the task does not exist.
+	 * @throws CPException If there is an exception while fetching the task, it is
+	 *                     caught and wrapped into a custom CPException, which will
+	 *                     be handled by the global exception handler to return a
+	 *                     meaningful error response to the client.
+	 */
+	@GetMapping("/taskby/{id}")
+	public ResponseEntity<Object> getInternalOrExternalTaskByTaskId(@PathVariable("id") int id) throws CPException {
+		// Log that the method has been entered and print the task ID received
+		logger.debug("Entering getTaskByTaskId");
+		logger.info("Entered task ID: " + id);
+
+		// Initialize a variable to hold the fetched task
+		InternalExternalTaskDTO internalExternalTaskDTO = null;
+
+		try {
+			// Fetch the task by its ID using the taskService
+			internalExternalTaskDTO = taskService.getInternalOrExternalTaskByTaskId(id);
+			logger.info("Fetched Task: " + internalExternalTaskDTO);
+
+			// If the task is found (i.e., not null), return a successful response
+			// with the fetched task and HTTP status OK
+			if (internalExternalTaskDTO != null) {
+				logger.debug("Task fetched, generating response");
+				return ResponseHandler.generateResponse(internalExternalTaskDTO, HttpStatus.OK);
+			} else {
+				// If the task is not found, return an error response with HTTP status NOT_FOUND
+				// and an error message "err001"
+				logger.debug("Task not found");
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+
+		} catch (Exception ex) {
+			// If an exception occurs while fetching the task, log the error and throw a
+			// custom CPException
+			// with the error message "err001" and the localized error message from the
+			// resource bundle.
+			logger.error("Failed getting task: " + ex.getMessage());
+			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
 	}
 

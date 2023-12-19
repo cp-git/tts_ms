@@ -106,4 +106,12 @@ public interface TaskService {
 	 * @return The created Task object.
 	 */
 	InternalExternalTaskDTO createOrUpdateTask(InternalExternalTaskDTO task, MultipartFile file);
+
+	/**
+	 * Retrieves a task by its unique ID.
+	 * 
+	 * @param id The ID of the task to retrieve.
+	 * @return The Task object with the specified ID, or null if not found.
+	 */
+	InternalExternalTaskDTO getInternalOrExternalTaskByTaskId(int id);
 }

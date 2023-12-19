@@ -22,22 +22,21 @@ import com.cpa.ttsms.entity.Employee;
 public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
 
 	// Retrieves an employee by their employeeId.
-	public Employee findByEmployeeId(int employeeId); 
+	public Employee findByEmployeeId(int employeeId);
 
 	// Retrieves a list of all employees.
-	public List<Employee> findAll(); 
-	
+	public List<Employee> findAll();
+
 	public Employee findByEmployeeEmail(String EmployeeEmail);
-	
 
 	// Deletes an employee by their employeeId.
 	@Transactional
 	@Modifying
 	@Query(value = "DELETE FROM employee WHERE id = ?1", nativeQuery = true)
-	public int deleteEmployeeByEmployeeId(int employeeId); 
-	
+	public int deleteEmployeeByEmployeeId(int employeeId);
+
 	List<Employee> findByCompanyId(int companyId);
 
-
+	List<Employee> findByCompanyIdAndIsOnBenchTrue(int companyId);
 
 }

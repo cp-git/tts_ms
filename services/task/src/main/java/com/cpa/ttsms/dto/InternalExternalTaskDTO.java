@@ -155,12 +155,12 @@ public class InternalExternalTaskDTO {
 		this.placementId = task.getPlacementId();
 
 		this.externalId = externalTask.getExternalId();
-//		this.candidateName = externalTask.getCandidateName();
-//		this.candidateCompany = externalTask.getCandidateCompany();
-//		this.companyAddress = externalTask.getCompanyAddress();
-//		this.hrName = externalTask.getHrName();
-//		this.hrEmail = externalTask.getHrEmail();
-//		this.hrPhone = externalTask.getHrPhone();
+		this.candidateName = externalTask.getCandidateName();
+		this.candidateCompany = externalTask.getCandidateCompany();
+		this.companyAddress = externalTask.getCompanyAddress();
+		this.hrName = externalTask.getHrName();
+		this.hrEmail = externalTask.getHrEmail();
+		this.hrPhone = externalTask.getHrPhone();
 
 		this.jobPortalId = externalTask.getJobPortalId();
 		this.hiringCompanyName = externalTask.getHiringCompanyName();

@@ -1096,10 +1096,10 @@ public class TaskServiceImpl implements TaskService {
 				if (internalTask != null) {
 					internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask);
 				} else {
-//					externalTask = externalTaskRepo.findByTaskId(task.getTaskId());
-//					if (externalTask != null) {
-//						internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
-//					}
+					externalTask = externalTaskRepo.findByTaskId(task.getTaskId());
+					if (externalTask != null) {
+						internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
+					}
 				}
 
 			}

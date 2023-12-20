@@ -735,4 +735,14 @@ public class TaskServiceImpl implements TaskService {
 		System.out.println(dto);
 		return dto;
 	}
+
+	@Override
+	public List<Task> getAllTaskCreatedByMeAndAssignToMeList(int employeeId) {
+		// TODO Auto-generated method stub
+		
+		int createdBy = employeeId;
+		int assignedBy = employeeId;
+		List<Task> allTasks = taskRepo.findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDescList(createdBy, assignedBy);
+		return allTasks;
+	}
 }

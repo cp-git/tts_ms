@@ -429,5 +429,22 @@ public class TaskController {
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
 		}
 	}
+	
+	//Getting the values from assignedby id and created by id
+	
+	@GetMapping("/createdby/{employeeId}")
+	public List<Task> getAllTaskCreatedByMeAndAssignToMeList(@PathVariable int employeeId) {
+
+		List<Task> taskList = null;
+		
+			 taskList = taskService.getAllTaskCreatedByMeAndAssignToMeList(employeeId);
+			 return taskList;
+		
+		
+		
+
+	}
+	
+	
 
 }

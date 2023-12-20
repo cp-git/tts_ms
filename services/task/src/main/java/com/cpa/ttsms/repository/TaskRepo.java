@@ -118,4 +118,11 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 //			int employeeId);
 	
 	public List<Task> findByCompanyId(int companyId);
+	
+	@Query(value = "select * from task ts where ts.parent=0 AND (ts.assignedto=?1 OR ts.createdby=?2);", nativeQuery = true)
+	public List<Task> findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDescList(int assingedTo, int createdBy);
+	
+	
+	
+	
 }

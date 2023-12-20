@@ -97,4 +97,6 @@ public interface TaskService {
 	ParentAndChildTaskDTO getAllTaskCreatedByMeAndAssignToMe(int employeeId);
 	
 	ParentAndChildTaskDTO getAllParentTasksByCompanyId(int companyId);
+	
+	List<Task> getAllTaskCreatedByMeAndAssignToMeList(int employeeId);
 }

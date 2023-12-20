@@ -29,6 +29,15 @@ public class JobLocation {
 	@Column(name = "locationdescription")
 	private String locationDescription;
 
+	@Column(name = "companyid")
+	private int companyId;
+
+	@Column(name = "isforbench")
+	private boolean isForBench;
+
+	@Column(name = "isforsourcing")
+	private boolean isForSourcing;
+
 	/**
 	 * @return the locationId
 	 */
@@ -72,15 +81,64 @@ public class JobLocation {
 	}
 
 	/**
+	 * @return the companyId
+	 */
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	/**
+	 * @param companyId the companyId to set
+	 */
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
+	/**
+	 * @return the isForBench
+	 */
+	public boolean isForBench() {
+		return isForBench;
+	}
+
+	/**
+	 * @param isForBench the isForBench to set
+	 */
+	public void setForBench(boolean isForBench) {
+		this.isForBench = isForBench;
+	}
+
+	/**
+	 * @return the isForSourcing
+	 */
+	public boolean isForSourcing() {
+		return isForSourcing;
+	}
+
+	/**
+	 * @param isForSourcing the isForSourcing to set
+	 */
+	public void setForSourcing(boolean isForSourcing) {
+		this.isForSourcing = isForSourcing;
+	}
+
+	/**
 	 * @param locationId
 	 * @param locationType
 	 * @param locationDescription
+	 * @param companyId
+	 * @param isForBench
+	 * @param isForSourcing
 	 */
-	public JobLocation(int locationId, String locationType, String locationDescription) {
+	public JobLocation(int locationId, String locationType, String locationDescription, int companyId,
+			boolean isForBench, boolean isForSourcing) {
 		super();
 		this.locationId = locationId;
 		this.locationType = locationType;
 		this.locationDescription = locationDescription;
+		this.companyId = companyId;
+		this.isForBench = isForBench;
+		this.isForSourcing = isForSourcing;
 	}
 
 	/**
@@ -94,7 +152,8 @@ public class JobLocation {
 	@Override
 	public String toString() {
 		return "JobLocation [locationId=" + locationId + ", locationType=" + locationType + ", locationDescription="
-				+ locationDescription + "]";
+				+ locationDescription + ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing="
+				+ isForSourcing + "]";
 	}
 
 //TODO - add attributed and genrate setters and getters

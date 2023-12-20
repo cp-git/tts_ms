@@ -23,4 +23,6 @@ public interface TaxtypeService {
 
 	int deleteTaxtypeBytaxtypeid(int taxtypeid);
 
+	List<Object> getAllTaxtypeByCompanyId(int companyId);
+
 }

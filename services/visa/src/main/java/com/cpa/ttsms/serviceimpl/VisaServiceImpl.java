@@ -92,7 +92,10 @@ public class VisaServiceImpl implements VisaService {
 		if (toUpdatedVisa != null) {
 			logger.debug("setting new data of Visa to exisitng Visa");
 			toUpdatedVisa.setVisaType(visa.getVisaType());
-			toUpdatedVisa.setVisadescription(visa.getVisadescription());
+			toUpdatedVisa.setVisaDescription(visa.getVisaDescription());
+			toUpdatedVisa.setCompanyId(visa.getVisaId());
+			toUpdatedVisa.setForBench(visa.isForBench());
+			toUpdatedVisa.setForSourcing(visa.isForSourcing());
 //			visa.setModifiedBy("admin");
 
 			updatedVisa = visaRepo.save(visa);
@@ -116,6 +119,14 @@ public class VisaServiceImpl implements VisaService {
 		int id = visaRepo.deleteVisaById(visaid);
 		logger.info("deleted Visa count : ");
 		return id;
+	}
+
+	@Override
+	public List<Object> getAllVisasByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+		List<Visa> visas = visaRepo.findByCompanyId(companyId);
+		List<Object> obj = new ArrayList<>(visas);
+		return obj;
 	}
 
 }

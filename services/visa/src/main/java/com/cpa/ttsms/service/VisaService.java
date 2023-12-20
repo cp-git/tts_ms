@@ -15,12 +15,14 @@ public interface VisaService {
 
 	Visa createVisa(Visa visa);
 
-	Visa getVisaByvisaId(int visaid);
+	Visa getVisaByvisaId(int visaId);
 
 	List<Object> getAllVisas();
 
-	Visa updateVisaByvisaId(Visa visa, int visaid);
+	Visa updateVisaByvisaId(Visa visa, int visaId);
 
-	int deleteVisaByvisaId(int visaid);
+	int deleteVisaByvisaId(int visaId);
+
+	List<Object> getAllVisasByCompanyId(int companyId);
 
 }

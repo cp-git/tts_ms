@@ -98,6 +98,9 @@ public class TaxtypeServiceImpl implements TaxtypeService {
 //			taxtype.setModifiedBy("admin");
 			toUpdatedTaxtype.setTaxTypeName(taxtype.getTaxTypeName());
 			toUpdatedTaxtype.setTaxTypeDescription(taxtype.getTaxTypeDescription());
+			toUpdatedTaxtype.setCompanyId(taxtype.getCompanyId());
+			toUpdatedTaxtype.setForBench(taxtype.isForBench());
+			toUpdatedTaxtype.setForSourcing(taxtype.isForSourcing());
 
 			updatedTaxtype = taxtypeRepo.save(taxtype);
 
@@ -120,6 +123,15 @@ public class TaxtypeServiceImpl implements TaxtypeService {
 		int typeId = taxtypeRepo.deleteTaxTypeById(taxtypeid);
 		// logger.info("deleted Taxtype count : " + count);
 		return typeId;
+	}
+
+	@Override
+	public List<Object> getAllTaxtypeByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+
+		List<Taxtype> types = taxtypeRepo.findByCompanyId(companyId);
+		List<Object> obj = new ArrayList<>(types);
+		return obj;
 	}
 
 }

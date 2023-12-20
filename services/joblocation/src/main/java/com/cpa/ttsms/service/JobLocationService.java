@@ -23,4 +23,6 @@ public interface JobLocationService {
 
 	int deleteJobLocationBylocationId(int locationid);
 
+	List<Object> getJobLocationByCompanyId(int companyId);
+
 }

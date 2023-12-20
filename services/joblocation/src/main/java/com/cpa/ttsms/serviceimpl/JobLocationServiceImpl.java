@@ -100,6 +100,9 @@ public class JobLocationServiceImpl implements JobLocationService {
 
 			toUpdatedJobLocation.setLocationType(joblocation.getLocationType());
 			toUpdatedJobLocation.setLocationDescription(joblocation.getLocationDescription());
+			toUpdatedJobLocation.setCompanyId(joblocation.getCompanyId());
+			toUpdatedJobLocation.setForBench(joblocation.isForBench());
+			toUpdatedJobLocation.setForSourcing(joblocation.isForSourcing());
 			updatedJobLocation = joblocationRepo.save(joblocation);
 
 			logger.info("updated JobLocation :" + updatedJobLocation);
@@ -123,6 +126,14 @@ public class JobLocationServiceImpl implements JobLocationService {
 //		int count =  joblocationRepo.deleteJobLocationBylocationId(locationid);
 //		logger.info("deleted JobLocation count : " + count);
 		return jobLocationId;
+	}
+
+	@Override
+	public List<Object> getJobLocationByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+		List<JobLocation> locations = joblocationRepo.findByCompanyId(companyId);
+		List<Object> obj = new ArrayList<>(locations);
+		return obj;
 	}
 
 }

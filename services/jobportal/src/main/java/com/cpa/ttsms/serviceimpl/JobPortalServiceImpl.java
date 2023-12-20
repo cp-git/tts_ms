@@ -95,8 +95,11 @@ public class JobPortalServiceImpl implements JobPortalService {
 
 		if (toUpdatedJobPortal != null) {
 			logger.debug("setting new data of JobPortal to exisitng JobPortal");
-			toUpdatedJobPortal.setPortalName(toUpdatedJobPortal.getPortalName());
-			toUpdatedJobPortal.setPortalDescription(toUpdatedJobPortal.getPortalDescription());
+			toUpdatedJobPortal.setPortalName(jobportal.getPortalName());
+			toUpdatedJobPortal.setPortalDescription(jobportal.getPortalDescription());
+			toUpdatedJobPortal.setCompanyId(jobportal.getCompanyId());
+			toUpdatedJobPortal.setForBench(jobportal.isForBench());
+			toUpdatedJobPortal.setForSourcing(jobportal.isForSourcing());
 
 			updatedJobPortal = jobportalRepo.save(jobportal);
 
@@ -120,6 +123,14 @@ public class JobPortalServiceImpl implements JobPortalService {
 		int jobPortalId = jobportalRepo.deleteJobPortalById(portalId);
 //		logger.info("deleted JobPortal count : " + count);
 		return jobPortalId;
+	}
+
+	@Override
+	public List<Object> getAllPortalsByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+		List<JobPortal> portals = jobportalRepo.findByCompanyId(companyId);
+		List<Object> obj = new ArrayList<>(portals);
+		return obj;
 	}
 
 }

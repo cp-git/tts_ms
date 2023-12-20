@@ -186,4 +186,29 @@ public class JobPortalController {
 
 	}
 
+	@GetMapping("/jobportal/{companyId}")
+	public ResponseEntity<List<Object>> getJobPortalByCompanyId(@PathVariable("companyId") int companyId)
+			throws CPException {
+		logger.debug("Entering getAllVisa");
+
+		List<Object> portals = null;
+
+		try {
+			portals = jobportalService.getAllPortalsByCompanyId(companyId);
+
+			if (portals != null && !portals.isEmpty()) {
+
+				logger.info("Fetched all portals: " + portals);
+				return ResponseHandler.generateListResponse(portals, HttpStatus.OK);
+			} else {
+
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+
+			throw new CPException("err002", "Error while retrieving all portals");
+		}
+	}
+
 }

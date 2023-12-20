@@ -30,6 +30,15 @@ public class Visa {
 	@Column(name = "visadescription")
 	private String visaDescription;
 
+	@Column(name = "companyid")
+	private int companyId;
+
+	@Column(name = "isforbench")
+	private boolean isForBench;
+
+	@Column(name = "isforsourcing")
+	private boolean isForSourcing;
+
 	/**
 	 * @return the visaId
 	 */
@@ -59,29 +68,78 @@ public class Visa {
 	}
 
 	/**
-	 * @return the visadescription
+	 * @return the visaDescription
 	 */
-	public String getVisadescription() {
+	public String getVisaDescription() {
 		return visaDescription;
 	}
 
 	/**
-	 * @param visadescription the visadescription to set
+	 * @param visaDescription the visaDescription to set
 	 */
-	public void setVisadescription(String visadescription) {
-		this.visaDescription = visadescription;
+	public void setVisaDescription(String visaDescription) {
+		this.visaDescription = visaDescription;
+	}
+
+	/**
+	 * @return the companyId
+	 */
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	/**
+	 * @param companyId the companyId to set
+	 */
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
+	/**
+	 * @return the isForBench
+	 */
+	public boolean isForBench() {
+		return isForBench;
+	}
+
+	/**
+	 * @param isForBench the isForBench to set
+	 */
+	public void setForBench(boolean isForBench) {
+		this.isForBench = isForBench;
+	}
+
+	/**
+	 * @return the isForSourcing
+	 */
+	public boolean isForSourcing() {
+		return isForSourcing;
+	}
+
+	/**
+	 * @param isForSourcing the isForSourcing to set
+	 */
+	public void setForSourcing(boolean isForSourcing) {
+		this.isForSourcing = isForSourcing;
 	}
 
 	/**
 	 * @param visaId
 	 * @param visaType
-	 * @param visadescription
+	 * @param visaDescription
+	 * @param companyId
+	 * @param isForBench
+	 * @param isForSourcing
 	 */
-	public Visa(int visaId, String visaType, String visadescription) {
+	public Visa(int visaId, String visaType, String visaDescription, int companyId, boolean isForBench,
+			boolean isForSourcing) {
 		super();
 		this.visaId = visaId;
 		this.visaType = visaType;
-		this.visaDescription = visadescription;
+		this.visaDescription = visaDescription;
+		this.companyId = companyId;
+		this.isForBench = isForBench;
+		this.isForSourcing = isForSourcing;
 	}
 
 	/**
@@ -94,7 +152,8 @@ public class Visa {
 
 	@Override
 	public String toString() {
-		return "Visa [visaId=" + visaId + ", visaType=" + visaType + ", visadescription=" + visaDescription + "]";
+		return "Visa [visaId=" + visaId + ", visaType=" + visaType + ", visaDescription=" + visaDescription
+				+ ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing=" + isForSourcing + "]";
 	}
 
 }

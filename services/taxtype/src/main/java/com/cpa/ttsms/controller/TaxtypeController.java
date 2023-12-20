@@ -153,6 +153,32 @@ public class TaxtypeController {
 
 	}
 
+	@GetMapping("/taxtypes/{companyId}")
+	public ResponseEntity<List<Object>> getAllTaxTypeByCompanyId(@PathVariable("companyId") int companyId)
+			throws CPException {
+		logger.debug("Entering getAllTaxtype");
+		// logger.info("Parameter :" + taxtypeid);
+
+		List<Object> taxtypes = null;
+
+		try {
+			taxtypes = taxtypeService.getAllTaxtypeByCompanyId(companyId);
+
+			if (taxtypes != null && !taxtypes.isEmpty()) {
+
+				logger.info("Fetched all Visas: " + taxtypes);
+				return ResponseHandler.generateListResponse(taxtypes, HttpStatus.OK);
+			} else {
+
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed getting all portals: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all portals");
+		}
+	}
+
 	@PutMapping("/taxtype/{taxtypeid}")
 	public ResponseEntity<Object> updateTaxtypeBytaxtypeid(@RequestBody Taxtype taxtype,
 			@PathVariable("taxtypeid") int taxtypeid) throws CPException {

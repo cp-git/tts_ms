@@ -23,4 +23,6 @@ public interface JobPortalService {
 
 	int deleteJobPortalByjobPortalId(int jobportalid);
 
+	List<Object> getAllPortalsByCompanyId(int companyId);
+
 }

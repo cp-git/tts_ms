@@ -180,4 +180,29 @@ public class JobLocationController {
 
 	}
 
+	@GetMapping("/locations/{companyId}")
+	public ResponseEntity<List<Object>> getJobLocationByCompanyId(@PathVariable("companyId") int companyId)
+			throws CPException {
+		logger.debug("Entering getAllVisa");
+
+		List<Object> locations = null;
+
+		try {
+			locations = joblocationService.getJobLocationByCompanyId(companyId);
+
+			if (locations != null && !locations.isEmpty()) {
+
+				logger.info("Fetched all location: " + locations);
+				return ResponseHandler.generateListResponse(locations, HttpStatus.OK);
+			} else {
+
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed getting all portals: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all portals");
+		}
+	}
+
 }

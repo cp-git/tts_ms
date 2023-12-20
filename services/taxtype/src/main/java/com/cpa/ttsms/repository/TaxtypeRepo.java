@@ -25,6 +25,8 @@ public interface TaxtypeRepo extends JpaRepository<Taxtype, Integer> {
 
 	public List<Taxtype> findAll();
 
+	public List<Taxtype> findByCompanyId(int companyId);
+
 //	@Transactional
 //	@Modifying
 //	@Query(value = "UPDATE taxtype SET is_active=false WHERE taxtypeid = ?1", nativeQuery = true)

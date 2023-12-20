@@ -24,6 +24,8 @@ public interface VisaRepo extends JpaRepository<Visa, Integer> {
 	public Visa findByVisaId(int visaId);
 
 	public List<Visa> findAll();
+	
+	public List<Visa> findByCompanyId(int companyId);
 
 	@Transactional
 	@Modifying

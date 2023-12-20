@@ -183,4 +183,29 @@ public class VisaController {
 
 	}
 
+	@GetMapping("/visas/{companyId}")
+	public ResponseEntity<List<Object>> getVisasByCompanyId(@PathVariable("companyId") int companyId)
+			throws CPException {
+		logger.debug("Entering getAllVisa");
+
+		List<Object> visas = null;
+
+		try {
+			visas = visaService.getAllVisasByCompanyId(companyId);
+
+			if (visas != null && !visas.isEmpty()) {
+
+				logger.info("Fetched all Visas: " + visas);
+				return ResponseHandler.generateListResponse(visas, HttpStatus.OK);
+			} else {
+
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed getting all portals: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all portals");
+		}
+	}
+
 }

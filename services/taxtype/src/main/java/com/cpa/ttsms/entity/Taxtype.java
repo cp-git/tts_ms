@@ -29,6 +29,15 @@ public class Taxtype {
 	@Column(name = "taxtypedescription")
 	private String taxTypeDescription;
 
+	@Column(name = "companyid")
+	private int companyId;
+
+	@Column(name = "isforbench")
+	private boolean isForBench;
+
+	@Column(name = "isforsourcing")
+	private boolean isForSourcing;
+
 	/**
 	 * @return the taxTypeId
 	 */
@@ -72,15 +81,64 @@ public class Taxtype {
 	}
 
 	/**
+	 * @return the companyId
+	 */
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	/**
+	 * @param companyId the companyId to set
+	 */
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
+	/**
+	 * @return the isForBench
+	 */
+	public boolean isForBench() {
+		return isForBench;
+	}
+
+	/**
+	 * @param isForBench the isForBench to set
+	 */
+	public void setForBench(boolean isForBench) {
+		this.isForBench = isForBench;
+	}
+
+	/**
+	 * @return the isForSourcing
+	 */
+	public boolean isForSourcing() {
+		return isForSourcing;
+	}
+
+	/**
+	 * @param isForSourcing the isForSourcing to set
+	 */
+	public void setForSourcing(boolean isForSourcing) {
+		this.isForSourcing = isForSourcing;
+	}
+
+	/**
 	 * @param taxTypeId
 	 * @param taxTypeName
 	 * @param taxTypeDescription
+	 * @param companyId
+	 * @param isForBench
+	 * @param isForSourcing
 	 */
-	public Taxtype(int taxTypeId, String taxTypeName, String taxTypeDescription) {
+	public Taxtype(int taxTypeId, String taxTypeName, String taxTypeDescription, int companyId, boolean isForBench,
+			boolean isForSourcing) {
 		super();
 		this.taxTypeId = taxTypeId;
 		this.taxTypeName = taxTypeName;
 		this.taxTypeDescription = taxTypeDescription;
+		this.companyId = companyId;
+		this.isForBench = isForBench;
+		this.isForSourcing = isForSourcing;
 	}
 
 	/**
@@ -94,7 +152,8 @@ public class Taxtype {
 	@Override
 	public String toString() {
 		return "Taxtype [taxTypeId=" + taxTypeId + ", taxTypeName=" + taxTypeName + ", taxTypeDescription="
-				+ taxTypeDescription + "]";
+				+ taxTypeDescription + ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing="
+				+ isForSourcing + "]";
 	}
 
 }

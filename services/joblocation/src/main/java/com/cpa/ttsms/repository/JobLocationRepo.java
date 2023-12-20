@@ -25,6 +25,8 @@ public interface JobLocationRepo extends JpaRepository<JobLocation, Integer> {
 
 	public List<JobLocation> findAll();
 
+	public List<JobLocation> findByCompanyId(int companyId);
+
 //	@Transactional
 //	@Modifying
 //	@Query(value = "UPDATE joblocation SET is_active=false WHERE locationid = ?1", nativeQuery = true)

@@ -661,4 +661,40 @@ public class EmployeeController {
 		}
 	}
 
+	@GetMapping("/onBench/{companyId}")
+	public ResponseEntity<List<Object>> getEmployeeOnBenchByCompanyId(@PathVariable("companyId") int companyId)
+			throws CPException {
+
+		// Initialize a list to store employee data.
+		List<Object> employees = null;
+		try {
+			// Check if the companyId is a valid non-negative integer.
+			if (companyId >= 0) {
+				// Call a service method to fetch all employees and their passwords by
+				// companyId.
+				employees = employeeService.getEmployeesOnBenchByCompanyId(companyId);
+
+				// Log a message indicating that employees were successfully fetched.
+				logger.info("Fetched all employees: " + employees);
+
+				// Generate a response with the list of employees and a HTTP status code of 200
+				// (OK).
+				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
+			} else {
+				// Log an error message indicating an invalid companyId.
+				logger.info(resourceBundle.getString("err002"));
+
+				// Generate a response with a HTTP status code of 404 (Not Found) and an error
+				// message.
+				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log an error message if an exception occurs during the process.
+			logger.error("Failed getting all employees: " + ex.getMessage());
+
+			// Throw a custom exception with an error code and message.
+			throw new CPException("err002", resourceBundle.getString("err002"));
+		}
+	}
+
 }

@@ -674,13 +674,13 @@ public class CodeGenerator {
 		t.merge(context, writer);
 		try {
 			FileWriter fw = new FileWriter(new File(props.getProperty("rootFolder") + File.separator
-					+ props.getProperty("Cservice") + Constants.PATH_DESIGN
-					+ File.separatorChar + props.get("Cservice") + Constants.FILE_UPDATE));
+					+ props.getProperty("Cservice") + Constants.PATH_DESIGN + File.separatorChar + props.get("Cservice")
+					+ Constants.FILE_UPDATE));
 			fw.write(writer.toString());
 			fw.close();
-			System.out.println("\t" + props.getProperty("rootFolder") + File.separator
-					+ props.getProperty("Cservice") + Constants.PATH_DESIGN + File.separatorChar
-					+ props.get("Cservice") + Constants.FILE_UPDATE + " - file created !!!");
+			System.out.println("\t" + props.getProperty("rootFolder") + File.separator + props.getProperty("Cservice")
+					+ Constants.PATH_DESIGN + File.separatorChar + props.get("Cservice") + Constants.FILE_UPDATE
+					+ " - file created !!!");
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
@@ -706,14 +706,14 @@ public class CodeGenerator {
 		context.put("param", props.get("param"));
 		t.merge(context, writer);
 		try {
-			FileWriter fw = new FileWriter(new File(props.getProperty("rootFolder")  + File.separator
-					+ props.getProperty("Cservice") + Constants.PATH_DESIGN
-					+ File.separatorChar + props.get("Cservice") + Constants.FILE_DELETE));
+			FileWriter fw = new FileWriter(new File(props.getProperty("rootFolder") + File.separator
+					+ props.getProperty("Cservice") + Constants.PATH_DESIGN + File.separatorChar + props.get("Cservice")
+					+ Constants.FILE_DELETE));
 			fw.write(writer.toString());
 			fw.close();
-			System.out.println("\t" + props.getProperty("rootFolder") + File.separator
-					+ props.getProperty("Cservice") +  Constants.PATH_DESIGN + File.separatorChar
-					+ props.get("Cservice") + Constants.FILE_DELETE + " - file created !!!");
+			System.out.println("\t" + props.getProperty("rootFolder") + File.separator + props.getProperty("Cservice")
+					+ Constants.PATH_DESIGN + File.separatorChar + props.get("Cservice") + Constants.FILE_DELETE
+					+ " - file created !!!");
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}
@@ -740,7 +740,7 @@ public class CodeGenerator {
 		velocityEngine.init(velocityProperties);
 
 		loadProperties(
-				"E:\\BE TTS PULLS\\BE-07-08-2023\\tts_ms\\tools\\CodeGenerator\\src\\main\\resources\\CodeGen_Question.properties");
+				"D:\\BE pull\\TTS BE PULLS\\BE 1212 ChangeReq\\tts_ms\\tools\\CodeGenerator\\src\\main\\resources\\CodeGen.properties");
 
 		String rootFolder = props.getProperty("rootFolder");
 		String serviceName = props.getProperty("service");

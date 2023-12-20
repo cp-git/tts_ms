@@ -160,4 +160,6 @@ public interface EmployeeService {
 
 	List<Object> getAllEmployeeAndPasswordByCompanyId(int companyId);
 
+	List<Object> getEmployeesOnBenchByCompanyId(int companyId);
+
 }

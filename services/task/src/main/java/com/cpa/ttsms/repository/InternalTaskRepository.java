@@ -6,4 +6,5 @@ import com.cpa.ttsms.entity.InternalTask;
 
 public interface InternalTaskRepository extends JpaRepository<InternalTask, Integer> {
 
+	public InternalTask findByTaskId(int taskId);
 }

@@ -111,6 +111,10 @@
 		<module>tools/CodeGenerator</module>
 		<module>services/email</module>
 		<module>services/uploadfile</module>
+		<module>services/joblocation</module>
+		<module>services/jobportal</module>
+		<module>services/taxtype</module>
+		<module>services/visa</module>
 	</modules>
 </project>
 

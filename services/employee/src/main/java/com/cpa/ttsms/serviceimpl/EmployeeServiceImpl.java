@@ -730,4 +730,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return employeePasswordDTOList;
 	}
 
+	@Override
+	public List<Object> getEmployeesOnBenchByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+
+		List<Employee> employeeOnBench = employeeRepo.findByCompanyIdAndIsOnBenchTrue(companyId);
+		List<Object> listEmployees = new ArrayList<>(employeeOnBench);
+		System.out.println(listEmployees);
+		return listEmployees;
+	}
+
 }

@@ -31,8 +31,9 @@ import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.JobLocationService;
 
 @RestController
-@RequestMapping("/ttsms")
 @CrossOrigin
+@RequestMapping("/ttsms")
+
 public class JobLocationController {
 
 	@Autowired

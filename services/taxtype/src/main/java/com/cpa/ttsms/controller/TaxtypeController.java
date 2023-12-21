@@ -31,8 +31,9 @@ import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.TaxtypeService;
 
 @RestController
-@RequestMapping("/ttsms")
 @CrossOrigin
+@RequestMapping("/ttsms")
+
 public class TaxtypeController {
 
 	@Autowired

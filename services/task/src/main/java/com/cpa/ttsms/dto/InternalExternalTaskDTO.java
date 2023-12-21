@@ -135,7 +135,7 @@ public class InternalExternalTaskDTO {
 		this.jobSubmissionPortalId = internalTask.getJobSubmissionPortalId();
 		this.datePosted = internalTask.getDatePosted();
 		this.jobLink = internalTask.getJobLink();
-//		this.visaId = internalTask.getVisaId();
+		this.visaId = internalTask.getVisaId();
 	}
 
 	public InternalExternalTaskDTO(Task task, ExternalTask externalTask) {

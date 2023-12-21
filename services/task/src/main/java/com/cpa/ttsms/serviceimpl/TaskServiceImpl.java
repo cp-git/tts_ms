@@ -938,7 +938,7 @@ public class TaskServiceImpl implements TaskService {
 			if (internalExternalTaskDTO.getPlacementId() <= 0) {
 				if (internalExternalTaskDTO.getInternalId() > 0) {
 					task.setPlacementId(INTERNAL_PLACEMENT_ID);
-				} else if (internalExternalTaskDTO.getInternalId() > 0) {
+				} else if (internalExternalTaskDTO.getExternalId() > 0) {
 					task.setPlacementId(EXTERNAL_PLACEMENT_ID);
 				}
 			}
@@ -980,7 +980,7 @@ public class TaskServiceImpl implements TaskService {
 				} else if (task.getPlacementId() == EXTERNAL_PLACEMENT_ID) {
 					externalTask = new ExternalTask();
 					System.out.println(internalExternalTaskDTO.toString());
-					if (internalExternalTaskDTO.getInternalId() > 0) {
+					if (internalExternalTaskDTO.getExternalId() > 0) {
 						externalTask.setExternalId(internalExternalTaskDTO.getExternalId());
 					}
 					externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());

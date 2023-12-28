@@ -59,6 +59,9 @@ public class InternalTask {
 	@Column(name = "jobsubmissionportalid")
 	private int jobSubmissionPortalId; // Foreign key of portal id
 
+	@Column(name = "portalname")
+	private String portalName;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@Column(name = "dateposted")
 	private Date datePosted;
@@ -101,7 +104,7 @@ public class InternalTask {
 	public InternalTask(int internalId, int candidateId, int jobPortalId, String hiringCompanyName, String jobTitle,
 			int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId, float rate,
 			String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
-			Date datePosted, String jobLink, int visaId, int taskId) {
+			String portalName, Date datePosted, String jobLink, int visaId, int taskId) {
 		super();
 		this.internalId = internalId;
 		this.candidateId = candidateId;
@@ -117,6 +120,7 @@ public class InternalTask {
 		this.recruiterEmail = recruiterEmail;
 		this.recruiterPhone = recruiterPhone;
 		this.jobSubmissionPortalId = jobSubmissionPortalId;
+		this.portalName = portalName;
 		this.datePosted = datePosted;
 		this.jobLink = jobLink;
 		this.visaId = visaId;
@@ -373,6 +377,14 @@ public class InternalTask {
 	 */
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getPortalName() {
+		return portalName;
+	}
+
+	public void setPortalName(String portalName) {
+		this.portalName = portalName;
 	}
 
 }

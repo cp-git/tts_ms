@@ -882,7 +882,7 @@ public class TaskServiceImpl implements TaskService {
 	public InternalExternalTaskDTO createOrUpdateTask(InternalExternalTaskDTO internalExternalTaskDTO,
 			MultipartFile file) {
 
-		logger.info("Entering createOrUpdateTask");
+		logger.info("Entering createOrUpdateTask " + internalExternalTaskDTO);
 		try {
 
 			Task task = new Task();
@@ -968,6 +968,7 @@ public class TaskServiceImpl implements TaskService {
 					internalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
 					internalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
 					internalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
+					internalTask.setPortalName(internalExternalTaskDTO.getPortalName());
 					internalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
 					internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
 					internalTask.setVisaId(internalExternalTaskDTO.getVisaId());
@@ -1000,6 +1001,7 @@ public class TaskServiceImpl implements TaskService {
 					externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
 					externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
 					externalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
+					externalTask.setPortalName(internalExternalTaskDTO.getPortalName());
 					externalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
 					externalTask.setJobLink(internalExternalTaskDTO.getJobLink());
 					externalTask.setVisaId(internalExternalTaskDTO.getVisaId());

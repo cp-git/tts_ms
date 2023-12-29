@@ -73,6 +73,8 @@ public class InternalExternalTaskDTO {
 
 	private int jobSubmissionPortalId; // Foreign key of portal id
 
+	private String portalName;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date datePosted;
 
@@ -133,6 +135,7 @@ public class InternalExternalTaskDTO {
 		this.recruiterEmail = internalTask.getRecruiterEmail();
 		this.recruiterPhone = internalTask.getRecruiterPhone();
 		this.jobSubmissionPortalId = internalTask.getJobSubmissionPortalId();
+		this.portalName = internalTask.getPortalName();
 		this.datePosted = internalTask.getDatePosted();
 		this.jobLink = internalTask.getJobLink();
 		this.visaId = internalTask.getVisaId();
@@ -174,6 +177,7 @@ public class InternalExternalTaskDTO {
 		this.recruiterEmail = externalTask.getRecruiterEmail();
 		this.recruiterPhone = externalTask.getRecruiterPhone();
 		this.jobSubmissionPortalId = externalTask.getJobSubmissionPortalId();
+		this.portalName = externalTask.getPortalName();
 		this.datePosted = externalTask.getDatePosted();
 		this.jobLink = externalTask.getJobLink();
 		this.visaId = externalTask.getVisaId();
@@ -225,8 +229,8 @@ public class InternalExternalTaskDTO {
 			boolean havingChild, int internalId, int externalId, int jobPortalId, String hiringCompanyName,
 			String jobTitle, int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId,
 			float rate, String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
-			Date datePosted, String jobLink, String candidateName, String candidateCompany, String companyAddress,
-			String hrName, String hrEmail, String hrPhone, int visaId, int placementId) {
+			String portalName, Date datePosted, String jobLink, String candidateName, String candidateCompany,
+			String companyAddress, String hrName, String hrEmail, String hrPhone, int visaId, int placementId) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -258,6 +262,7 @@ public class InternalExternalTaskDTO {
 		this.recruiterEmail = recruiterEmail;
 		this.recruiterPhone = recruiterPhone;
 		this.jobSubmissionPortalId = jobSubmissionPortalId;
+		this.portalName = portalName;
 		this.datePosted = datePosted;
 		this.jobLink = jobLink;
 		this.candidateName = candidateName;
@@ -838,6 +843,14 @@ public class InternalExternalTaskDTO {
 		this.candidateId = candidateId;
 	}
 
+	public String getPortalName() {
+		return portalName;
+	}
+
+	public void setPortalName(String portalName) {
+		this.portalName = portalName;
+	}
+
 	@Override
 	public String toString() {
 		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
@@ -854,7 +867,7 @@ public class InternalExternalTaskDTO {
 				+ jobSubmissionPortalId + ", datePosted=" + datePosted + ", jobLink=" + jobLink + ", candidateId="
 				+ candidateId + ", candidateName=" + candidateName + ", candidateCompany=" + candidateCompany
 				+ ", companyAddress=" + companyAddress + ", hrName=" + hrName + ", hrEmail=" + hrEmail + ", hrPhone="
-				+ hrPhone + ", visaId=" + visaId + ", placementId=" + placementId + "]";
+				+ hrPhone + ", visaId=" + visaId + ", placementId=" + placementId + ", portalName=" + portalName + "]";
 	}
 
 }

@@ -89,6 +89,33 @@ public class ExternalTask {
 	@Column(name = "taskid")
 	private int taskId;
 
+	@Column(name = "jobaddress")
+	private String jobAddress;
+
+	@Column(name = "jobcity")
+	private String jobCity;
+
+	@Column(name = "jobstate")
+	private String jobState;
+
+	@Column(name = "jobdescription")
+	private String jobDescription;
+
+	@Column(name = "candidateexperience")
+	private int candidateExperience;
+
+	@Column(name = "expectedmaxsal")
+	private int expectedMaxSalary;
+
+	@Column(name = "expectedminsal")
+	private int expectedMinSalary;
+
+	@Column(name = "iswillingtorelocate")
+	private boolean willingToRelocate;
+
+	@Column(name = "iswillingtonegotiatesal")
+	private boolean willingToNegotiateSalary;
+
 	/**
 	 * 
 	 */
@@ -100,6 +127,7 @@ public class ExternalTask {
 	 * @param externalId
 	 * @param candidateName
 	 * @param candidateCompany
+	 * @param companyAddress
 	 * @param hrName
 	 * @param hrEmail
 	 * @param hrPhone
@@ -115,15 +143,28 @@ public class ExternalTask {
 	 * @param recruiterEmail
 	 * @param recruiterPhone
 	 * @param jobSubmissionPortalId
+	 * @param portalName
 	 * @param datePosted
 	 * @param jobLink
 	 * @param visaId
+	 * @param taskId
+	 * @param jobAddress
+	 * @param jobCity
+	 * @param jobState
+	 * @param jobDescription
+	 * @param candidateExperience
+	 * @param expectedMaxSalary
+	 * @param expectedMinSalary
+	 * @param willingToRelocate
+	 * @param willingToNegotiateSalary
 	 */
-	public ExternalTask(int externalId, String candidateName, String candidateCompany, String hrName, String hrEmail,
-			String hrPhone, int jobPortalId, String hiringCompanyName, String companyAddress, String jobTitle,
+	public ExternalTask(int externalId, String candidateName, String candidateCompany, String companyAddress,
+			String hrName, String hrEmail, String hrPhone, int jobPortalId, String hiringCompanyName, String jobTitle,
 			int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId, float rate,
 			String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
-			String portalName, Date datePosted, String jobLink, int visaId, int taskId) {
+			String portalName, Date datePosted, String jobLink, int visaId, int taskId, String jobAddress,
+			String jobCity, String jobState, String jobDescription, int candidateExperience, int expectedMaxSalary,
+			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary) {
 		super();
 		this.externalId = externalId;
 		this.candidateName = candidateName;
@@ -149,6 +190,15 @@ public class ExternalTask {
 		this.jobLink = jobLink;
 		this.visaId = visaId;
 		this.taskId = taskId;
+		this.jobAddress = jobAddress;
+		this.jobCity = jobCity;
+		this.jobState = jobState;
+		this.jobDescription = jobDescription;
+		this.candidateExperience = candidateExperience;
+		this.expectedMaxSalary = expectedMaxSalary;
+		this.expectedMinSalary = expectedMinSalary;
+		this.willingToRelocate = willingToRelocate;
+		this.willingToNegotiateSalary = willingToNegotiateSalary;
 	}
 
 	/**
@@ -480,4 +530,131 @@ public class ExternalTask {
 	public void setPortalName(String portalName) {
 		this.portalName = portalName;
 	}
+
+	/**
+	 * @return the jobAddress
+	 */
+	public String getJobAddress() {
+		return jobAddress;
+	}
+
+	/**
+	 * @param jobAddress the jobAddress to set
+	 */
+	public void setJobAddress(String jobAddress) {
+		this.jobAddress = jobAddress;
+	}
+
+	/**
+	 * @return the jobCity
+	 */
+	public String getJobCity() {
+		return jobCity;
+	}
+
+	/**
+	 * @param jobCity the jobCity to set
+	 */
+	public void setJobCity(String jobCity) {
+		this.jobCity = jobCity;
+	}
+
+	/**
+	 * @return the jobState
+	 */
+	public String getJobState() {
+		return jobState;
+	}
+
+	/**
+	 * @param jobState the jobState to set
+	 */
+	public void setJobState(String jobState) {
+		this.jobState = jobState;
+	}
+
+	/**
+	 * @return the jobDescription
+	 */
+	public String getJobDescription() {
+		return jobDescription;
+	}
+
+	/**
+	 * @param jobDescription the jobDescription to set
+	 */
+	public void setJobDescription(String jobDescription) {
+		this.jobDescription = jobDescription;
+	}
+
+	/**
+	 * @return the candidateExperience
+	 */
+	public int getCandidateExperience() {
+		return candidateExperience;
+	}
+
+	/**
+	 * @param candidateExperience the candidateExperience to set
+	 */
+	public void setCandidateExperience(int candidateExperience) {
+		this.candidateExperience = candidateExperience;
+	}
+
+	/**
+	 * @return the expectedMaxSalary
+	 */
+	public int getExpectedMaxSalary() {
+		return expectedMaxSalary;
+	}
+
+	/**
+	 * @param expectedMaxSalary the expectedMaxSalary to set
+	 */
+	public void setExpectedMaxSalary(int expectedMaxSalary) {
+		this.expectedMaxSalary = expectedMaxSalary;
+	}
+
+	/**
+	 * @return the expectedMinSalary
+	 */
+	public int getExpectedMinSalary() {
+		return expectedMinSalary;
+	}
+
+	/**
+	 * @param expectedMinSalary the expectedMinSalary to set
+	 */
+	public void setExpectedMinSalary(int expectedMinSalary) {
+		this.expectedMinSalary = expectedMinSalary;
+	}
+
+	/**
+	 * @return the willingToRelocate
+	 */
+	public boolean isWillingToRelocate() {
+		return willingToRelocate;
+	}
+
+	/**
+	 * @param willingToRelocate the willingToRelocate to set
+	 */
+	public void setWillingToRelocate(boolean willingToRelocate) {
+		this.willingToRelocate = willingToRelocate;
+	}
+
+	/**
+	 * @return the willingToNegotiateSalary
+	 */
+	public boolean isWillingToNegotiateSalary() {
+		return willingToNegotiateSalary;
+	}
+
+	/**
+	 * @param willingToNegotiateSalary the willingToNegotiateSalary to set
+	 */
+	public void setWillingToNegotiateSalary(boolean willingToNegotiateSalary) {
+		this.willingToNegotiateSalary = willingToNegotiateSalary;
+	}
+
 }

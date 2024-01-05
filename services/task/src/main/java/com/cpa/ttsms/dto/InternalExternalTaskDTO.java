@@ -57,7 +57,7 @@ public class InternalExternalTaskDTO {
 
 	private int experienceRequired; // Indicates the number of years of experience needed for the job
 
-	private int jobLocationId; // Foreign key of table "joblocation"
+	private int jobLocationId; // Foreign key of table "joblocation" (Job Mode)
 
 	private String jobReferenceNumber;
 
@@ -98,11 +98,147 @@ public class InternalExternalTaskDTO {
 
 	private int placementId;
 
+	private String jobAddress;
+
+	private String jobCity;
+
+	private String jobState;
+
+	private String jobDescription;
+
+	private int candidateExperience;
+
+	private int expectedMaxSalary;
+
+	private int expectedMinSalary;
+
+	private boolean willingToRelocate;
+
+	private boolean willingToNegotiateSalary;
+
 	/**
 	 * 
 	 */
 	public InternalExternalTaskDTO() {
 		super();
+	}
+
+	/**
+	 * @param taskId
+	 * @param taskName
+	 * @param taskDescription
+	 * @param taskCreatedBy
+	 * @param taskAssignedTo
+	 * @param taskStatus
+	 * @param taskStartDate
+	 * @param taskEndDate
+	 * @param taskActualStartDate
+	 * @param taskActualEndDate
+	 * @param companyId
+	 * @param taskParent
+	 * @param reason
+	 * @param employeeId
+	 * @param fileName
+	 * @param havingChild
+	 * @param internalId
+	 * @param externalId
+	 * @param jobPortalId
+	 * @param hiringCompanyName
+	 * @param jobTitle
+	 * @param experienceRequired
+	 * @param jobLocationId
+	 * @param jobReferenceNumber
+	 * @param taxTypeId
+	 * @param rate
+	 * @param recruiterName
+	 * @param recruiterEmail
+	 * @param recruiterPhone
+	 * @param jobSubmissionPortalId
+	 * @param portalName
+	 * @param datePosted
+	 * @param jobLink
+	 * @param candidateId
+	 * @param candidateName
+	 * @param candidateCompany
+	 * @param companyAddress
+	 * @param hrName
+	 * @param hrEmail
+	 * @param hrPhone
+	 * @param visaId
+	 * @param placementId
+	 * @param jobAddress
+	 * @param jobCity
+	 * @param jobState
+	 * @param jobDescription
+	 * @param candidateExperience
+	 * @param expectedMaxSalary
+	 * @param expectedMinSalary
+	 * @param willingToRelocate
+	 * @param willingToNegotiateSalary
+	 */
+	public InternalExternalTaskDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy,
+			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
+			Date taskActualEndDate, int companyId, int taskParent, String reason, int employeeId, String fileName,
+			boolean havingChild, int internalId, int externalId, int jobPortalId, String hiringCompanyName,
+			String jobTitle, int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId,
+			float rate, String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
+			String portalName, Date datePosted, String jobLink, int candidateId, String candidateName,
+			String candidateCompany, String companyAddress, String hrName, String hrEmail, String hrPhone, int visaId,
+			int placementId, String jobAddress, String jobCity, String jobState, String jobDescription,
+			int candidateExperience, int expectedMaxSalary, int expectedMinSalary, boolean willingToRelocate,
+			boolean willingToNegotiateSalary) {
+		super();
+		this.taskId = taskId;
+		this.taskName = taskName;
+		this.taskDescription = taskDescription;
+		this.taskCreatedBy = taskCreatedBy;
+		this.taskAssignedTo = taskAssignedTo;
+		this.taskStatus = taskStatus;
+		this.taskStartDate = taskStartDate;
+		this.taskEndDate = taskEndDate;
+		this.taskActualStartDate = taskActualStartDate;
+		this.taskActualEndDate = taskActualEndDate;
+		this.companyId = companyId;
+		this.taskParent = taskParent;
+		this.reason = reason;
+		this.employeeId = employeeId;
+		this.fileName = fileName;
+		this.havingChild = havingChild;
+		this.internalId = internalId;
+		this.externalId = externalId;
+		this.jobPortalId = jobPortalId;
+		this.hiringCompanyName = hiringCompanyName;
+		this.jobTitle = jobTitle;
+		this.experienceRequired = experienceRequired;
+		this.jobLocationId = jobLocationId;
+		this.jobReferenceNumber = jobReferenceNumber;
+		this.taxTypeId = taxTypeId;
+		this.rate = rate;
+		this.recruiterName = recruiterName;
+		this.recruiterEmail = recruiterEmail;
+		this.recruiterPhone = recruiterPhone;
+		this.jobSubmissionPortalId = jobSubmissionPortalId;
+		this.portalName = portalName;
+		this.datePosted = datePosted;
+		this.jobLink = jobLink;
+		this.candidateId = candidateId;
+		this.candidateName = candidateName;
+		this.candidateCompany = candidateCompany;
+		this.companyAddress = companyAddress;
+		this.hrName = hrName;
+		this.hrEmail = hrEmail;
+		this.hrPhone = hrPhone;
+		this.visaId = visaId;
+		this.placementId = placementId;
+		this.jobAddress = jobAddress;
+		this.jobCity = jobCity;
+		this.jobState = jobState;
+		this.jobDescription = jobDescription;
+		this.candidateExperience = candidateExperience;
+		this.expectedMaxSalary = expectedMaxSalary;
+		this.expectedMinSalary = expectedMinSalary;
+		this.willingToRelocate = willingToRelocate;
+		this.willingToNegotiateSalary = willingToNegotiateSalary;
 	}
 
 	public InternalExternalTaskDTO(Task task, InternalTask internalTask) {
@@ -139,6 +275,11 @@ public class InternalExternalTaskDTO {
 		this.datePosted = internalTask.getDatePosted();
 		this.jobLink = internalTask.getJobLink();
 		this.visaId = internalTask.getVisaId();
+
+		this.jobAddress = internalTask.getJobAddress();
+		this.jobCity = internalTask.getJobCity();
+		this.jobState = internalTask.getJobState();
+		this.jobDescription = internalTask.getJobDescription();
 	}
 
 	public InternalExternalTaskDTO(Task task, ExternalTask externalTask) {
@@ -181,98 +322,17 @@ public class InternalExternalTaskDTO {
 		this.datePosted = externalTask.getDatePosted();
 		this.jobLink = externalTask.getJobLink();
 		this.visaId = externalTask.getVisaId();
-	}
 
-	/**
-	 * @param taskId
-	 * @param taskName
-	 * @param taskDescription
-	 * @param taskCreatedBy
-	 * @param taskAssignedTo
-	 * @param taskStatus
-	 * @param taskStartDate
-	 * @param taskEndDate
-	 * @param taskActualStartDate
-	 * @param taskActualEndDate
-	 * @param companyId
-	 * @param taskParent
-	 * @param reason
-	 * @param employeeId
-	 * @param fileName
-	 * @param havingChild
-	 * @param internalId
-	 * @param externalId
-	 * @param jobPortalId
-	 * @param hiringCompanyName
-	 * @param jobTitle
-	 * @param experienceRequired
-	 * @param jobLocationId
-	 * @param jobReferenceNumber
-	 * @param taxTypeId
-	 * @param rate
-	 * @param recruiterName
-	 * @param recruiterEmail
-	 * @param recruiterPhone
-	 * @param jobSubmissionPortalId
-	 * @param datePosted
-	 * @param jobLink
-	 * @param candidateName
-	 * @param candidateCompany
-	 * @param hrName
-	 * @param hrEmail
-	 * @param hrPhone
-	 * @param visaId
-	 */
-	public InternalExternalTaskDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy,
-			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
-			Date taskActualEndDate, int companyId, int taskParent, String reason, int employeeId, String fileName,
-			boolean havingChild, int internalId, int externalId, int jobPortalId, String hiringCompanyName,
-			String jobTitle, int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId,
-			float rate, String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
-			String portalName, Date datePosted, String jobLink, String candidateName, String candidateCompany,
-			String companyAddress, String hrName, String hrEmail, String hrPhone, int visaId, int placementId) {
-		super();
-		this.taskId = taskId;
-		this.taskName = taskName;
-		this.taskDescription = taskDescription;
-		this.taskCreatedBy = taskCreatedBy;
-		this.taskAssignedTo = taskAssignedTo;
-		this.taskStatus = taskStatus;
-		this.taskStartDate = taskStartDate;
-		this.taskEndDate = taskEndDate;
-		this.taskActualStartDate = taskActualStartDate;
-		this.taskActualEndDate = taskActualEndDate;
-		this.companyId = companyId;
-		this.taskParent = taskParent;
-		this.reason = reason;
-		this.employeeId = employeeId;
-		this.fileName = fileName;
-		this.havingChild = havingChild;
-		this.internalId = internalId;
-		this.externalId = externalId;
-		this.jobPortalId = jobPortalId;
-		this.hiringCompanyName = hiringCompanyName;
-		this.jobTitle = jobTitle;
-		this.experienceRequired = experienceRequired;
-		this.jobLocationId = jobLocationId;
-		this.jobReferenceNumber = jobReferenceNumber;
-		this.taxTypeId = taxTypeId;
-		this.rate = rate;
-		this.recruiterName = recruiterName;
-		this.recruiterEmail = recruiterEmail;
-		this.recruiterPhone = recruiterPhone;
-		this.jobSubmissionPortalId = jobSubmissionPortalId;
-		this.portalName = portalName;
-		this.datePosted = datePosted;
-		this.jobLink = jobLink;
-		this.candidateName = candidateName;
-		this.candidateCompany = candidateCompany;
-		this.companyAddress = companyAddress;
-		this.hrName = hrName;
-		this.hrEmail = hrEmail;
-		this.hrPhone = hrPhone;
-		this.visaId = visaId;
-		this.placementId = placementId;
+		this.jobAddress = externalTask.getJobAddress();
+		this.jobCity = externalTask.getJobCity();
+		this.jobState = externalTask.getJobState();
+		this.jobDescription = externalTask.getJobDescription();
+
+		this.candidateExperience = externalTask.getCandidateExperience();
+		this.expectedMinSalary = externalTask.getExpectedMinSalary();
+		this.expectedMaxSalary = externalTask.getExpectedMaxSalary();
+		this.willingToRelocate = externalTask.isWillingToRelocate();
+		this.willingToNegotiateSalary = externalTask.isWillingToNegotiateSalary();
 	}
 
 	/**
@@ -851,6 +911,114 @@ public class InternalExternalTaskDTO {
 		this.portalName = portalName;
 	}
 
+	public String getJobAddress() {
+		return jobAddress;
+	}
+
+	public void setJobAddress(String jobAddress) {
+		this.jobAddress = jobAddress;
+	}
+
+	public String getJobCity() {
+		return jobCity;
+	}
+
+	public void setJobCity(String jobCity) {
+		this.jobCity = jobCity;
+	}
+
+	public String getJobState() {
+		return jobState;
+	}
+
+	public void setJobState(String jobState) {
+		this.jobState = jobState;
+	}
+
+	/**
+	 * @return the jobDescription
+	 */
+	public String getJobDescription() {
+		return jobDescription;
+	}
+
+	/**
+	 * @param jobDescription the jobDescription to set
+	 */
+	public void setJobDescription(String jobDescription) {
+		this.jobDescription = jobDescription;
+	}
+
+	/**
+	 * @return the candidateExperience
+	 */
+	public int getCandidateExperience() {
+		return candidateExperience;
+	}
+
+	/**
+	 * @param candidateExperience the candidateExperience to set
+	 */
+	public void setCandidateExperience(int candidateExperience) {
+		this.candidateExperience = candidateExperience;
+	}
+
+	/**
+	 * @return the expectedMaxSalary
+	 */
+	public int getExpectedMaxSalary() {
+		return expectedMaxSalary;
+	}
+
+	/**
+	 * @param expectedMaxSalary the expectedMaxSalary to set
+	 */
+	public void setExpectedMaxSalary(int expectedMaxSalary) {
+		this.expectedMaxSalary = expectedMaxSalary;
+	}
+
+	/**
+	 * @return the expectedMinSalary
+	 */
+	public int getExpectedMinSalary() {
+		return expectedMinSalary;
+	}
+
+	/**
+	 * @param expectedMinSalary the expectedMinSalary to set
+	 */
+	public void setExpectedMinSalary(int expectedMinSalary) {
+		this.expectedMinSalary = expectedMinSalary;
+	}
+
+	/**
+	 * @return the willingToRelocate
+	 */
+	public boolean isWillingToRelocate() {
+		return willingToRelocate;
+	}
+
+	/**
+	 * @param willingToRelocate the willingToRelocate to set
+	 */
+	public void setWillingToRelocate(boolean willingToRelocate) {
+		this.willingToRelocate = willingToRelocate;
+	}
+
+	/**
+	 * @return the willingToNegotiateSalary
+	 */
+	public boolean isWillingToNegotiateSalary() {
+		return willingToNegotiateSalary;
+	}
+
+	/**
+	 * @param willingToNegotiateSalary the willingToNegotiateSalary to set
+	 */
+	public void setWillingToNegotiateSalary(boolean willingToNegotiateSalary) {
+		this.willingToNegotiateSalary = willingToNegotiateSalary;
+	}
+
 	@Override
 	public String toString() {
 		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
@@ -864,10 +1032,14 @@ public class InternalExternalTaskDTO {
 				+ ", jobLocationId=" + jobLocationId + ", jobReferenceNumber=" + jobReferenceNumber + ", taxTypeId="
 				+ taxTypeId + ", rate=" + rate + ", recruiterName=" + recruiterName + ", recruiterEmail="
 				+ recruiterEmail + ", recruiterPhone=" + recruiterPhone + ", jobSubmissionPortalId="
-				+ jobSubmissionPortalId + ", datePosted=" + datePosted + ", jobLink=" + jobLink + ", candidateId="
-				+ candidateId + ", candidateName=" + candidateName + ", candidateCompany=" + candidateCompany
-				+ ", companyAddress=" + companyAddress + ", hrName=" + hrName + ", hrEmail=" + hrEmail + ", hrPhone="
-				+ hrPhone + ", visaId=" + visaId + ", placementId=" + placementId + ", portalName=" + portalName + "]";
+				+ jobSubmissionPortalId + ", portalName=" + portalName + ", datePosted=" + datePosted + ", jobLink="
+				+ jobLink + ", candidateId=" + candidateId + ", candidateName=" + candidateName + ", candidateCompany="
+				+ candidateCompany + ", companyAddress=" + companyAddress + ", hrName=" + hrName + ", hrEmail="
+				+ hrEmail + ", hrPhone=" + hrPhone + ", visaId=" + visaId + ", placementId=" + placementId
+				+ ", jobAddress=" + jobAddress + ", jobCity=" + jobCity + ", jobState=" + jobState + ", jobDescription="
+				+ jobDescription + ", candidateExperience=" + candidateExperience + ", expectedMaxSalary="
+				+ expectedMaxSalary + ", expectedMinSalary=" + expectedMinSalary + ", isWillingToRelocate="
+				+ willingToRelocate + ", isWillingToNegotiateSalary=" + willingToNegotiateSalary + "]";
 	}
 
 }

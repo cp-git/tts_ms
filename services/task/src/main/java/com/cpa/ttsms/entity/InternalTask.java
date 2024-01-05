@@ -75,6 +75,18 @@ public class InternalTask {
 	@Column(name = "taskid")
 	private int taskId;
 
+	@Column(name = "jobaddress")
+	private String jobAddress;
+
+	@Column(name = "jobcity")
+	private String jobCity;
+
+	@Column(name = "jobstate")
+	private String jobState;
+
+	@Column(name = "jobdescription")
+	private String jobDescription;
+
 	/**
 	 * 
 	 */
@@ -82,29 +94,11 @@ public class InternalTask {
 		super();
 	}
 
-	/**
-	 * @param internalId
-	 * @param candidateName
-	 * @param jobPortalId
-	 * @param hiringCompanyName
-	 * @param jobTitle
-	 * @param experienceRequired
-	 * @param jobLocationId
-	 * @param jobReferenceNumber
-	 * @param taxTypeId
-	 * @param rate
-	 * @param recruiterName
-	 * @param recruiterEmail
-	 * @param recruiterPhone
-	 * @param jobSubmissionPortalId
-	 * @param datePosted
-	 * @param jobLink
-	 * @param visaId
-	 */
 	public InternalTask(int internalId, int candidateId, int jobPortalId, String hiringCompanyName, String jobTitle,
 			int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId, float rate,
 			String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
-			String portalName, Date datePosted, String jobLink, int visaId, int taskId) {
+			String portalName, Date datePosted, String jobLink, int visaId, int taskId, String jobAddress,
+			String jobCity, String jobState, String jobDescription) {
 		super();
 		this.internalId = internalId;
 		this.candidateId = candidateId;
@@ -125,6 +119,10 @@ public class InternalTask {
 		this.jobLink = jobLink;
 		this.visaId = visaId;
 		this.taskId = taskId;
+		this.jobAddress = jobAddress;
+		this.jobCity = jobCity;
+		this.jobState = jobState;
+		this.jobDescription = jobDescription;
 	}
 
 	/**
@@ -385,6 +383,62 @@ public class InternalTask {
 
 	public void setPortalName(String portalName) {
 		this.portalName = portalName;
+	}
+
+	/**
+	 * @return the jobAddress
+	 */
+	public String getJobAddress() {
+		return jobAddress;
+	}
+
+	/**
+	 * @param jobAddress the jobAddress to set
+	 */
+	public void setJobAddress(String jobAddress) {
+		this.jobAddress = jobAddress;
+	}
+
+	/**
+	 * @return the jobCity
+	 */
+	public String getJobCity() {
+		return jobCity;
+	}
+
+	/**
+	 * @param jobCity the jobCity to set
+	 */
+	public void setJobCity(String jobCity) {
+		this.jobCity = jobCity;
+	}
+
+	/**
+	 * @return the jobState
+	 */
+	public String getJobState() {
+		return jobState;
+	}
+
+	/**
+	 * @param jobState the jobState to set
+	 */
+	public void setJobState(String jobState) {
+		this.jobState = jobState;
+	}
+
+	/**
+	 * @return the jobDescription
+	 */
+	public String getJobDescription() {
+		return jobDescription;
+	}
+
+	/**
+	 * @param jobDescription the jobDescription to set
+	 */
+	public void setJobDescription(String jobDescription) {
+		this.jobDescription = jobDescription;
 	}
 
 }

@@ -973,6 +973,12 @@ public class TaskServiceImpl implements TaskService {
 					internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
 					internalTask.setVisaId(internalExternalTaskDTO.getVisaId());
 					internalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
+
+					internalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
+					internalTask.setJobCity(internalExternalTaskDTO.getJobCity());
+					internalTask.setJobState(internalExternalTaskDTO.getJobState());
+					internalTask.setJobDescription(internalExternalTaskDTO.getJobDescription());
+
 					internalTask.setTaskId((createdTask.getTaskId()));
 
 					internalCreatedTask = internalTaskRepo.save(internalTask);
@@ -1007,6 +1013,17 @@ public class TaskServiceImpl implements TaskService {
 					externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
 					externalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
 					externalTask.setTaskId((createdTask.getTaskId()));
+
+					externalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
+					externalTask.setJobCity(internalExternalTaskDTO.getJobCity());
+					externalTask.setJobState(internalExternalTaskDTO.getJobState());
+					externalTask.setJobDescription(internalExternalTaskDTO.getJobDescription());
+
+					externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
+					externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
+					externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
+					externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
+					externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
 
 					externalCreatedTask = externalTaskRepo.save(externalTask);
 					internalExternalTaskDTO.setExternalId(externalCreatedTask.getExternalId());

@@ -116,6 +116,8 @@ public class InternalExternalTaskDTO {
 
 	private boolean willingToNegotiateSalary;
 
+	private String reasonToFitForJob;
+
 	/**
 	 * 
 	 */
@@ -186,7 +188,7 @@ public class InternalExternalTaskDTO {
 			String candidateCompany, String companyAddress, String hrName, String hrEmail, String hrPhone, int visaId,
 			int placementId, String jobAddress, String jobCity, String jobState, String jobDescription,
 			int candidateExperience, int expectedMaxSalary, int expectedMinSalary, boolean willingToRelocate,
-			boolean willingToNegotiateSalary) {
+			boolean willingToNegotiateSalary, String reasonToFitForJob) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -239,6 +241,7 @@ public class InternalExternalTaskDTO {
 		this.expectedMinSalary = expectedMinSalary;
 		this.willingToRelocate = willingToRelocate;
 		this.willingToNegotiateSalary = willingToNegotiateSalary;
+		this.reasonToFitForJob = reasonToFitForJob;
 	}
 
 	public InternalExternalTaskDTO(Task task, InternalTask internalTask) {
@@ -333,6 +336,8 @@ public class InternalExternalTaskDTO {
 		this.expectedMaxSalary = externalTask.getExpectedMaxSalary();
 		this.willingToRelocate = externalTask.isWillingToRelocate();
 		this.willingToNegotiateSalary = externalTask.isWillingToNegotiateSalary();
+
+		this.reasonToFitForJob = externalTask.getReasonToFitForJob();
 	}
 
 	/**
@@ -1019,6 +1024,20 @@ public class InternalExternalTaskDTO {
 		this.willingToNegotiateSalary = willingToNegotiateSalary;
 	}
 
+	/**
+	 * @return the reasonToFitForJob
+	 */
+	public String getReasonToFitForJob() {
+		return reasonToFitForJob;
+	}
+
+	/**
+	 * @param reasonToFitForJob the reasonToFitForJob to set
+	 */
+	public void setReasonToFitForJob(String reasonToFitForJob) {
+		this.reasonToFitForJob = reasonToFitForJob;
+	}
+
 	@Override
 	public String toString() {
 		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
@@ -1038,8 +1057,9 @@ public class InternalExternalTaskDTO {
 				+ hrEmail + ", hrPhone=" + hrPhone + ", visaId=" + visaId + ", placementId=" + placementId
 				+ ", jobAddress=" + jobAddress + ", jobCity=" + jobCity + ", jobState=" + jobState + ", jobDescription="
 				+ jobDescription + ", candidateExperience=" + candidateExperience + ", expectedMaxSalary="
-				+ expectedMaxSalary + ", expectedMinSalary=" + expectedMinSalary + ", isWillingToRelocate="
-				+ willingToRelocate + ", isWillingToNegotiateSalary=" + willingToNegotiateSalary + "]";
+				+ expectedMaxSalary + ", expectedMinSalary=" + expectedMinSalary + ", willingToRelocate="
+				+ willingToRelocate + ", willingToNegotiateSalary=" + willingToNegotiateSalary + ", reasonToFitForJob="
+				+ reasonToFitForJob + "]";
 	}
 
 }

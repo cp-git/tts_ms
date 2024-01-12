@@ -116,6 +116,9 @@ public class ExternalTask {
 	@Column(name = "iswillingtonegotiatesal")
 	private boolean willingToNegotiateSalary;
 
+	@Column(name = "reasontofitforjob")
+	private String reasonToFitForJob;
+
 	/**
 	 * 
 	 */
@@ -164,7 +167,8 @@ public class ExternalTask {
 			String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
 			String portalName, Date datePosted, String jobLink, int visaId, int taskId, String jobAddress,
 			String jobCity, String jobState, String jobDescription, int candidateExperience, int expectedMaxSalary,
-			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary) {
+			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary,
+			String reasonToFitForJob) {
 		super();
 		this.externalId = externalId;
 		this.candidateName = candidateName;
@@ -199,6 +203,7 @@ public class ExternalTask {
 		this.expectedMinSalary = expectedMinSalary;
 		this.willingToRelocate = willingToRelocate;
 		this.willingToNegotiateSalary = willingToNegotiateSalary;
+		this.reasonToFitForJob = reasonToFitForJob;
 	}
 
 	/**
@@ -655,6 +660,20 @@ public class ExternalTask {
 	 */
 	public void setWillingToNegotiateSalary(boolean willingToNegotiateSalary) {
 		this.willingToNegotiateSalary = willingToNegotiateSalary;
+	}
+
+	/**
+	 * @return the reasonToFitForJob
+	 */
+	public String getReasonToFitForJob() {
+		return reasonToFitForJob;
+	}
+
+	/**
+	 * @param reasonToFitForJob the reasonToFitForJob to set
+	 */
+	public void setReasonToFitForJob(String reasonToFitForJob) {
+		this.reasonToFitForJob = reasonToFitForJob;
 	}
 
 }

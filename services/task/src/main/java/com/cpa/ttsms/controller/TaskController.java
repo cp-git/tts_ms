@@ -452,7 +452,7 @@ public class TaskController {
 			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateTask");
-		logger.info("Data of creating Task: " + internalExternalTaskDTO.getTaskName());
+		logger.info("Data of creating Task: " + internalExternalTaskDTO.toString());
 
 		try {
 

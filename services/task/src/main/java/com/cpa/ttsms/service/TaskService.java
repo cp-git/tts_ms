@@ -114,4 +114,7 @@ public interface TaskService {
 	 * @return The Task object with the specified ID, or null if not found.
 	 */
 	InternalExternalTaskDTO getInternalOrExternalTaskByTaskId(int id);
+	
+	
+	List<InternalExternalTaskDTO> getMltipleParentTaskAndChildTaskByParentIds(List <Integer> parentId);
 }

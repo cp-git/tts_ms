@@ -529,5 +529,36 @@ public class TaskController {
 			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
 	}
+	
+	@PostMapping("/multiTask")
+	public ResponseEntity<Object> getParentTaskAndAllChildTasksByParentIds(@RequestPart("parentid") List<Integer> parentIds)
+	        throws CPException {
+	    logger.debug("Entering getParentTaskAndAllChildTasksByParentIds");
+	    logger.info("Entered parentIds: " + parentIds);
+
+	    List<List<InternalExternalTaskDTO>> allParentAndChildTasks = new ArrayList<>();
+
+	    try {
+	      
+	            List<InternalExternalTaskDTO> parentAndChildTasks = taskService.getMltipleParentTaskAndChildTaskByParentIds(parentIds);
+	            allParentAndChildTasks.add(parentAndChildTasks);
+	        
+
+	        // If tasks are found for any parent ID, return a successful response
+	        if (allParentAndChildTasks.stream().anyMatch(tasks -> !tasks.isEmpty())) {
+	            logger.debug("Tasks fetched, generating response");
+	            return ResponseHandler.generateResponse(allParentAndChildTasks, HttpStatus.OK);
+	        } else {
+	            // If no tasks are found for any parent ID, return an error response with HTTP status NOT_FOUND
+	            // and an error message "err001"
+	            logger.debug("Tasks not found");
+	            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+	        }
+
+	    } catch (Exception ex) {
+	        logger.error("Failed getting tasks: " + ex.getMessage());
+	        throw new CPException("err001", resourceBundle.getString("err001"));
+	    }
+	}
 
 }

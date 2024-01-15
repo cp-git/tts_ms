@@ -1141,4 +1141,28 @@ public class TaskServiceImpl implements TaskService {
 		logger.info("Founded internalExternalTaskDTO: " + internalExternalTaskDTO);
 		return internalExternalTaskDTO;
 	}
+	
+	@Override
+	public List<InternalExternalTaskDTO> getMltipleParentTaskAndChildTaskByParentIds(List<Integer> parentId) {
+		List<InternalExternalTaskDTO> parentAndChildTasks = new ArrayList<>();
+		System.out.println(parentId);
+		for (int id : parentId) {
+
+			System.out.println(id);
+			InternalExternalTaskDTO parentTask = getInternalOrExternalTaskByTaskId(id);
+			parentAndChildTasks.add(parentTask);
+			List<Task> allChilds = getAllChildTasksByParentId(id);
+			System.out.println(allChilds.size() > 0);
+
+			if (allChilds.size() > 0) {
+				for (Task child : allChilds) {
+					InternalExternalTaskDTO childTaskDTO = getInternalOrExternalTaskByTaskId(child.getTaskId());
+					parentAndChildTasks.add(childTaskDTO);
+				}
+			}
+
+		}
+	
+		return parentAndChildTasks;
+	}
 }

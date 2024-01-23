@@ -1026,6 +1026,7 @@ public class TaskServiceImpl implements TaskService {
 					externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
 
 					externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
+					externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
 
 					externalCreatedTask = externalTaskRepo.save(externalTask);
 					internalExternalTaskDTO.setExternalId(externalCreatedTask.getExternalId());

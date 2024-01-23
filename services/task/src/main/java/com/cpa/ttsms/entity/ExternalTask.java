@@ -119,6 +119,9 @@ public class ExternalTask {
 	@Column(name = "reasontofitforjob")
 	private String reasonToFitForJob;
 
+	@Column(name = "hiringcompanyid")
+	private int hiringCompanyId;
+
 	/**
 	 * 
 	 */
@@ -168,7 +171,7 @@ public class ExternalTask {
 			String portalName, Date datePosted, String jobLink, int visaId, int taskId, String jobAddress,
 			String jobCity, String jobState, String jobDescription, int candidateExperience, int expectedMaxSalary,
 			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary,
-			String reasonToFitForJob) {
+			String reasonToFitForJob, int hiringCompanyId) {
 		super();
 		this.externalId = externalId;
 		this.candidateName = candidateName;
@@ -204,6 +207,7 @@ public class ExternalTask {
 		this.willingToRelocate = willingToRelocate;
 		this.willingToNegotiateSalary = willingToNegotiateSalary;
 		this.reasonToFitForJob = reasonToFitForJob;
+		this.hiringCompanyId = hiringCompanyId;
 	}
 
 	/**
@@ -674,6 +678,20 @@ public class ExternalTask {
 	 */
 	public void setReasonToFitForJob(String reasonToFitForJob) {
 		this.reasonToFitForJob = reasonToFitForJob;
+	}
+
+	/**
+	 * @return the hiringCompanyId
+	 */
+	public int getHiringCompanyId() {
+		return hiringCompanyId;
+	}
+
+	/**
+	 * @param hiringCompanyId the hiringCompanyId to set
+	 */
+	public void setHiringCompanyId(int hiringCompanyId) {
+		this.hiringCompanyId = hiringCompanyId;
 	}
 
 }

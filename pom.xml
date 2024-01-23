@@ -115,6 +115,8 @@
 		<module>services/jobportal</module>
 		<module>services/taxtype</module>
 		<module>services/visa</module>
+		<module>services/hiringcompany</module>
+		<module>services/benchcandidate</module>
 	</modules>
 </project>
 

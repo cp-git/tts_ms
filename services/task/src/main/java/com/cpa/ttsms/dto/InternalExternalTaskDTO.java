@@ -118,6 +118,8 @@ public class InternalExternalTaskDTO {
 
 	private String reasonToFitForJob;
 
+	private int hiringCompanyId;
+
 	/**
 	 * 
 	 */
@@ -188,7 +190,7 @@ public class InternalExternalTaskDTO {
 			String candidateCompany, String companyAddress, String hrName, String hrEmail, String hrPhone, int visaId,
 			int placementId, String jobAddress, String jobCity, String jobState, String jobDescription,
 			int candidateExperience, int expectedMaxSalary, int expectedMinSalary, boolean willingToRelocate,
-			boolean willingToNegotiateSalary, String reasonToFitForJob) {
+			boolean willingToNegotiateSalary, String reasonToFitForJob, int hiringCompanyId) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -242,6 +244,7 @@ public class InternalExternalTaskDTO {
 		this.willingToRelocate = willingToRelocate;
 		this.willingToNegotiateSalary = willingToNegotiateSalary;
 		this.reasonToFitForJob = reasonToFitForJob;
+		this.hiringCompanyId = hiringCompanyId;
 	}
 
 	public InternalExternalTaskDTO(Task task, InternalTask internalTask) {
@@ -338,6 +341,8 @@ public class InternalExternalTaskDTO {
 		this.willingToNegotiateSalary = externalTask.isWillingToNegotiateSalary();
 
 		this.reasonToFitForJob = externalTask.getReasonToFitForJob();
+
+		this.hiringCompanyId = externalTask.getHiringCompanyId();
 	}
 
 	/**
@@ -1038,6 +1043,20 @@ public class InternalExternalTaskDTO {
 		this.reasonToFitForJob = reasonToFitForJob;
 	}
 
+	/**
+	 * @return the hiringCompanyId
+	 */
+	public int getHiringCompanyId() {
+		return hiringCompanyId;
+	}
+
+	/**
+	 * @param hiringCompanyId the hiringCompanyId to set
+	 */
+	public void setHiringCompanyId(int hiringCompanyId) {
+		this.hiringCompanyId = hiringCompanyId;
+	}
+
 	@Override
 	public String toString() {
 		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
@@ -1059,7 +1078,7 @@ public class InternalExternalTaskDTO {
 				+ jobDescription + ", candidateExperience=" + candidateExperience + ", expectedMaxSalary="
 				+ expectedMaxSalary + ", expectedMinSalary=" + expectedMinSalary + ", willingToRelocate="
 				+ willingToRelocate + ", willingToNegotiateSalary=" + willingToNegotiateSalary + ", reasonToFitForJob="
-				+ reasonToFitForJob + "]";
+				+ reasonToFitForJob + ", hiringCompanyId=" + hiringCompanyId + "]";
 	}
 
 }

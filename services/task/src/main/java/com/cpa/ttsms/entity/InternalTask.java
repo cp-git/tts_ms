@@ -20,8 +20,8 @@ public class InternalTask {
 	@Column(name = "internalid")
 	private int internalId;
 
-	@Column(name = "internalcandidateid")
-	private int candidateId;
+	@Column(name = "benchcandidateid")
+	private int benchCandidateId;
 
 	@Column(name = "jobportalid")
 	private int jobPortalId; // Foreign key of table "jobportal"
@@ -41,20 +41,17 @@ public class InternalTask {
 	@Column(name = "jobreferencenumber")
 	private String jobReferenceNumber;
 
-	@Column(name = "taxtypeid")
-	private int taxTypeId; // Foreign key of table "jobtype"
-
 	@Column(name = "rate")
 	private float rate; // $ per hour
 
-	@Column(name = "recruitername")
-	private String recruiterName;
+	@Column(name = "vendorname")
+	private String vendorName;
 
-	@Column(name = "recruiteremail")
-	private String recruiterEmail;
+	@Column(name = "vendoremail")
+	private String vendorEmail;
 
-	@Column(name = "recruiterphone")
-	private String recruiterPhone;
+	@Column(name = "vendorphone")
+	private String vendorPhone;
 
 	@Column(name = "jobsubmissionportalid")
 	private int jobSubmissionPortalId; // Foreign key of portal id
@@ -69,9 +66,6 @@ public class InternalTask {
 	@Column(name = "joblink")
 	private String jobLink;
 
-	@Column(name = "visaid")
-	private int visaId; // Visa Type, Foreign key of table "visatype"
-
 	@Column(name = "taskid")
 	private int taskId;
 
@@ -84,46 +78,8 @@ public class InternalTask {
 	@Column(name = "jobstate")
 	private String jobState;
 
-	@Column(name = "jobdescription")
-	private String jobDescription;
-
-	/**
-	 * 
-	 */
-	public InternalTask() {
-		super();
-	}
-
-	public InternalTask(int internalId, int candidateId, int jobPortalId, String hiringCompanyName, String jobTitle,
-			int experienceRequired, int jobLocationId, String jobReferenceNumber, int taxTypeId, float rate,
-			String recruiterName, String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId,
-			String portalName, Date datePosted, String jobLink, int visaId, int taskId, String jobAddress,
-			String jobCity, String jobState, String jobDescription) {
-		super();
-		this.internalId = internalId;
-		this.candidateId = candidateId;
-		this.jobPortalId = jobPortalId;
-		this.hiringCompanyName = hiringCompanyName;
-		this.jobTitle = jobTitle;
-		this.experienceRequired = experienceRequired;
-		this.jobLocationId = jobLocationId;
-		this.jobReferenceNumber = jobReferenceNumber;
-		this.taxTypeId = taxTypeId;
-		this.rate = rate;
-		this.recruiterName = recruiterName;
-		this.recruiterEmail = recruiterEmail;
-		this.recruiterPhone = recruiterPhone;
-		this.jobSubmissionPortalId = jobSubmissionPortalId;
-		this.portalName = portalName;
-		this.datePosted = datePosted;
-		this.jobLink = jobLink;
-		this.visaId = visaId;
-		this.taskId = taskId;
-		this.jobAddress = jobAddress;
-		this.jobCity = jobCity;
-		this.jobState = jobState;
-		this.jobDescription = jobDescription;
-	}
+	@Column(name = "commentoncandidate")
+	private String commentOnCandidate;
 
 	/**
 	 * @return the internalId
@@ -140,17 +96,17 @@ public class InternalTask {
 	}
 
 	/**
-	 * @return the candidateName
+	 * @return the benchCandidateId
 	 */
-	public int getCandidateId() {
-		return candidateId;
+	public int getBenchCandidateId() {
+		return benchCandidateId;
 	}
 
 	/**
-	 * @param candidateName the candidateName to set
+	 * @param benchCandidateId the benchCandidateId to set
 	 */
-	public void setCandidateId(int candidateId) {
-		this.candidateId = candidateId;
+	public void setBenchCandidateId(int benchCandidateId) {
+		this.benchCandidateId = benchCandidateId;
 	}
 
 	/**
@@ -238,20 +194,6 @@ public class InternalTask {
 	}
 
 	/**
-	 * @return the taxTypeId
-	 */
-	public int getTaxTypeId() {
-		return taxTypeId;
-	}
-
-	/**
-	 * @param taxTypeId the taxTypeId to set
-	 */
-	public void setTaxTypeId(int taxTypeId) {
-		this.taxTypeId = taxTypeId;
-	}
-
-	/**
 	 * @return the rate
 	 */
 	public float getRate() {
@@ -266,45 +208,45 @@ public class InternalTask {
 	}
 
 	/**
-	 * @return the recruiterName
+	 * @return the vendorName
 	 */
-	public String getRecruiterName() {
-		return recruiterName;
+	public String getVendorName() {
+		return vendorName;
 	}
 
 	/**
-	 * @param recruiterName the recruiterName to set
+	 * @param vendorName the vendorName to set
 	 */
-	public void setRecruiterName(String recruiterName) {
-		this.recruiterName = recruiterName;
+	public void setVendorName(String vendorName) {
+		this.vendorName = vendorName;
 	}
 
 	/**
-	 * @return the recruiterEmail
+	 * @return the vendorEmail
 	 */
-	public String getRecruiterEmail() {
-		return recruiterEmail;
+	public String getVendorEmail() {
+		return vendorEmail;
 	}
 
 	/**
-	 * @param recruiterEmail the recruiterEmail to set
+	 * @param vendorEmail the vendorEmail to set
 	 */
-	public void setRecruiterEmail(String recruiterEmail) {
-		this.recruiterEmail = recruiterEmail;
+	public void setVendorEmail(String vendorEmail) {
+		this.vendorEmail = vendorEmail;
 	}
 
 	/**
-	 * @return the recruiterPhone
+	 * @return the vendorPhone
 	 */
-	public String getRecruiterPhone() {
-		return recruiterPhone;
+	public String getVendorPhone() {
+		return vendorPhone;
 	}
 
 	/**
-	 * @param recruiterPhone the recruiterPhone to set
+	 * @param vendorPhone the vendorPhone to set
 	 */
-	public void setRecruiterPhone(String recruiterPhone) {
-		this.recruiterPhone = recruiterPhone;
+	public void setVendorPhone(String vendorPhone) {
+		this.vendorPhone = vendorPhone;
 	}
 
 	/**
@@ -347,20 +289,6 @@ public class InternalTask {
 	 */
 	public void setJobLink(String jobLink) {
 		this.jobLink = jobLink;
-	}
-
-	/**
-	 * @return the visaId
-	 */
-	public int getVisaId() {
-		return visaId;
-	}
-
-	/**
-	 * @param visaId the visaId to set
-	 */
-	public void setVisaId(int visaId) {
-		this.visaId = visaId;
 	}
 
 	/**
@@ -428,17 +356,17 @@ public class InternalTask {
 	}
 
 	/**
-	 * @return the jobDescription
+	 * @return the commentOnCandidate
 	 */
-	public String getJobDescription() {
-		return jobDescription;
+	public String getCommentOnCandidate() {
+		return commentOnCandidate;
 	}
 
 	/**
-	 * @param jobDescription the jobDescription to set
+	 * @param commentOnCandidate the commentOnCandidate to set
 	 */
-	public void setJobDescription(String jobDescription) {
-		this.jobDescription = jobDescription;
+	public void setCommentOnCandidate(String commentOnCandidate) {
+		this.commentOnCandidate = commentOnCandidate;
 	}
 
 }

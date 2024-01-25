@@ -33,7 +33,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cpa.ttsms.dto.ExternalTaskDTO;
 import com.cpa.ttsms.dto.InternalExternalTaskDTO;
+import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
@@ -530,4 +532,75 @@ public class TaskController {
 		}
 	}
 
+	@PostMapping("/internal/add_update")
+	public ResponseEntity<Object> createOrUpdateInternalTask(@RequestPart("task") InternalTaskDTO internalTaskDTO,
+			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+		// Log that the method has been entered and print task details
+		logger.debug("Entering createOrUpdateInternalTask");
+		logger.info("Data of creating Task: " + internalTaskDTO.getBenchCandidateId());
+
+		try {
+
+			InternalTaskDTO createdTask = taskService.createOrUpdateInternalTask(internalTaskDTO, file);
+			logger.info("createdTask " + createdTask);
+
+			if (createdTask != null) {
+				logger.info("Task created: " + createdTask.getTaskName());
+
+				// Return a successful response with the created task and HTTP status CREATED
+				return ResponseHandler.generateResponse(createdTask, HttpStatus.CREATED);
+
+			} else {
+				// If the task with the provided task name already exists, return an error
+				// response
+				// with HTTP status INTERNAL_SERVER_ERROR and an error message "err003"
+				logger.error(resourceBundle.getString("err003"));
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+			}
+
+		} catch (Exception ex) {
+			// If an exception occurs during task creation, log the error and throw a custom
+			// CPException
+			// with the error message "err003" and the localized error message from the
+			// resource bundle.
+			logger.error("Failed Task creation: " + ex.getMessage());
+			throw new CPException("err003", resourceBundle.getString("err003"));
+		}
+	}
+
+	@PostMapping("/external/add_update")
+	public ResponseEntity<Object> createOrUpdateExternalTask(@RequestPart("task") ExternalTaskDTO externalTaskDTO,
+			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+		// Log that the method has been entered and print task details
+		logger.debug("Entering createOrUpdateInternalTask");
+		logger.info("Data of creating Task: " + externalTaskDTO.getHiringCompanyId());
+
+		try {
+
+			ExternalTaskDTO createdTask = taskService.createOrUpdateExternalTask(externalTaskDTO, file);
+			logger.info("createdTask " + createdTask);
+
+			if (createdTask != null) {
+				logger.info("Task created: " + createdTask.getTaskName());
+
+				// Return a successful response with the created task and HTTP status CREATED
+				return ResponseHandler.generateResponse(createdTask, HttpStatus.CREATED);
+
+			} else {
+				// If the task with the provided task name already exists, return an error
+				// response
+				// with HTTP status INTERNAL_SERVER_ERROR and an error message "err003"
+				logger.error(resourceBundle.getString("err003"));
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+			}
+
+		} catch (Exception ex) {
+			// If an exception occurs during task creation, log the error and throw a custom
+			// CPException
+			// with the error message "err003" and the localized error message from the
+			// resource bundle.
+			logger.error("Failed Task creation: " + ex.getMessage());
+			throw new CPException("err003", resourceBundle.getString("err003"));
+		}
+	}
 }

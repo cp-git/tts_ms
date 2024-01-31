@@ -59,8 +59,8 @@ public class BenchCandidate {
 	@Column(name = "willingtorelocate")
 	private boolean willingToRelocate;
 
-	@Column(name = "minbillingrate")
-	private int minBillingRate;
+//	@Column(name = "minbillingrate")
+//	private int minBillingRate;
 
 	/**
 	 * @return the benchCandidateId
@@ -244,18 +244,18 @@ public class BenchCandidate {
 		this.willingToRelocate = willingToRelocate;
 	}
 
-	/**
-	 * @return the minBillingRate
-	 */
-	public int getMinBillingRate() {
-		return minBillingRate;
-	}
-
-	/**
-	 * @param minBillingRate the minBillingRate to set
-	 */
-	public void setMinBillingRate(int minBillingRate) {
-		this.minBillingRate = minBillingRate;
-	}
+//	/**
+//	 * @return the minBillingRate
+//	 */
+//	public int getMinBillingRate() {
+//		return minBillingRate;
+//	}
+//
+//	/**
+//	 * @param minBillingRate the minBillingRate to set
+//	 */
+//	public void setMinBillingRate(int minBillingRate) {
+//		this.minBillingRate = minBillingRate;
+//	}
 
 }

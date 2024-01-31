@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.cpa.ttsms.dto.InternalExternalTaskDTO;
+
 @Entity
 @Table(name = "externaltask")
 public class ExternalTask {
@@ -68,6 +70,30 @@ public class ExternalTask {
 	 */
 	public ExternalTask() {
 		super();
+	}
+
+	// extracting data from internalExternalTaskDTO to externalTask
+	public static ExternalTask setExternalTaskData(ExternalTask externalTask,
+			InternalExternalTaskDTO internalExternalTaskDTO) {
+		externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
+		externalTask.setCandidateCompany(internalExternalTaskDTO.getCandidateCompany());
+		externalTask.setCompanyAddress(internalExternalTaskDTO.getCompanyAddress());
+		externalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());
+		externalTask.setRecruiterName(internalExternalTaskDTO.getRecruiterName());
+		externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
+		externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
+		externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
+
+		externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
+		externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
+		externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
+		externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
+		externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
+
+		externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
+		externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
+
+		return externalTask;
 	}
 
 	/**

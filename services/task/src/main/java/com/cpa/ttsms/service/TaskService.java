@@ -19,6 +19,8 @@ import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
+import com.cpa.ttsms.entity.ExternalTask;
+import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Task;
 
 public interface TaskService {
@@ -120,4 +122,12 @@ public interface TaskService {
 	InternalTaskDTO createOrUpdateInternalTask(InternalTaskDTO task, MultipartFile file);
 
 	ExternalTaskDTO createOrUpdateExternalTask(ExternalTaskDTO task, MultipartFile file);
+
+	List<InternalTask> getAllParentAndChildTaskByBenchCandidateId(int employeeId);
+
+	List<ExternalTask> getAllTasksOfSourcingCandidateByCompanyId(int companyId);
+
+	List<InternalTaskDTO> getInternalTaskAndTaskByBenchCandidateId(int employeeId);
+
+	List<ExternalTaskDTO> getExternalTaskAndTaskByHiringCompanyId(int hiringCompanyId);
 }

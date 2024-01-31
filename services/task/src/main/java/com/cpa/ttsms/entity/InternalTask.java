@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -80,6 +81,40 @@ public class InternalTask {
 
 	@Column(name = "commentoncandidate")
 	private String commentOnCandidate;
+
+	@Column(name = "minbillingrate")
+	private int minBillingRate;
+
+	public InternalTask() {
+		super();
+	}
+
+	// extracting data from internalExternalTaskDTO to internalTask
+	public static InternalTask setInternalTaskData(InternalTask internalTask, InternalExternalTaskDTO intExtTaskDTO) {
+		internalTask.setBenchCandidateId(intExtTaskDTO.getBenchCandidateId());
+		internalTask.setHiringCompanyName(intExtTaskDTO.getHiringCompanyName());
+		internalTask.setJobPortalId(intExtTaskDTO.getJobPortalId());
+		internalTask.setJobTitle(intExtTaskDTO.getJobTitle());
+		internalTask.setExperienceRequired(intExtTaskDTO.getExperienceRequired());
+		internalTask.setJobLocationId(intExtTaskDTO.getJobLocationId());
+		internalTask.setRate(intExtTaskDTO.getRate());
+		internalTask.setVendorName(intExtTaskDTO.getRecruiterName());
+		internalTask.setVendorEmail(intExtTaskDTO.getRecruiterEmail());
+		internalTask.setVendorPhone(intExtTaskDTO.getRecruiterPhone());
+		internalTask.setJobSubmissionPortalId(intExtTaskDTO.getJobSubmissionPortalId());
+		internalTask.setPortalName(intExtTaskDTO.getPortalName());
+		internalTask.setDatePosted(intExtTaskDTO.getDatePosted());
+		internalTask.setJobLink(intExtTaskDTO.getJobLink());
+		internalTask.setJobReferenceNumber((intExtTaskDTO.getJobReferenceNumber()));
+
+		internalTask.setJobAddress(intExtTaskDTO.getJobAddress());
+		internalTask.setJobCity(intExtTaskDTO.getJobCity());
+		internalTask.setJobState(intExtTaskDTO.getJobState());
+		internalTask.setCommentOnCandidate(intExtTaskDTO.getCommentOnCandidate());
+		internalTask.setMinBillingRate(intExtTaskDTO.getMinBillingRate());
+
+		return internalTask;
+	}
 
 	/**
 	 * @return the internalId
@@ -367,6 +402,20 @@ public class InternalTask {
 	 */
 	public void setCommentOnCandidate(String commentOnCandidate) {
 		this.commentOnCandidate = commentOnCandidate;
+	}
+
+	/**
+	 * @return the minBillingRate
+	 */
+	public int getMinBillingRate() {
+		return minBillingRate;
+	}
+
+	/**
+	 * @param minBillingRate the minBillingRate to set
+	 */
+	public void setMinBillingRate(int minBillingRate) {
+		this.minBillingRate = minBillingRate;
 	}
 
 }

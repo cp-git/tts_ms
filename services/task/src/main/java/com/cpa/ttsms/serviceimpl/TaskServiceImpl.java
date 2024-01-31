@@ -1166,26 +1166,29 @@ public class TaskServiceImpl implements TaskService {
 					if (internalExternalTaskDTO.getInternalId() > 0) {
 						internalTask.setInternalId(internalExternalTaskDTO.getInternalId());
 					}
-					internalTask.setBenchCandidateId(internalExternalTaskDTO.getBenchCandidateId());
-					internalTask.setHiringCompanyName(internalExternalTaskDTO.getHiringCompanyName());
-					internalTask.setJobPortalId(internalExternalTaskDTO.getJobPortalId());
-					internalTask.setJobTitle(internalExternalTaskDTO.getJobTitle());
-					internalTask.setExperienceRequired(internalExternalTaskDTO.getExperienceRequired());
-					internalTask.setJobLocationId(internalExternalTaskDTO.getJobLocationId());
-					internalTask.setRate(internalExternalTaskDTO.getRate());
-					internalTask.setVendorName(internalExternalTaskDTO.getRecruiterName());
-					internalTask.setVendorEmail(internalExternalTaskDTO.getRecruiterEmail());
-					internalTask.setVendorPhone(internalExternalTaskDTO.getRecruiterPhone());
-					internalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
-					internalTask.setPortalName(internalExternalTaskDTO.getPortalName());
-					internalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
-					internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
-					internalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
 
-					internalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
-					internalTask.setJobCity(internalExternalTaskDTO.getJobCity());
-					internalTask.setJobState(internalExternalTaskDTO.getJobState());
-					internalTask.setCommentOnCandidate(internalExternalTaskDTO.getCommentOnCandidate());
+					internalTask = InternalTask.setInternalTaskData(internalTask, internalExternalTaskDTO);
+//					internalTask.setBenchCandidateId(internalExternalTaskDTO.getBenchCandidateId());
+//					internalTask.setHiringCompanyName(internalExternalTaskDTO.getHiringCompanyName());
+//					internalTask.setJobPortalId(internalExternalTaskDTO.getJobPortalId());
+//					internalTask.setJobTitle(internalExternalTaskDTO.getJobTitle());
+//					internalTask.setExperienceRequired(internalExternalTaskDTO.getExperienceRequired());
+//					internalTask.setJobLocationId(internalExternalTaskDTO.getJobLocationId());
+//					internalTask.setRate(internalExternalTaskDTO.getRate());
+//					internalTask.setVendorName(internalExternalTaskDTO.getRecruiterName());
+//					internalTask.setVendorEmail(internalExternalTaskDTO.getRecruiterEmail());
+//					internalTask.setVendorPhone(internalExternalTaskDTO.getRecruiterPhone());
+//					internalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
+//					internalTask.setPortalName(internalExternalTaskDTO.getPortalName());
+//					internalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
+//					internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
+//					internalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
+//
+//					internalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
+//					internalTask.setJobCity(internalExternalTaskDTO.getJobCity());
+//					internalTask.setJobState(internalExternalTaskDTO.getJobState());
+//					internalTask.setCommentOnCandidate(internalExternalTaskDTO.getCommentOnCandidate());
+//					internalTask.setMinBillingRate(internalExternalTaskDTO.getMinBillingRate());
 
 					internalTask.setTaskId((createdTask.getTaskId()));
 
@@ -1198,24 +1201,27 @@ public class TaskServiceImpl implements TaskService {
 					if (internalExternalTaskDTO.getExternalId() > 0) {
 						externalTask.setExternalId(internalExternalTaskDTO.getExternalId());
 					}
-					externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
-					externalTask.setCandidateCompany(internalExternalTaskDTO.getCandidateCompany());
-					externalTask.setCompanyAddress(internalExternalTaskDTO.getCompanyAddress());
-					externalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());
-					externalTask.setRecruiterName(internalExternalTaskDTO.getRecruiterName());
-					externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
-					externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
-					externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
+
+					externalTask = ExternalTask.setExternalTaskData(externalTask, internalExternalTaskDTO);
+//					externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
+//					externalTask.setCandidateCompany(internalExternalTaskDTO.getCandidateCompany());
+//					externalTask.setCompanyAddress(internalExternalTaskDTO.getCompanyAddress());
+//					externalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());
+//					externalTask.setRecruiterName(internalExternalTaskDTO.getRecruiterName());
+//					externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
+//					externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
+//					externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
+
 					externalTask.setTaskId((createdTask.getTaskId()));
 
-					externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
-					externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
-					externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
-					externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
-					externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
-
-					externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
-					externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
+//					externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
+//					externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
+//					externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
+//					externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
+//					externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
+//
+//					externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
+//					externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
 
 					externalCreatedTask = externalTaskRepo.save(externalTask);
 					internalExternalTaskDTO.setExternalId(externalCreatedTask.getExternalId());
@@ -1333,6 +1339,7 @@ public class TaskServiceImpl implements TaskService {
 		return internalExternalTaskDTO;
 	}
 
+	// not in used
 	@Override
 	public InternalTaskDTO createOrUpdateInternalTask(InternalTaskDTO internalTaskDTO, MultipartFile file) {
 		// TODO Auto-generated method stub
@@ -1501,6 +1508,7 @@ public class TaskServiceImpl implements TaskService {
 
 	}
 
+	// not in used
 	@Override
 	public ExternalTaskDTO createOrUpdateExternalTask(ExternalTaskDTO externalTaskDTO, MultipartFile file) {
 		// TODO Auto-generated method stub

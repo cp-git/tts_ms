@@ -1,4 +1,3 @@
-
 spring.jpa:
   database: POSTGRESQL
   hibernate.ddl-auto: update
@@ -9,17 +8,17 @@ spring.datasource:
   driverClassName: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/tts
   username: postgres
-  password: password
-  
+  password: "7$Rt6&m,6&Ui4!as9^Yu2"
+
 server:
-  port : 8080
-  
+  port: 8080
+
 file:
   base-path: D:/demo/tts
-  
+
 email:
   url: http://localhost:8080/email/sendMail
-  
+
 upload:
   file:
     url: http://localhost:8080/uploadfile/ttsms/upload

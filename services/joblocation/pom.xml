@@ -17,7 +17,7 @@
 	<packaging>war</packaging>
 	<description>This is JobLocation joblocation module of ttsms</description>
 	<properties>
-		<java.version>11</java.version>
+<java.version>11</java.version>
 	</properties>
 
 	<build>

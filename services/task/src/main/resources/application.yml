@@ -13,10 +13,15 @@ spring.datasource:
   driverClassName: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/tts
   username: postgres
-  password: password
+  password: Pass1word
   
 server:
-  port : 8080
+  port: 8443
+  ssl:
+      key-store-type : PKCS12
+      key-store : src/main/resources/keystore/tomcatkey.p12
+      key-store-password: sslpassword
+      key-alias : tomcatkey
   
 file:
   base-path: D:/demo/tts

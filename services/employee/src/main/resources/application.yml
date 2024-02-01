@@ -9,26 +9,23 @@ spring.datasource:
   url: jdbc:postgresql://localhost:5432/tts
   username: postgres
   password: "7$Rt6&m,6&Ui4!as9^Yu2"
-  
+
 server:
   port: 8443
   ssl:
-      key-store-type : PKCS12
-      key-store : src/main/resources/keystore/tomcatkey.p12
-      key-store-password: sslpassword
-      key-alias : tomcatkey
+    key-store-type: PKCS12
+    key-store: src/main/resources/keystore/tomcatkey.p12
+    key-store-password: sslpassword
+    key-alias: tomcatkey
 #server:
 #  port: 8010
-
-  
-
 
 file:
   base-path: D:/demo/tts
 
 email:
-  url: http://localhost:8080/email/sendMail
+  url: https://localhost:8443/email/sendMail
 
 upload:
   file:
-    url: http://localhost:8080/uploadfile/ttsms/upload
+    url: https://localhost:8443/uploadfile/ttsms/upload

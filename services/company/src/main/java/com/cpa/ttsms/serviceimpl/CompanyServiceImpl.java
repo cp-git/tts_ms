@@ -44,7 +44,7 @@ import com.cpa.ttsms.service.CompanyService;
 public class CompanyServiceImpl implements CompanyService {
 
 	// private final String UPLOAD_FILE_URL =
-	// "http://localhost:8080/uploadfile/ttsms/upload";
+	// "https://localhost:8443/uploadfile/ttsms/upload";
 
 	// Inject the value of 'file.upload-url' from application.properties or
 	// application.yml
@@ -205,36 +205,37 @@ public class CompanyServiceImpl implements CompanyService {
 	 * @param company     The updated Company object.
 	 * @return The updated Company object.
 	 */
-//	@Override
-//	public Company updateCompanyByCompanyCode(Company company, String companyCode) {
-//		logger.info("Updating company by companyCode : " + companyCode);
-//
-//		// Check if the company exists in the database
-//		Company existingCompany = companyRepo.findByCompanyCode(companyCode);
-//
-//		// If the company does not exist, return null
-//		if (existingCompany == null) {
-//			logger.warn("Company not found with Code: " + companyCode);
-//			return null;
-//		}
-//		// If the company exists, update their details and save to the database
-//		else {
-//
-//			existingCompany.setCompanyCode(company.getCompanyCode());
-//			existingCompany.setCompanyName(company.getCompanyName());
-//			existingCompany.setCompanyContactEmail(company.getCompanyContactEmail());
-//			existingCompany.setCompanyContactPhone(company.getCompanyContactPhone());
-//			existingCompany.setCompanyAddress(company.getCompanyAddress());
-//			existingCompany.setCompanyZip(company.getCompanyZip());
-//			existingCompany.setCompanyCountryId(company.getCompanyCountryId());
-//
-//			// Save the updated company to the database
-//			Company updatedCompany = companyRepo.save(existingCompany);
-//
-//			logger.info("Company updated successfully");
-//			return updatedCompany;
-//		}
-//	}
+	// @Override
+	// public Company updateCompanyByCompanyCode(Company company, String
+	// companyCode) {
+	// logger.info("Updating company by companyCode : " + companyCode);
+	//
+	// // Check if the company exists in the database
+	// Company existingCompany = companyRepo.findByCompanyCode(companyCode);
+	//
+	// // If the company does not exist, return null
+	// if (existingCompany == null) {
+	// logger.warn("Company not found with Code: " + companyCode);
+	// return null;
+	// }
+	// // If the company exists, update their details and save to the database
+	// else {
+	//
+	// existingCompany.setCompanyCode(company.getCompanyCode());
+	// existingCompany.setCompanyName(company.getCompanyName());
+	// existingCompany.setCompanyContactEmail(company.getCompanyContactEmail());
+	// existingCompany.setCompanyContactPhone(company.getCompanyContactPhone());
+	// existingCompany.setCompanyAddress(company.getCompanyAddress());
+	// existingCompany.setCompanyZip(company.getCompanyZip());
+	// existingCompany.setCompanyCountryId(company.getCompanyCountryId());
+	//
+	// // Save the updated company to the database
+	// Company updatedCompany = companyRepo.save(existingCompany);
+	//
+	// logger.info("Company updated successfully");
+	// return updatedCompany;
+	// }
+	// }
 
 	/**
 	 * deletes the company with the given code

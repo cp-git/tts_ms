@@ -14,24 +14,23 @@ spring.datasource:
   url: jdbc:postgresql://localhost:5432/tts
   username: postgres
   password: "7$Rt6&m,6&Ui4!as9^Yu2"
-  
+
 server:
   port: 8443
   ssl:
-      key-store-type : PKCS12
-      key-store : src/main/resources/keystore/tomcatkey.p12
-      key-store-password: sslpassword
-      key-alias : tomcatkey
-  
+    key-store-type: PKCS12
+    key-store: src/main/resources/keystore/tomcatkey.p12
+    key-store-password: sslpassword
+    key-alias: tomcatkey
 
 file:
   base-path: D:/demo/tts
 
   # Define the URLs for external services
 external-services:
-  reason-api-url: http://localhost:8080/reason/ttsms/reason
-  upload-file-url: http://localhost:8080/uploadfile/ttsms/upload
-  email-url: http://localhost:8080/email/taskMail
-  employee-url: http://localhost:8080/employee/ttsms/employee/
-  status-url: http://localhost:8080/status/ttsms/status/
-  task-url: http://localhost:8080/task/ttsms/task/
+  reason-api-url: https://localhost:8443/reason/ttsms/reason
+  upload-file-url: https://localhost:8443/uploadfile/ttsms/upload
+  email-url: https://localhost:8443/email/taskMail
+  employee-url: https://localhost:8443/employee/ttsms/employee/
+  status-url: https://localhost:8443/status/ttsms/status/
+  task-url: https://localhost:8443/task/ttsms/task/

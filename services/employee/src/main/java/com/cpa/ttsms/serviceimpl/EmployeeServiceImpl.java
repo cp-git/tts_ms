@@ -45,9 +45,9 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	// private final String email_URL = "http://localhost:8080/email/sendMail";
+	// private final String email_URL = "https://localhost:8443/email/sendMail";
 	// private final String UPLOAD_FILE_URL =
-	// "http://localhost:8080/uploadfile/ttsms/upload";
+	// "https://localhost:8443/uploadfile/ttsms/upload";
 
 	@Value("${email.url}")
 	private String email_URL;
@@ -85,39 +85,40 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return The newly created Country object if successful, otherwise null.
 	 */
 
-//	@Override
-//	public Employee updateEmployeeByEmployeeId(Employee employee, int employeeId) {
-//		// TODO Auto-generated method stub
-//		logger.debug("Entering updateEmployee");
-//
-//		// Initialize variables
-//		Employee toUpdatedEmployee = null;
-//		Employee updatedEmployee = null;
-//
-//		// Find the existing employee based on the provided employeeId
-//		toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
-//		logger.info("existing Employee :: " + toUpdatedEmployee);
-//
-//		// Check if an employee with the given ID exists
-//		if (toUpdatedEmployee != null) {
-//			logger.debug("setting new data of Employee to existing Employee");
-//
-//			// Update the existing employee's data with the provided employee data
-//			toUpdatedEmployee.setCountryId(employee.getCountryId());
-//			toUpdatedEmployee.setCompanyId(employee.getCompanyId());
-//			toUpdatedEmployee.setFirstName(employee.getFirstName());
-//			toUpdatedEmployee.setLastName(employee.getLastName());
-//			toUpdatedEmployee.setBirthDate(employee.getBirthDate());
-//			toUpdatedEmployee.setEmployeeEmail(employee.getEmployeeEmail());
-//
-//			// Save the updated employee in the database
-//			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
-//
-//			logger.info("updated Employee :" + updatedEmployee);
-//		}
-//
-//		return updatedEmployee;
-//	}
+	// @Override
+	// public Employee updateEmployeeByEmployeeId(Employee employee, int employeeId)
+	// {
+	// // TODO Auto-generated method stub
+	// logger.debug("Entering updateEmployee");
+	//
+	// // Initialize variables
+	// Employee toUpdatedEmployee = null;
+	// Employee updatedEmployee = null;
+	//
+	// // Find the existing employee based on the provided employeeId
+	// toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
+	// logger.info("existing Employee :: " + toUpdatedEmployee);
+	//
+	// // Check if an employee with the given ID exists
+	// if (toUpdatedEmployee != null) {
+	// logger.debug("setting new data of Employee to existing Employee");
+	//
+	// // Update the existing employee's data with the provided employee data
+	// toUpdatedEmployee.setCountryId(employee.getCountryId());
+	// toUpdatedEmployee.setCompanyId(employee.getCompanyId());
+	// toUpdatedEmployee.setFirstName(employee.getFirstName());
+	// toUpdatedEmployee.setLastName(employee.getLastName());
+	// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
+	// toUpdatedEmployee.setEmployeeEmail(employee.getEmployeeEmail());
+	//
+	// // Save the updated employee in the database
+	// updatedEmployee = employeeRepo.save(toUpdatedEmployee);
+	//
+	// logger.info("updated Employee :" + updatedEmployee);
+	// }
+	//
+	// return updatedEmployee;
+	// }
 
 	/**
 	 * Saves the employee and their password information.
@@ -144,15 +145,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setShowAllTasks(dto.isShowAllTasks());
 		employee.setOnBench(dto.isOnBench());
 
-//	    // Parse the date string from the DTO and set it as the employee's birth date
-//	    Date dob;
-//	    try {
-//	        dob = new SimpleDateFormat("yyyy-dd-MM").parse(dto.getBirthDate());
-//	        employee.setBirthDate(dob);
-//	    } catch (ParseException e) {
-//	        // TODO Auto-generated catch block
-//	        e.printStackTrace();
-//	    }
+		// // Parse the date string from the DTO and set it as the employee's birth date
+		// Date dob;
+		// try {
+		// dob = new SimpleDateFormat("yyyy-dd-MM").parse(dto.getBirthDate());
+		// employee.setBirthDate(dob);
+		// } catch (ParseException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
 		employee.setBirthDate(dto.getBirthDate());
 		employee.setEmployeeEmail(dto.getEmployeeEmail());
@@ -208,8 +209,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setLastName(emp.getLastName());
 				dto.setBirthDate(emp.getBirthDate());
 				// Format dob as a String (assuming it's already in Date format in the entity)
-//	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//	            dto.setBirthDate(dateFormat.format(emp.getBirthDate()));
+				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				// dto.setBirthDate(dateFormat.format(emp.getBirthDate()));
 				dto.setPasswordId(password.getPasswordId());
 				dto.setEmployeeEmail(emp.getEmployeeEmail());
 				dto.setUsername(password.getUsername());
@@ -460,18 +461,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
-//	private String generateRandomPassword() {
-//		// Generate a random 8-digit password
-//		StringBuilder password = new StringBuilder();
-//		Random random = new Random();
-//
-//		for (int i = 0; i < 8; i++) {
-//			int digit = random.nextInt(10); // Generates a random digit between 0 and 9
-//			password.append(digit);
-//		}
-//
-//		return password.toString();
-//	}
+	// private String generateRandomPassword() {
+	// // Generate a random 8-digit password
+	// StringBuilder password = new StringBuilder();
+	// Random random = new Random();
+	//
+	// for (int i = 0; i < 8; i++) {
+	// int digit = random.nextInt(10); // Generates a random digit between 0 and 9
+	// password.append(digit);
+	// }
+	//
+	// return password.toString();
+	// }
 
 	@Override
 	public Password getPasswordObjectByUsername(String username) {

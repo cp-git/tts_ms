@@ -52,6 +52,7 @@ public class InternalExternalTaskDTO {
 	private int jobSubmissionPortalId;
 	private String portalName;
 	private String commentOnCandidate;
+	private int minBillingRate;
 
 	// External
 	private int externalId;
@@ -77,57 +78,6 @@ public class InternalExternalTaskDTO {
 		super();
 	}
 
-	/**
-	 * @param taskId
-	 * @param taskName
-	 * @param taskDescription
-	 * @param taskCreatedBy
-	 * @param taskAssignedTo
-	 * @param taskStatus
-	 * @param taskStartDate
-	 * @param taskEndDate
-	 * @param taskActualStartDate
-	 * @param taskActualEndDate
-	 * @param companyId
-	 * @param taskParent
-	 * @param havingChild
-	 * @param placementId
-	 * @param reason
-	 * @param employeeId
-	 * @param internalId
-	 * @param hiringCompanyName
-	 * @param jobTitle
-	 * @param jobLocationId
-	 * @param jobAddress
-	 * @param jobCity
-	 * @param jobState
-	 * @param experienceRequired
-	 * @param rate
-	 * @param datePosted
-	 * @param jobLink
-	 * @param jobPortalId
-	 * @param jobReferenceNumber
-	 * @param taxTypeId
-	 * @param recruiterName
-	 * @param recruiterEmail
-	 * @param recruiterPhone
-	 * @param jobSubmissionPortalId
-	 * @param portalName
-	 * @param commentOnCandidate
-	 * @param externalId
-	 * @param candidateName
-	 * @param candidateCompany
-	 * @param companyAddress
-	 * @param visaId
-	 * @param candidateExperience
-	 * @param expectedMaxSalary
-	 * @param expectedMinSalary
-	 * @param willingToRelocate
-	 * @param willingToNegotiateSalary
-	 * @param reasonToFitForJob
-	 * @param hiringCompanyId
-	 * @param benchCandidateId
-	 */
 	public InternalExternalTaskDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy,
 			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
 			Date taskActualEndDate, int companyId, int taskParent, boolean havingChild, int placementId, String reason,
@@ -135,10 +85,10 @@ public class InternalExternalTaskDTO {
 			String jobAddress, String jobCity, String jobState, int experienceRequired, float rate, Date datePosted,
 			String jobLink, int jobPortalId, String jobReferenceNumber, int taxTypeId, String recruiterName,
 			String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId, String portalName,
-			String commentOnCandidate, int externalId, String candidateName, String candidateCompany,
-			String companyAddress, int visaId, int candidateExperience, int expectedMaxSalary, int expectedMinSalary,
-			boolean willingToRelocate, boolean willingToNegotiateSalary, String reasonToFitForJob, int hiringCompanyId,
-			int benchCandidateId) {
+			String commentOnCandidate, int minBillingRate, int externalId, String candidateName,
+			String candidateCompany, String companyAddress, int visaId, int candidateExperience, int expectedMaxSalary,
+			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary,
+			String reasonToFitForJob, int hiringCompanyId, int benchCandidateId) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -176,6 +126,7 @@ public class InternalExternalTaskDTO {
 		this.jobSubmissionPortalId = jobSubmissionPortalId;
 		this.portalName = portalName;
 		this.commentOnCandidate = commentOnCandidate;
+		this.minBillingRate = minBillingRate;
 		this.externalId = externalId;
 		this.candidateName = candidateName;
 		this.candidateCompany = candidateCompany;
@@ -228,6 +179,8 @@ public class InternalExternalTaskDTO {
 		this.jobCity = internalTask.getJobCity();
 		this.jobState = internalTask.getJobState();
 		this.commentOnCandidate = internalTask.getCommentOnCandidate();
+
+		this.minBillingRate = internalTask.getMinBillingRate();
 	}
 
 	public InternalExternalTaskDTO(Task task, ExternalTask externalTask) {
@@ -956,28 +909,18 @@ public class InternalExternalTaskDTO {
 		this.benchCandidateId = benchCandidateId;
 	}
 
-	@Override
-	public String toString() {
-		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
-				+ taskDescription + ", taskCreatedBy=" + taskCreatedBy + ", taskAssignedTo=" + taskAssignedTo
-				+ ", taskStatus=" + taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate=" + taskEndDate
-				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
-				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild
-				+ ", placementId=" + placementId + ", reason=" + reason + ", employeeId=" + employeeId + ", internalId="
-				+ internalId + ", hiringCompanyName=" + hiringCompanyName + ", jobTitle=" + jobTitle
-				+ ", jobLocationId=" + jobLocationId + ", jobAddress=" + jobAddress + ", jobCity=" + jobCity
-				+ ", jobState=" + jobState + ", experienceRequired=" + experienceRequired + ", rate=" + rate
-				+ ", datePosted=" + datePosted + ", jobLink=" + jobLink + ", jobPortalId=" + jobPortalId
-				+ ", jobReferenceNumber=" + jobReferenceNumber + ", taxTypeId=" + taxTypeId + ", recruiterName="
-				+ recruiterName + ", recruiterEmail=" + recruiterEmail + ", recruiterPhone=" + recruiterPhone
-				+ ", jobSubmissionPortalId=" + jobSubmissionPortalId + ", portalName=" + portalName
-				+ ", commentOnCandidate=" + commentOnCandidate + ", externalId=" + externalId + ", candidateName="
-				+ candidateName + ", candidateCompany=" + candidateCompany + ", companyAddress=" + companyAddress
-				+ ", visaId=" + visaId + ", candidateExperience=" + candidateExperience + ", expectedMaxSalary="
-				+ expectedMaxSalary + ", expectedMinSalary=" + expectedMinSalary + ", willingToRelocate="
-				+ willingToRelocate + ", willingToNegotiateSalary=" + willingToNegotiateSalary + ", reasonToFitForJob="
-				+ reasonToFitForJob + ", hiringCompanyId=" + hiringCompanyId + ", benchCandidateId=" + benchCandidateId
-				+ "]";
+	/**
+	 * @return the minBillingRate
+	 */
+	public int getMinBillingRate() {
+		return minBillingRate;
+	}
+
+	/**
+	 * @param minBillingRate the minBillingRate to set
+	 */
+	public void setMinBillingRate(int minBillingRate) {
+		this.minBillingRate = minBillingRate;
 	}
 
 }

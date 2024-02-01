@@ -39,6 +39,8 @@ import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
+import com.cpa.ttsms.entity.ExternalTask;
+import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Task;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
@@ -601,6 +603,112 @@ public class TaskController {
 			// resource bundle.
 			logger.error("Failed Task creation: " + ex.getMessage());
 			throw new CPException("err003", resourceBundle.getString("err003"));
+		}
+	}
+
+	@GetMapping("/internalTask/{candidateId}")
+	public ResponseEntity<Object> getInternalTaskByCandidateId(@PathVariable("candidateId") int candidateId) {
+		System.out.println(candidateId + "conterolloeeellllllllllll");
+		// Log that the method has been entered and print the statuses, createdBy,
+		// assignedTo received
+		logger.debug("Entering getAllParentTasksByCompanyId");
+
+		List<InternalTask> internalTask = null;
+
+		try {
+			internalTask = taskService.getAllParentAndChildTaskByBenchCandidateId(candidateId);
+
+			logger.info("Fetched  tasks :  " + candidateId);
+
+			if (internalTask != null) {
+				return ResponseHandler.generateResponse(internalTask, HttpStatus.OK);
+			} else {
+				// If no parent tasks are found with the specified statuses, return NOT_FOUND
+				// status
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
+	@GetMapping("/internal/{candidateId}")
+	public ResponseEntity<Object> getInternalTask(@PathVariable("candidateId") int candidateId) {
+		System.out.println(candidateId + "conterolloeeellllllllllll");
+		// Log that the method has been entered and print the statuses, createdBy,
+		// assignedTo received
+		logger.debug("Entering getAllParentTasksByCompanyId");
+
+		List<InternalTaskDTO> internalTask = null;
+
+		try {
+			internalTask = taskService.getInternalTaskAndTaskByBenchCandidateId(candidateId);
+
+			logger.info("Fetched  tasks :  " + candidateId);
+
+			if (internalTask != null) {
+				return ResponseHandler.generateResponse(internalTask, HttpStatus.OK);
+			} else {
+				// If no parent tasks are found with the specified statuses, return NOT_FOUND
+				// status
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
+	@GetMapping("/externalTask/{companyId}")
+	public ResponseEntity<Object> getExternalTaskByCompanyId(@PathVariable("companyId") int companyId) {
+
+		List<ExternalTask> externalTask = null;
+
+		try {
+			externalTask = taskService.getAllTasksOfSourcingCandidateByCompanyId(companyId);
+
+			logger.info("Fetched  tasks :  " + companyId);
+
+			if (externalTask != null) {
+				return ResponseHandler.generateResponse(externalTask, HttpStatus.OK);
+			} else {
+
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
+	@GetMapping("/external/{companyId}")
+	public ResponseEntity<Object> getExternalTask(@PathVariable("companyId") int companyId) {
+
+		List<ExternalTaskDTO> externalTask = null;
+
+		try {
+			externalTask = taskService.getExternalTaskAndTaskByHiringCompanyId(companyId);
+
+			logger.info("Fetched  tasks :  " + companyId);
+
+			if (externalTask != null) {
+				return ResponseHandler.generateResponse(externalTask, HttpStatus.OK);
+			} else {
+
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
 		}
 	}
 }

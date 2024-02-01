@@ -13,7 +13,7 @@ spring.datasource:
   driverClassName: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/tts
   username: postgres
-  password: Pass1word
+  password: "7$Rt6&m,6&Ui4!as9^Yu2"
   
 server:
   port: 8443
@@ -23,9 +23,10 @@ server:
       key-store-password: sslpassword
       key-alias : tomcatkey
   
+
 file:
   base-path: D:/demo/tts
-  
+
   # Define the URLs for external services
 external-services:
   reason-api-url: http://localhost:8080/reason/ttsms/reason

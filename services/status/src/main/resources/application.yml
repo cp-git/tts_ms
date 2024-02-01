@@ -8,7 +8,7 @@ spring.datasource:
   driverClassName: org.postgresql.Driver
   url: jdbc:postgresql://localhost:5432/tts
   username: postgres
-  password: Pass1word
+  password: "7$Rt6&m,6&Ui4!as9^Yu2"
   
 server:
   port: 8443
@@ -17,3 +17,4 @@ server:
       key-store : src/main/resources/keystore/tomcatkey.p12
       key-store-password: sslpassword
       key-alias : tomcatkey
+

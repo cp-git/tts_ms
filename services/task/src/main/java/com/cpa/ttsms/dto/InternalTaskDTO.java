@@ -667,4 +667,21 @@ public class InternalTaskDTO {
 		this.commentsOnCandidate = commentsOnCandidate;
 	}
 
+	@Override
+	public String toString() {
+		return "InternalTaskDTO [benchCandidateId=" + benchCandidateId + ", taskId=" + taskId + ", taskName=" + taskName
+				+ ", taskDescription=" + taskDescription + ", taskCreatedBy=" + taskCreatedBy + ", taskAssignedTo="
+				+ taskAssignedTo + ", taskStatus=" + taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate="
+				+ taskEndDate + ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate="
+				+ taskActualEndDate + ", companyId=" + companyId + ", placementId=" + placementId + ", taskParent="
+				+ taskParent + ", reason=" + reason + ", employeeId=" + employeeId + ", fileName=" + fileName
+				+ ", havingChild=" + havingChild + ", internalId=" + internalId + ", hiringCompanyName="
+				+ hiringCompanyName + ", jobTitle=" + jobTitle + ", jobLocationId=" + jobLocationId + ", jobAddress="
+				+ jobAddress + ", jobCity=" + jobCity + ", jobState=" + jobState + ", experienceRequired="
+				+ experienceRequired + ", rate=" + rate + ", datePosted=" + datePosted + ", jobLink=" + jobLink
+				+ ", jobPortalId=" + jobPortalId + ", jobReferenceNumber=" + jobReferenceNumber + ", taxTypeId="
+				+ taxTypeId + ", vendorName=" + vendorName + ", vendorEmail=" + vendorEmail + ", vendorPhone="
+				+ vendorPhone + ", jobSubmissionPortalId=" + jobSubmissionPortalId + ", portalName=" + portalName
+				+ ", commentsOnCandidate=" + commentsOnCandidate + "]";
+	}
 }

@@ -1669,4 +1669,53 @@ public class TaskServiceImpl implements TaskService {
 		return null;
 
 	}
+
+	@Override
+	public List<InternalTask> getAllParentAndChildTaskByBenchCandidateId(int employeeId) {
+		// TODO Auto-generated method stub
+
+		List<InternalTask> candidateTask = internalTaskRepo.findByBenchCandidateId(employeeId);
+
+		return candidateTask;
+	}
+
+	@Override
+	public List<ExternalTask> getAllTasksOfSourcingCandidateByCompanyId(int companyId) {
+		// TODO Auto-generated method stub
+
+		List<ExternalTask> externalTask = externalTaskRepo.findByHiringCompanyId(companyId);
+		System.out.println(externalTask.toString() + "555555555555555");
+
+		return externalTask;
+	}
+
+	@Override
+	public List<InternalTaskDTO> getInternalTaskAndTaskByBenchCandidateId(int employeeId) {
+		// TODO Auto-generated method stub
+		List<InternalTaskDTO> dto = new ArrayList<>();
+
+		List<InternalTask> internalTasks = internalTaskRepo.findByBenchCandidateId(employeeId);
+		for (InternalTask internalTask : internalTasks) {
+			Task associatedTask = getTaskById(internalTask.getTaskId());
+			InternalTaskDTO internaldto = new InternalTaskDTO(associatedTask, internalTask);
+
+			dto.add(internaldto);
+		}
+
+		return dto;
+	}
+
+	@Override
+	public List<ExternalTaskDTO> getExternalTaskAndTaskByHiringCompanyId(int hiringCompanyId) {
+		// TODO Auto-generated method stub
+		List<ExternalTaskDTO> dto = new ArrayList<>();
+		List<ExternalTask> externalTasks = externalTaskRepo.findByHiringCompanyId(hiringCompanyId);
+
+		for (ExternalTask externalTask : externalTasks) {
+			Task associatedTask = getTaskById(externalTask.getTaskId());
+			ExternalTaskDTO externalDTO = new ExternalTaskDTO(associatedTask, externalTask);
+			dto.add(externalDTO);
+		}
+		return dto;
+	}
 }

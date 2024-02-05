@@ -27,8 +27,8 @@ file:
   base-path: D:/demo/tts
 
 email:
-  url: http://localhost:8080/email/sendMail
+  url: https://localhost:8443/email/sendMail
 
 upload:
   file:
-    url: http://localhost:8080/uploadfile/ttsms/upload
+    url: https://localhost:8443/uploadfile/ttsms/upload

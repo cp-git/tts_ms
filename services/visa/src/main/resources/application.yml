@@ -19,3 +19,6 @@ server:
       key-store : src/main/resources/keystore/tomcatkey.p12
       key-store-password: sslpassword
       key-alias : tomcatkey
+      
+      
+      

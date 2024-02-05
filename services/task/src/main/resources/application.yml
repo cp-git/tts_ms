@@ -29,9 +29,9 @@ file:
 
   # Define the URLs for external services
 external-services:
-  reason-api-url: http://localhost:8080/reason/ttsms/reason
-  upload-file-url: http://localhost:8080/uploadfile/ttsms/upload
-  email-url: http://localhost:8080/email/taskMail
-  employee-url: http://localhost:8080/employee/ttsms/employee/
-  status-url: http://localhost:8080/status/ttsms/status/
-  task-url: http://localhost:8080/task/ttsms/task/
+  reason-api-url: https://localhost:8443/reason/ttsms/reason
+  upload-file-url: https://localhost:8443/uploadfile/ttsms/upload
+  email-url: https://localhost:8443/email/taskMail
+  employee-url: https://localhost:8443/employee/ttsms/employee/
+  status-url: https://localhost:8443/status/ttsms/status/
+  task-url: https://localhost:8443/task/ttsms/task/

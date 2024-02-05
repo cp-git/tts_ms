@@ -134,7 +134,7 @@ public class TaskServiceImpl implements TaskService {
 
 	        public boolean verify(String hostname,
 	                javax.net.ssl.SSLSession sslSession) {
-	            if (hostname.equals("localhost")) {
+	            if (hostname.equals("127.0.0.1")) {
 	                return true;
 	            }
 	            return false;

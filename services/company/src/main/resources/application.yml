@@ -28,4 +28,4 @@ server:
 
 file:
   base-path: D:/demo/tts
-  upload-url: https://localhost:8443/uploadfile/ttsms/upload
+  upload-url: https://127.0.0.1:8443/uploadfile/ttsms/upload

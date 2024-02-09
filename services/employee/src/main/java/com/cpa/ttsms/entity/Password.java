@@ -25,6 +25,9 @@ public class Password {
 	@Column(name = "password")
 	private String password;
 
+	@Column(name="isforgotpassword")
+	private boolean isForgotPassword;
+
 	public int getPasswordId() {
 		return passwordId;
 	}
@@ -57,12 +60,21 @@ public class Password {
 		this.password = password;
 	}
 
-	public Password(int passwordId, int employeeId, String username, String password) {
+	public boolean isForgotPassword() {
+		return isForgotPassword;
+	}
+
+	public void setForgotPassword(boolean isForgotPassword) {
+		this.isForgotPassword = isForgotPassword;
+	}
+
+	public Password(int passwordId, int employeeId, String username, String password, boolean isForgotPassword) {
 		super();
 		this.passwordId = passwordId;
 		this.employeeId = employeeId;
 		this.username = username;
 		this.password = password;
+		this.isForgotPassword = isForgotPassword;
 	}
 
 	public Password() {
@@ -73,7 +85,6 @@ public class Password {
 	@Override
 	public String toString() {
 		return "Password [passwordId=" + passwordId + ", employeeId=" + employeeId + ", username=" + username
-				+ ", password=" + password + "]";
+				+ ", password=" + password + ", isForgotPassword=" + isForgotPassword + "]";
 	}
-
 }

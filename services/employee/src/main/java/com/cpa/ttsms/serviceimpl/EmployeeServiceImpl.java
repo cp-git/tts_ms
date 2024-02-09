@@ -1,5 +1,6 @@
 /**
- * @author - Code Generator
+
++ * @author - Code Generator
  * @createdOn 25/07/2023
  * @Description Controller class for employee
  * 
@@ -8,9 +9,11 @@
 package com.cpa.ttsms.serviceimpl;
 
 import java.io.File;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import javax.transaction.Transactional;
 
@@ -306,8 +309,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (toUpdatePassword != null) {
 
-			toUpdatePassword.setUsername(password.getUsername());
+//			toUpdatePassword.setUsername(password.getUsername());
 			toUpdatePassword.setPassword(password.getPassword());
+			toUpdatePassword.setForgotPassword(false);
 
 			updatedPassword = passwordRepository.save(toUpdatePassword);
 			logger.info("updated Employee :" + updatedPassword);
@@ -420,6 +424,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		// Generate a new random password
 		String oldPassword = password.getPassword();
+		password.setForgotPassword(true);
+		passwordRepository.save(password);
+//		String oldPassword = generateRandomPassword();
+//		password.setPassword(oldPassword);
 
 		// Update the password value in the Password object
 		// password.setPassword(newPassword);
@@ -460,23 +468,34 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
-//	private String generateRandomPassword() {
-//		// Generate a random 8-digit password
-//		StringBuilder password = new StringBuilder();
-//		Random random = new Random();
-//
-//		for (int i = 0; i < 8; i++) {
-//			int digit = random.nextInt(10); // Generates a random digit between 0 and 9
-//			password.append(digit);
-//		}
-//
-//		return password.toString();
-//	}
+	private String generateRandomPassword() {
+		// Generate a random 8-digit password
+		StringBuilder password = new StringBuilder();
+		Random random = new Random();
+		   String UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		   String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
+		   String NUMBERS = "0123456789";
+		   String SPECIAL_CHARS = "!@#$%^&*()-_=+[]{}|;:'\",.<>?";
+
+		    String ALL_CHARS = UPPERCASE_CHARS + LOWERCASE_CHARS + NUMBERS + SPECIAL_CHARS;
+		  //  SecureRandom randomPass = new SecureRandom();
+		 for (int i = 0; i < 8; i++) {
+	            int randomIndex = random.nextInt(ALL_CHARS.length());
+	            char randomChar = ALL_CHARS.charAt(randomIndex);
+	            password.append(randomChar);
+	        }
+
+
+		return password.toString();
+	}
 
 	@Override
 	public Password getPasswordObjectByUsername(String username) {
 		// TODO Auto-generated method stub
 		Password password = passwordRepository.findByUsername(username);
+		String oldPassword = generateRandomPassword();
+		password.setPassword(oldPassword);
+		passwordRepository.save(password);
 		return password;
 	}
 
@@ -554,7 +573,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				Password password = new Password(0, // Assign an appropriate value for the passwordId, or generate it as
 													// needed
 						createdEmployee.getEmployeeId(), employeePasswordAndEmployeePhotosDTO.getUsername(),
-						employeePasswordAndEmployeePhotosDTO.getPassword());
+						employeePasswordAndEmployeePhotosDTO.getPassword(),employeePasswordAndEmployeePhotosDTO.isForgotPassword());
 
 				// Save the password to the database
 				passwordRepository.save(password);
@@ -738,6 +757,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<Object> listEmployees = new ArrayList<>(employeeOnBench);
 		System.out.println(listEmployees);
 		return listEmployees;
+	}
+
+	@Override
+	public Password savePasswordForChangePassword(Password password) {
+		// TODO Auto-generated method stub
+		
+		Password newPassword = new Password();
+		newPassword.setEmployeeId(password.getEmployeeId());
+		newPassword.setPassword(password.getPassword());
+		newPassword.setUsername(password.getUsername());
+		newPassword.setForgotPassword(false);
+		
+		Password savePassword = passwordRepository.save(newPassword);
+		return savePassword;
 	}
 
 }

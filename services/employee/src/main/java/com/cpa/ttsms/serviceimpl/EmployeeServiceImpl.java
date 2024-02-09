@@ -472,19 +472,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 		// Generate a random 8-digit password
 		StringBuilder password = new StringBuilder();
 		Random random = new Random();
-		   String UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		   String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
-		   String NUMBERS = "0123456789";
-		   String SPECIAL_CHARS = "!@#$%^&*()-_=+[]{}|;:'\",.<>?";
+		String UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
+		String NUMBERS = "0123456789";
+		String SPECIAL_CHARS = "@#$&";
 
-		    String ALL_CHARS = UPPERCASE_CHARS + LOWERCASE_CHARS + NUMBERS + SPECIAL_CHARS;
-		  //  SecureRandom randomPass = new SecureRandom();
-		 for (int i = 0; i < 8; i++) {
-	            int randomIndex = random.nextInt(ALL_CHARS.length());
-	            char randomChar = ALL_CHARS.charAt(randomIndex);
-	            password.append(randomChar);
-	        }
-
+		String ALL_CHARS = UPPERCASE_CHARS + LOWERCASE_CHARS + NUMBERS + SPECIAL_CHARS;
+		// SecureRandom randomPass = new SecureRandom();
+		for (int i = 0; i < 8; i++) {
+			int randomIndex =0;
+			char randomChar;
+			int rem = i % 4;
+			switch (rem) {
+			case 0:
+				randomIndex = random.nextInt(ALL_CHARS.length());
+				randomChar = UPPERCASE_CHARS.charAt(randomIndex);
+				password.append(randomChar);
+				break;
+			case 1:
+				randomIndex = random.nextInt(ALL_CHARS.length());
+				randomChar = SPECIAL_CHARS.charAt(randomIndex);
+				password.append(randomChar);
+				break;
+			case 2:
+				randomIndex = random.nextInt(ALL_CHARS.length());
+				randomChar = LOWERCASE_CHARS.charAt(randomIndex);
+				password.append(randomChar);
+				break;
+			case 3:
+				randomIndex = random.nextInt(ALL_CHARS.length());
+				randomChar = NUMBERS.charAt(randomIndex);
+				password.append(randomChar);
+				break;
+			}
+		
+		}
 
 		return password.toString();
 	}
@@ -573,7 +595,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				Password password = new Password(0, // Assign an appropriate value for the passwordId, or generate it as
 													// needed
 						createdEmployee.getEmployeeId(), employeePasswordAndEmployeePhotosDTO.getUsername(),
-						employeePasswordAndEmployeePhotosDTO.getPassword(),employeePasswordAndEmployeePhotosDTO.isForgotPassword());
+						employeePasswordAndEmployeePhotosDTO.getPassword(),
+						employeePasswordAndEmployeePhotosDTO.isForgotPassword());
 
 				// Save the password to the database
 				passwordRepository.save(password);
@@ -762,13 +785,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public Password savePasswordForChangePassword(Password password) {
 		// TODO Auto-generated method stub
-		
+
 		Password newPassword = new Password();
 		newPassword.setEmployeeId(password.getEmployeeId());
 		newPassword.setPassword(password.getPassword());
 		newPassword.setUsername(password.getUsername());
 		newPassword.setForgotPassword(false);
-		
+
 		Password savePassword = passwordRepository.save(newPassword);
 		return savePassword;
 	}

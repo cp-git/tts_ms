@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cpa.ttsms.dto.EmailDTO;
 import com.cpa.ttsms.dto.EmployeeDTO;
 import com.cpa.ttsms.dto.ExternalTaskDTO;
+import com.cpa.ttsms.dto.InternalExternalListDTO;
 import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
@@ -197,7 +199,7 @@ public class TaskServiceImpl implements TaskService {
 			task.setTaskStatus(taskAndReasonDTO.getTaskStatus());
 			task.setTaskParent(taskAndReasonDTO.getTaskParent());
 			task.setHavingChild(taskAndReasonDTO.isHavingChild());
-
+			task.setTaskChangeDate(new Date());
 			task.setCompanyId(taskAndReasonDTO.getCompanyId());
 
 			// adding or updating row
@@ -1163,6 +1165,7 @@ public class TaskServiceImpl implements TaskService {
 			task.setHavingChild(internalExternalTaskDTO.isHavingChild());
 			task.setCompanyId(internalExternalTaskDTO.getCompanyId());
 			task.setPlacementId(internalExternalTaskDTO.getPlacementId());
+			task.setTaskChangeDate(new Date());
 
 			if (internalExternalTaskDTO.getPlacementId() <= 0) {
 				if (internalExternalTaskDTO.getInternalId() > 0) {
@@ -1738,4 +1741,49 @@ public class TaskServiceImpl implements TaskService {
 		}
 		return dto;
 	}
+
+	@Override
+	public InternalExternalListDTO getTodaysInternalAndExternalTaskByCompanyId(int companyId) {
+
+		Date today = new Date(); // Create a new Date object representing today's date
+
+		// Retrieve internal tasks for the given company ID and today's date with a
+		// specific placement ID
+		List<Task> internalTasks = taskRepo.findByCompanyIdAndTaskChangeDateAndPlacementId(companyId, today,
+				INTERNAL_PLACEMENT_ID);
+
+		// Retrieve external tasks for the given company ID and today's date with a
+		// specific placement ID
+		List<Task> externalTasks = taskRepo.findByCompanyIdAndTaskChangeDateAndPlacementId(companyId, today,
+				EXTERNAL_PLACEMENT_ID);
+
+		InternalExternalListDTO listDTO = new InternalExternalListDTO(); // Create a new InternalExternalListDTO object
+		List<InternalTaskDTO> internalTaskDTO = new ArrayList<>(); // Create a new ArrayList to hold internal task DTOs
+		List<ExternalTaskDTO> externalTaskDTO = new ArrayList<>(); // Create a new ArrayList to hold external task DTOs
+
+		// Loop through internal tasks and create InternalTaskDTO objects for each task
+		for (Task task : internalTasks) {
+			InternalTask internalTask = internalTaskRepo.findByTaskId(task.getTaskId()); // Retrieve internal task
+																							// details
+			InternalTaskDTO internaldto = new InternalTaskDTO(task, internalTask); // Create InternalTaskDTO object
+			internalTaskDTO.add(internaldto); // Add InternalTaskDTO to the list
+		}
+
+		// Loop through external tasks and create ExternalTaskDTO objects for each task
+		for (Task task : externalTasks) {
+			ExternalTask externalTask = externalTaskRepo.findByTaskId(task.getTaskId()); // Retrieve external task
+																							// details
+			ExternalTaskDTO externalDto = new ExternalTaskDTO(task, externalTask); // Create ExternalTaskDTO object
+			externalTaskDTO.add(externalDto); // Add ExternalTaskDTO to the list
+		}
+
+		listDTO.setInternalTask(internalTaskDTO); // Set the list of internal tasks in the InternalExternalListDTO
+													// object
+		listDTO.setExternalTask(externalTaskDTO); // Set the list of external tasks in the InternalExternalListDTO
+													// object
+
+		return listDTO; // Return the InternalExternalListDTO object containing internal and external
+						// tasks
+	}
+
 }

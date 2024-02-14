@@ -7,6 +7,7 @@
 
 package com.cpa.ttsms.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -116,6 +117,8 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 //	@Query(value = "SELECT task.* FROM public.task task JOIN public.status st ON task.status = st.id WHERE task.parent = 0 AND task.companyid = ?4 AND (?1 = 'ALL' OR (st.code = ?1)) AND ((?2 > 0 AND task.createdby = ?2) OR ?2 <= 0) AND ((?3 > 0 AND task.assignedto = ?3) OR ?3 <= 0)", nativeQuery = true)
 //	List<Task> findTasksByStatusAndCreatorAndAssigneeOfCompanyByEmployeeId(String status, int createdBy, int assignedTo,
 //			int employeeId);
-	
+
 	public List<Task> findByCompanyId(int companyId);
+
+	List<Task> findByCompanyIdAndTaskChangeDateAndPlacementId(int companyId, Date today, int id);
 }

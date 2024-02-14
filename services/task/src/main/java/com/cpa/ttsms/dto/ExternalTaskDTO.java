@@ -47,6 +47,8 @@ public class ExternalTaskDTO {
 
 	private String fileName;
 
+	private Date taskChangeDate;
+
 	private boolean havingChild;
 
 	private int externalId; // Primary Key
@@ -79,6 +81,327 @@ public class ExternalTaskDTO {
 
 	private String reasonToFitForJob;
 
+	public int getHiringCompanyId() {
+		return hiringCompanyId;
+	}
+
+	public void setHiringCompanyId(int hiringCompanyId) {
+		this.hiringCompanyId = hiringCompanyId;
+	}
+
+	public int getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public String getTaskDescription() {
+		return taskDescription;
+	}
+
+	public void setTaskDescription(String taskDescription) {
+		this.taskDescription = taskDescription;
+	}
+
+	public int getTaskCreatedBy() {
+		return taskCreatedBy;
+	}
+
+	public void setTaskCreatedBy(int taskCreatedBy) {
+		this.taskCreatedBy = taskCreatedBy;
+	}
+
+	public int getTaskAssignedTo() {
+		return taskAssignedTo;
+	}
+
+	public void setTaskAssignedTo(int taskAssignedTo) {
+		this.taskAssignedTo = taskAssignedTo;
+	}
+
+	public int getTaskStatus() {
+		return taskStatus;
+	}
+
+	public void setTaskStatus(int taskStatus) {
+		this.taskStatus = taskStatus;
+	}
+
+	public Date getTaskStartDate() {
+		return taskStartDate;
+	}
+
+	public void setTaskStartDate(Date taskStartDate) {
+		this.taskStartDate = taskStartDate;
+	}
+
+	public Date getTaskEndDate() {
+		return taskEndDate;
+	}
+
+	public void setTaskEndDate(Date taskEndDate) {
+		this.taskEndDate = taskEndDate;
+	}
+
+	public Date getTaskActualStartDate() {
+		return taskActualStartDate;
+	}
+
+	public void setTaskActualStartDate(Date taskActualStartDate) {
+		this.taskActualStartDate = taskActualStartDate;
+	}
+
+	public Date getTaskActualEndDate() {
+		return taskActualEndDate;
+	}
+
+	public void setTaskActualEndDate(Date taskActualEndDate) {
+		this.taskActualEndDate = taskActualEndDate;
+	}
+
+	public int getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(int companyId) {
+		this.companyId = companyId;
+	}
+
+	public int getPlacementId() {
+		return placementId;
+	}
+
+	public void setPlacementId(int placementId) {
+		this.placementId = placementId;
+	}
+
+	public int getTaskParent() {
+		return taskParent;
+	}
+
+	public void setTaskParent(int taskParent) {
+		this.taskParent = taskParent;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public int getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public Date getTaskChangeDate() {
+		return taskChangeDate;
+	}
+
+	public void setTaskChangeDate(Date taskChangeDate) {
+		this.taskChangeDate = taskChangeDate;
+	}
+
+	public boolean isHavingChild() {
+		return havingChild;
+	}
+
+	public void setHavingChild(boolean havingChild) {
+		this.havingChild = havingChild;
+	}
+
+	public int getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(int externalId) {
+		this.externalId = externalId;
+	}
+
+	public String getCandidateCompany() {
+		return candidateCompany;
+	}
+
+	public void setCandidateCompany(String candidateCompany) {
+		this.candidateCompany = candidateCompany;
+	}
+
+	public String getCompanyAddress() {
+		return companyAddress;
+	}
+
+	public void setCompanyAddress(String companyAddress) {
+		this.companyAddress = companyAddress;
+	}
+
+	public String getRecruiterName() {
+		return recruiterName;
+	}
+
+	public void setRecruiterName(String recruiterName) {
+		this.recruiterName = recruiterName;
+	}
+
+	public String getRecruiterEmail() {
+		return recruiterEmail;
+	}
+
+	public void setRecruiterEmail(String recruiterEmail) {
+		this.recruiterEmail = recruiterEmail;
+	}
+
+	public String getRecruiterPhone() {
+		return recruiterPhone;
+	}
+
+	public void setRecruiterPhone(String recruiterPhone) {
+		this.recruiterPhone = recruiterPhone;
+	}
+
+	public String getCandidateName() {
+		return candidateName;
+	}
+
+	public void setCandidateName(String candidateName) {
+		this.candidateName = candidateName;
+	}
+
+	public int getVisaId() {
+		return visaId;
+	}
+
+	public void setVisaId(int visaId) {
+		this.visaId = visaId;
+	}
+
+	public int getTaxTypeId() {
+		return taxTypeId;
+	}
+
+	public void setTaxTypeId(int taxTypeId) {
+		this.taxTypeId = taxTypeId;
+	}
+
+	public int getCandidateExperience() {
+		return candidateExperience;
+	}
+
+	public void setCandidateExperience(int candidateExperience) {
+		this.candidateExperience = candidateExperience;
+	}
+
+	public int getExpectedMaxSalary() {
+		return expectedMaxSalary;
+	}
+
+	public void setExpectedMaxSalary(int expectedMaxSalary) {
+		this.expectedMaxSalary = expectedMaxSalary;
+	}
+
+	public int getExpectedMinSalary() {
+		return expectedMinSalary;
+	}
+
+	public void setExpectedMinSalary(int expectedMinSalary) {
+		this.expectedMinSalary = expectedMinSalary;
+	}
+
+	public boolean isWillingToRelocate() {
+		return willingToRelocate;
+	}
+
+	public void setWillingToRelocate(boolean willingToRelocate) {
+		this.willingToRelocate = willingToRelocate;
+	}
+
+	public boolean isWillingToNegotiateSalary() {
+		return willingToNegotiateSalary;
+	}
+
+	public void setWillingToNegotiateSalary(boolean willingToNegotiateSalary) {
+		this.willingToNegotiateSalary = willingToNegotiateSalary;
+	}
+
+	public String getReasonToFitForJob() {
+		return reasonToFitForJob;
+	}
+
+	public void setReasonToFitForJob(String reasonToFitForJob) {
+		this.reasonToFitForJob = reasonToFitForJob;
+	}
+
+	public ExternalTaskDTO(int hiringCompanyId, int taskId, String taskName, String taskDescription, int taskCreatedBy,
+			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
+			Date taskActualEndDate, int companyId, int placementId, int taskParent, String reason, int employeeId,
+			String fileName, Date taskChangeDate, boolean havingChild, int externalId, String candidateCompany,
+			String companyAddress, String recruiterName, String recruiterEmail, String recruiterPhone,
+			String candidateName, int visaId, int taxTypeId, int candidateExperience, int expectedMaxSalary,
+			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary,
+			String reasonToFitForJob) {
+		super();
+		this.hiringCompanyId = hiringCompanyId;
+		this.taskId = taskId;
+		this.taskName = taskName;
+		this.taskDescription = taskDescription;
+		this.taskCreatedBy = taskCreatedBy;
+		this.taskAssignedTo = taskAssignedTo;
+		this.taskStatus = taskStatus;
+		this.taskStartDate = taskStartDate;
+		this.taskEndDate = taskEndDate;
+		this.taskActualStartDate = taskActualStartDate;
+		this.taskActualEndDate = taskActualEndDate;
+		this.companyId = companyId;
+		this.placementId = placementId;
+		this.taskParent = taskParent;
+		this.reason = reason;
+		this.employeeId = employeeId;
+		this.fileName = fileName;
+		this.taskChangeDate = taskChangeDate;
+		this.havingChild = havingChild;
+		this.externalId = externalId;
+		this.candidateCompany = candidateCompany;
+		this.companyAddress = companyAddress;
+		this.recruiterName = recruiterName;
+		this.recruiterEmail = recruiterEmail;
+		this.recruiterPhone = recruiterPhone;
+		this.candidateName = candidateName;
+		this.visaId = visaId;
+		this.taxTypeId = taxTypeId;
+		this.candidateExperience = candidateExperience;
+		this.expectedMaxSalary = expectedMaxSalary;
+		this.expectedMinSalary = expectedMinSalary;
+		this.willingToRelocate = willingToRelocate;
+		this.willingToNegotiateSalary = willingToNegotiateSalary;
+		this.reasonToFitForJob = reasonToFitForJob;
+	}
+
+//	public ExternalTaskDTO(Task associatedTask, ExternalTask externalTask) {
+//		super();
+//		// TODO Auto-generated constructor stub
+//	}
 	public ExternalTaskDTO(Task task, ExternalTask externalTask) {
 		this.hiringCompanyId = externalTask.getHiringCompanyId();
 
@@ -96,7 +419,7 @@ public class ExternalTaskDTO {
 		this.taskParent = task.getTaskParent();
 		this.havingChild = task.isHavingChild();
 		this.placementId = task.getPlacementId();
-
+		this.taskChangeDate = task.getTaskChangeDate();
 		this.externalId = externalTask.getExternalId();
 
 		this.candidateName = externalTask.getCandidateName();
@@ -118,466 +441,22 @@ public class ExternalTaskDTO {
 
 	}
 
-	/**
-	 * @return the hiringCompanyId
-	 */
-	public int getHiringCompanyId() {
-		return hiringCompanyId;
-	}
-
-	/**
-	 * @param hiringCompanyId the hiringCompanyId to set
-	 */
-	public void setHiringCompanyId(int hiringCompanyId) {
-		this.hiringCompanyId = hiringCompanyId;
-	}
-
-	/**
-	 * @return the taskId
-	 */
-	public int getTaskId() {
-		return taskId;
-	}
-
-	/**
-	 * @param taskId the taskId to set
-	 */
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
-	}
-
-	/**
-	 * @return the taskName
-	 */
-	public String getTaskName() {
-		return taskName;
-	}
-
-	/**
-	 * @param taskName the taskName to set
-	 */
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
-
-	/**
-	 * @return the taskDescription
-	 */
-	public String getTaskDescription() {
-		return taskDescription;
-	}
-
-	/**
-	 * @param taskDescription the taskDescription to set
-	 */
-	public void setTaskDescription(String taskDescription) {
-		this.taskDescription = taskDescription;
-	}
-
-	/**
-	 * @return the taskCreatedBy
-	 */
-	public int getTaskCreatedBy() {
-		return taskCreatedBy;
-	}
-
-	/**
-	 * @param taskCreatedBy the taskCreatedBy to set
-	 */
-	public void setTaskCreatedBy(int taskCreatedBy) {
-		this.taskCreatedBy = taskCreatedBy;
-	}
-
-	/**
-	 * @return the taskAssignedTo
-	 */
-	public int getTaskAssignedTo() {
-		return taskAssignedTo;
-	}
-
-	/**
-	 * @param taskAssignedTo the taskAssignedTo to set
-	 */
-	public void setTaskAssignedTo(int taskAssignedTo) {
-		this.taskAssignedTo = taskAssignedTo;
-	}
-
-	/**
-	 * @return the taskStatus
-	 */
-	public int getTaskStatus() {
-		return taskStatus;
-	}
-
-	/**
-	 * @param taskStatus the taskStatus to set
-	 */
-	public void setTaskStatus(int taskStatus) {
-		this.taskStatus = taskStatus;
-	}
-
-	/**
-	 * @return the taskStartDate
-	 */
-	public Date getTaskStartDate() {
-		return taskStartDate;
-	}
-
-	/**
-	 * @param taskStartDate the taskStartDate to set
-	 */
-	public void setTaskStartDate(Date taskStartDate) {
-		this.taskStartDate = taskStartDate;
-	}
-
-	/**
-	 * @return the taskEndDate
-	 */
-	public Date getTaskEndDate() {
-		return taskEndDate;
-	}
-
-	/**
-	 * @param taskEndDate the taskEndDate to set
-	 */
-	public void setTaskEndDate(Date taskEndDate) {
-		this.taskEndDate = taskEndDate;
-	}
-
-	/**
-	 * @return the taskActualStartDate
-	 */
-	public Date getTaskActualStartDate() {
-		return taskActualStartDate;
-	}
-
-	/**
-	 * @param taskActualStartDate the taskActualStartDate to set
-	 */
-	public void setTaskActualStartDate(Date taskActualStartDate) {
-		this.taskActualStartDate = taskActualStartDate;
-	}
-
-	/**
-	 * @return the taskActualEndDate
-	 */
-	public Date getTaskActualEndDate() {
-		return taskActualEndDate;
-	}
-
-	/**
-	 * @param taskActualEndDate the taskActualEndDate to set
-	 */
-	public void setTaskActualEndDate(Date taskActualEndDate) {
-		this.taskActualEndDate = taskActualEndDate;
-	}
-
-	/**
-	 * @return the companyId
-	 */
-	public int getCompanyId() {
-		return companyId;
-	}
-
-	/**
-	 * @param companyId the companyId to set
-	 */
-	public void setCompanyId(int companyId) {
-		this.companyId = companyId;
-	}
-
-	/**
-	 * @return the placementId
-	 */
-	public int getPlacementId() {
-		return placementId;
-	}
-
-	/**
-	 * @param placementId the placementId to set
-	 */
-	public void setPlacementId(int placementId) {
-		this.placementId = placementId;
-	}
-
-	/**
-	 * @return the taskParent
-	 */
-	public int getTaskParent() {
-		return taskParent;
-	}
-
-	/**
-	 * @param taskParent the taskParent to set
-	 */
-	public void setTaskParent(int taskParent) {
-		this.taskParent = taskParent;
-	}
-
-	/**
-	 * @return the reason
-	 */
-	public String getReason() {
-		return reason;
-	}
-
-	/**
-	 * @param reason the reason to set
-	 */
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	/**
-	 * @return the employeeId
-	 */
-	public int getEmployeeId() {
-		return employeeId;
-	}
-
-	/**
-	 * @param employeeId the employeeId to set
-	 */
-	public void setEmployeeId(int employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	/**
-	 * @return the fileName
-	 */
-	public String getFileName() {
-		return fileName;
-	}
-
-	/**
-	 * @param fileName the fileName to set
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	/**
-	 * @return the havingChild
-	 */
-	public boolean isHavingChild() {
-		return havingChild;
-	}
-
-	/**
-	 * @param havingChild the havingChild to set
-	 */
-	public void setHavingChild(boolean havingChild) {
-		this.havingChild = havingChild;
-	}
-
-	/**
-	 * @return the externalId
-	 */
-	public int getExternalId() {
-		return externalId;
-	}
-
-	/**
-	 * @param externalId the externalId to set
-	 */
-	public void setExternalId(int externalId) {
-		this.externalId = externalId;
-	}
-
-	/**
-	 * @return the candidateCompany
-	 */
-	public String getCandidateCompany() {
-		return candidateCompany;
-	}
-
-	/**
-	 * @param candidateCompany the candidateCompany to set
-	 */
-	public void setCandidateCompany(String candidateCompany) {
-		this.candidateCompany = candidateCompany;
-	}
-
-	/**
-	 * @return the companyAddress
-	 */
-	public String getCompanyAddress() {
-		return companyAddress;
-	}
-
-	/**
-	 * @param companyAddress the companyAddress to set
-	 */
-	public void setCompanyAddress(String companyAddress) {
-		this.companyAddress = companyAddress;
-	}
-
-	/**
-	 * @return the recruiterName
-	 */
-	public String getRecruiterName() {
-		return recruiterName;
-	}
-
-	/**
-	 * @param recruiterName the recruiterName to set
-	 */
-	public void setRecruiterName(String recruiterName) {
-		this.recruiterName = recruiterName;
-	}
-
-	/**
-	 * @return the recruiterEmail
-	 */
-	public String getRecruiterEmail() {
-		return recruiterEmail;
-	}
-
-	/**
-	 * @param recruiterEmail the recruiterEmail to set
-	 */
-	public void setRecruiterEmail(String recruiterEmail) {
-		this.recruiterEmail = recruiterEmail;
-	}
-
-	/**
-	 * @return the recruiterPhone
-	 */
-	public String getRecruiterPhone() {
-		return recruiterPhone;
-	}
-
-	/**
-	 * @param recruiterPhone the recruiterPhone to set
-	 */
-	public void setRecruiterPhone(String recruiterPhone) {
-		this.recruiterPhone = recruiterPhone;
-	}
-
-	/**
-	 * @return the candidateName
-	 */
-	public String getCandidateName() {
-		return candidateName;
-	}
-
-	/**
-	 * @param candidateName the candidateName to set
-	 */
-	public void setCandidateName(String candidateName) {
-		this.candidateName = candidateName;
-	}
-
-	/**
-	 * @return the visaId
-	 */
-	public int getVisaId() {
-		return visaId;
-	}
-
-	/**
-	 * @param visaId the visaId to set
-	 */
-	public void setVisaId(int visaId) {
-		this.visaId = visaId;
-	}
-
-	/**
-	 * @return the taxTypeId
-	 */
-	public int getTaxTypeId() {
-		return taxTypeId;
-	}
-
-	/**
-	 * @param taxTypeId the taxTypeId to set
-	 */
-	public void setTaxTypeId(int taxTypeId) {
-		this.taxTypeId = taxTypeId;
-	}
-
-	/**
-	 * @return the candidateExperience
-	 */
-	public int getCandidateExperience() {
-		return candidateExperience;
-	}
-
-	/**
-	 * @param candidateExperience the candidateExperience to set
-	 */
-	public void setCandidateExperience(int candidateExperience) {
-		this.candidateExperience = candidateExperience;
-	}
-
-	/**
-	 * @return the expectedMaxSalary
-	 */
-	public int getExpectedMaxSalary() {
-		return expectedMaxSalary;
-	}
-
-	/**
-	 * @param expectedMaxSalary the expectedMaxSalary to set
-	 */
-	public void setExpectedMaxSalary(int expectedMaxSalary) {
-		this.expectedMaxSalary = expectedMaxSalary;
-	}
-
-	/**
-	 * @return the expectedMinSalary
-	 */
-	public int getExpectedMinSalary() {
-		return expectedMinSalary;
-	}
-
-	/**
-	 * @param expectedMinSalary the expectedMinSalary to set
-	 */
-	public void setExpectedMinSalary(int expectedMinSalary) {
-		this.expectedMinSalary = expectedMinSalary;
-	}
-
-	/**
-	 * @return the willingToRelocate
-	 */
-	public boolean isWillingToRelocate() {
-		return willingToRelocate;
-	}
-
-	/**
-	 * @param willingToRelocate the willingToRelocate to set
-	 */
-	public void setWillingToRelocate(boolean willingToRelocate) {
-		this.willingToRelocate = willingToRelocate;
-	}
-
-	/**
-	 * @return the willingToNegotiateSalary
-	 */
-	public boolean isWillingToNegotiateSalary() {
-		return willingToNegotiateSalary;
-	}
-
-	/**
-	 * @param willingToNegotiateSalary the willingToNegotiateSalary to set
-	 */
-	public void setWillingToNegotiateSalary(boolean willingToNegotiateSalary) {
-		this.willingToNegotiateSalary = willingToNegotiateSalary;
-	}
-
-	/**
-	 * @return the reasonToFitForJob
-	 */
-	public String getReasonToFitForJob() {
-		return reasonToFitForJob;
-	}
-
-	/**
-	 * @param reasonToFitForJob the reasonToFitForJob to set
-	 */
-	public void setReasonToFitForJob(String reasonToFitForJob) {
-		this.reasonToFitForJob = reasonToFitForJob;
+	@Override
+	public String toString() {
+		return "ExternalTaskDTO [hiringCompanyId=" + hiringCompanyId + ", taskId=" + taskId + ", taskName=" + taskName
+				+ ", taskDescription=" + taskDescription + ", taskCreatedBy=" + taskCreatedBy + ", taskAssignedTo="
+				+ taskAssignedTo + ", taskStatus=" + taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate="
+				+ taskEndDate + ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate="
+				+ taskActualEndDate + ", companyId=" + companyId + ", placementId=" + placementId + ", taskParent="
+				+ taskParent + ", reason=" + reason + ", employeeId=" + employeeId + ", fileName=" + fileName
+				+ ", taskChangeDate=" + taskChangeDate + ", havingChild=" + havingChild + ", externalId=" + externalId
+				+ ", candidateCompany=" + candidateCompany + ", companyAddress=" + companyAddress + ", recruiterName="
+				+ recruiterName + ", recruiterEmail=" + recruiterEmail + ", recruiterPhone=" + recruiterPhone
+				+ ", candidateName=" + candidateName + ", visaId=" + visaId + ", taxTypeId=" + taxTypeId
+				+ ", candidateExperience=" + candidateExperience + ", expectedMaxSalary=" + expectedMaxSalary
+				+ ", expectedMinSalary=" + expectedMinSalary + ", willingToRelocate=" + willingToRelocate
+				+ ", willingToNegotiateSalary=" + willingToNegotiateSalary + ", reasonToFitForJob=" + reasonToFitForJob
+				+ "]";
 	}
 
 }

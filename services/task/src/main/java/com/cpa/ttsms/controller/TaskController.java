@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.ExternalTaskDTO;
+import com.cpa.ttsms.dto.InternalExternalListDTO;
 import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
@@ -710,5 +711,34 @@ public class TaskController {
 			logger.error("Error while fetching parent tasks: " + e.getMessage());
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
 		}
+	}
+
+	@GetMapping("/tasklist/{companyId}")
+	public ResponseEntity<Object> getAllList(@PathVariable("companyId") int companyId) {
+
+		InternalExternalListDTO dto = null;
+
+		try {
+			dto = taskService.getTodaysInternalAndExternalTaskByCompanyId(companyId);
+
+			logger.info("Fetched  tasks :  " + companyId);
+
+			if (dto != null) {
+				return ResponseHandler.generateResponse(dto, HttpStatus.OK);
+			} else {
+
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err001");
+			}
+		} catch (Exception e) {
+			// If any other exception occurs, log the error and return INTERNAL_SERVER_ERROR
+			// status
+			logger.error("Error while fetching parent tasks: " + e.getMessage());
+			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err002");
+		}
+	}
+
+	@GetMapping("/tasks/{companyId}")
+	public InternalExternalListDTO getTodaysInternalAndExternalTaskByCompanyId(@PathVariable int companyId) {
+		return taskService.getTodaysInternalAndExternalTaskByCompanyId(companyId);
 	}
 }

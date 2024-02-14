@@ -72,12 +72,16 @@ public class TaskServiceImpl implements TaskService {
 	@Value("${file.base-path}")
 	private String basePath;
 
-//	private final String REASON_API_URL = "http://localhost:8080/reason/ttsms/reason";
-//	private final String UPLOAD_FILE_URL = "http://localhost:8080/uploadfile/ttsms/upload";
-//	private final String email_URL = "http://localhost:8080/email/taskMail";
-//	private final String employee_URL = "http://localhost:8080/employee/ttsms/employee/";
-//	private final String status_URL = "http://localhost:8080/status/ttsms/status/";
-//	private final String task_URL = "http://localhost:8080/task/ttsms/task/";
+	// private final String REASON_API_URL =
+	// "http://127.0.0.1:8080/reason/ttsms/reason";
+	// private final String UPLOAD_FILE_URL =
+	// "http://127.0.0.1:8080/uploadfile/ttsms/upload";
+	// private final String email_URL = "http://127.0.0.1:8080/email/taskMail";
+	// private final String employee_URL =
+	// "http://127.0.0.1:8080/employee/ttsms/employee/";
+	// private final String status_URL =
+	// "http://127.0.0.1:8080/status/ttsms/status/";
+	// private final String task_URL = "http://127.0.0.1:8080/task/ttsms/task/";
 
 	@Value("${external-services.reason-api-url}")
 	private String REASON_API_URL;
@@ -121,6 +125,19 @@ public class TaskServiceImpl implements TaskService {
 	private static Logger logger;
 
 	private final RestTemplate restTemplate;
+
+	static {
+		// for 127.0.0.1 testing only
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
+
+			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
+				if (hostname.equals("127.0.0.1")) {
+					return true;
+				}
+				return false;
+			}
+		});
+	}
 
 	public TaskServiceImpl(RestTemplate restTemplate) {
 		logger = Logger.getLogger(TaskServiceImpl.class);
@@ -773,26 +790,26 @@ public class TaskServiceImpl implements TaskService {
 	 * @return The list of parent tasks with the specified status.
 	 * @throws IllegalArgumentException If an invalid status is provided.
 	 */
-//	@Override
-//	public List<Task> getAllParentTasksByStatus(String status) {
-//		// Switch statement to handle different status values and fetch corresponding
-//		// tasks
-//		switch (status.toLowerCase()) {
-//		// If status is "created", fetch all parent tasks with status "Created"
-//		case "created":
-//			return taskRepo.findByTaskParentIsNullAndTaskStatus("CREATED");
-//		// If status is "done", fetch all parent tasks with status "Done"
-//		case "done":
-//			return taskRepo.findByTaskParentIsNullAndTaskStatus("DONE");
-//		// If status is "inprogress", fetch all parent tasks with status not in
-//		// "Created" or "Done"
-//		case "inprogress":
-//			return taskRepo.findByTaskParentIsNullAndTaskStatusNotIn("CREATED", "DONE");
-//		// If an invalid status is provided, throw an exception
-//		default:
-//			throw new IllegalArgumentException("Invalid status provided.");
-//		}
-//	}
+	// @Override
+	// public List<Task> getAllParentTasksByStatus(String status) {
+	// // Switch statement to handle different status values and fetch corresponding
+	// // tasks
+	// switch (status.toLowerCase()) {
+	// // If status is "created", fetch all parent tasks with status "Created"
+	// case "created":
+	// return taskRepo.findByTaskParentIsNullAndTaskStatus("CREATED");
+	// // If status is "done", fetch all parent tasks with status "Done"
+	// case "done":
+	// return taskRepo.findByTaskParentIsNullAndTaskStatus("DONE");
+	// // If status is "inprogress", fetch all parent tasks with status not in
+	// // "Created" or "Done"
+	// case "inprogress":
+	// return taskRepo.findByTaskParentIsNullAndTaskStatusNotIn("CREATED", "DONE");
+	// // If an invalid status is provided, throw an exception
+	// default:
+	// throw new IllegalArgumentException("Invalid status provided.");
+	// }
+	// }
 
 	/**
 	 * Get all child tasks of a parent task with a specific ID.
@@ -1002,8 +1019,9 @@ public class TaskServiceImpl implements TaskService {
 		int assignedBy = employeeId;
 		List<Task> allTasks = taskRepo.findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDesc(createdBy, assignedBy);
 
-//		List<Integer> parentTaskIds = allTasks.stream().filter(task -> task.getTaskParent() == 0).map(Task::getTaskId)
-//				.collect(Collectors.toList());
+		// List<Integer> parentTaskIds = allTasks.stream().filter(task ->
+		// task.getTaskParent() == 0).map(Task::getTaskId)
+		// .collect(Collectors.toList());
 
 		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
 																					// filtering
@@ -1051,8 +1069,9 @@ public class TaskServiceImpl implements TaskService {
 		// TODO Auto-generated method stub
 		List<Task> allTasks = taskRepo.findByCompanyId(companyId);
 
-//		List<Integer> parentTaskIds = allTasks.stream().filter(task -> task.getTaskParent() == 0).map(Task::getTaskId)
-//				.collect(Collectors.toList());
+		// List<Integer> parentTaskIds = allTasks.stream().filter(task ->
+		// task.getTaskParent() == 0).map(Task::getTaskId)
+		// .collect(Collectors.toList());
 
 		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
 																					// filtering
@@ -1155,6 +1174,7 @@ public class TaskServiceImpl implements TaskService {
 
 			// adding or updating row
 			Task createdTask = taskRepo.save(task);
+			System.out.println("created task " + createdTask.toString());
 			internalExternalTaskDTO.setPlacementId(createdTask.getPlacementId());
 			logger.info("created Task " + createdTask.getTaskName());
 			if (createdTask != null) {
@@ -1168,27 +1188,27 @@ public class TaskServiceImpl implements TaskService {
 					}
 
 					internalTask = InternalTask.setInternalTaskData(internalTask, internalExternalTaskDTO);
-//					internalTask.setBenchCandidateId(internalExternalTaskDTO.getBenchCandidateId());
-//					internalTask.setHiringCompanyName(internalExternalTaskDTO.getHiringCompanyName());
-//					internalTask.setJobPortalId(internalExternalTaskDTO.getJobPortalId());
-//					internalTask.setJobTitle(internalExternalTaskDTO.getJobTitle());
-//					internalTask.setExperienceRequired(internalExternalTaskDTO.getExperienceRequired());
-//					internalTask.setJobLocationId(internalExternalTaskDTO.getJobLocationId());
-//					internalTask.setRate(internalExternalTaskDTO.getRate());
-//					internalTask.setVendorName(internalExternalTaskDTO.getRecruiterName());
-//					internalTask.setVendorEmail(internalExternalTaskDTO.getRecruiterEmail());
-//					internalTask.setVendorPhone(internalExternalTaskDTO.getRecruiterPhone());
-//					internalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
-//					internalTask.setPortalName(internalExternalTaskDTO.getPortalName());
-//					internalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
-//					internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
-//					internalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
-//
-//					internalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
-//					internalTask.setJobCity(internalExternalTaskDTO.getJobCity());
-//					internalTask.setJobState(internalExternalTaskDTO.getJobState());
-//					internalTask.setCommentOnCandidate(internalExternalTaskDTO.getCommentOnCandidate());
-//					internalTask.setMinBillingRate(internalExternalTaskDTO.getMinBillingRate());
+					// internalTask.setBenchCandidateId(internalExternalTaskDTO.getBenchCandidateId());
+					// internalTask.setHiringCompanyName(internalExternalTaskDTO.getHiringCompanyName());
+					// internalTask.setJobPortalId(internalExternalTaskDTO.getJobPortalId());
+					// internalTask.setJobTitle(internalExternalTaskDTO.getJobTitle());
+					// internalTask.setExperienceRequired(internalExternalTaskDTO.getExperienceRequired());
+					// internalTask.setJobLocationId(internalExternalTaskDTO.getJobLocationId());
+					// internalTask.setRate(internalExternalTaskDTO.getRate());
+					// internalTask.setVendorName(internalExternalTaskDTO.getRecruiterName());
+					// internalTask.setVendorEmail(internalExternalTaskDTO.getRecruiterEmail());
+					// internalTask.setVendorPhone(internalExternalTaskDTO.getRecruiterPhone());
+					// internalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
+					// internalTask.setPortalName(internalExternalTaskDTO.getPortalName());
+					// internalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
+					// internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
+					// internalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
+					//
+					// internalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
+					// internalTask.setJobCity(internalExternalTaskDTO.getJobCity());
+					// internalTask.setJobState(internalExternalTaskDTO.getJobState());
+					// internalTask.setCommentOnCandidate(internalExternalTaskDTO.getCommentOnCandidate());
+					// internalTask.setMinBillingRate(internalExternalTaskDTO.getMinBillingRate());
 
 					internalTask.setTaskId((createdTask.getTaskId()));
 
@@ -1203,25 +1223,25 @@ public class TaskServiceImpl implements TaskService {
 					}
 
 					externalTask = ExternalTask.setExternalTaskData(externalTask, internalExternalTaskDTO);
-//					externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
-//					externalTask.setCandidateCompany(internalExternalTaskDTO.getCandidateCompany());
-//					externalTask.setCompanyAddress(internalExternalTaskDTO.getCompanyAddress());
-//					externalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());
-//					externalTask.setRecruiterName(internalExternalTaskDTO.getRecruiterName());
-//					externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
-//					externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
-//					externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
+					// externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
+					// externalTask.setCandidateCompany(internalExternalTaskDTO.getCandidateCompany());
+					// externalTask.setCompanyAddress(internalExternalTaskDTO.getCompanyAddress());
+					// externalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());
+					// externalTask.setRecruiterName(internalExternalTaskDTO.getRecruiterName());
+					// externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
+					// externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
+					// externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
 
 					externalTask.setTaskId((createdTask.getTaskId()));
 
-//					externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
-//					externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
-//					externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
-//					externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
-//					externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
-//
-//					externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
-//					externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
+					// externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
+					// externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
+					// externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
+					// externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
+					// externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
+					//
+					// externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
+					// externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
 
 					externalCreatedTask = externalTaskRepo.save(externalTask);
 					internalExternalTaskDTO.setExternalId(externalCreatedTask.getExternalId());
@@ -1326,14 +1346,14 @@ public class TaskServiceImpl implements TaskService {
 			return null;
 		}
 
-//		if (task.getPlacementId() == INTERNAL_PLACEMENT_ID) {
-//			InternalTask internalTask = internalTaskRepo.findByTaskId(id);
-//			internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask);
-//
-//		} else if (task.getPlacementId() == EXTERNAL_PLACEMENT_ID) {
-//			ExternalTask externalTask = externalTaskRepo.findByTaskId(id);
-//			internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
-//		}
+		// if (task.getPlacementId() == INTERNAL_PLACEMENT_ID) {
+		// InternalTask internalTask = internalTaskRepo.findByTaskId(id);
+		// internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask);
+		//
+		// } else if (task.getPlacementId() == EXTERNAL_PLACEMENT_ID) {
+		// ExternalTask externalTask = externalTaskRepo.findByTaskId(id);
+		// internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
+		// }
 
 		logger.info("Founded internalExternalTaskDTO: " + internalExternalTaskDTO);
 		return internalExternalTaskDTO;

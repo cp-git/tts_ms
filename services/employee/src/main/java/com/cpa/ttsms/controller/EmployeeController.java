@@ -696,8 +696,5 @@ public class EmployeeController {
 			throw new CPException("err002", resourceBundle.getString("err002"));
 		}
 	}
-	
-	
-	
-	
+
 }

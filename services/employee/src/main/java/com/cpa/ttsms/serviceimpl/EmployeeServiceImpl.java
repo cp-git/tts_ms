@@ -9,7 +9,6 @@
 package com.cpa.ttsms.serviceimpl;
 
 import java.io.File;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,9 +47,9 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	// private final String email_URL = "http://localhost:8080/email/sendMail";
+	// private final String email_URL = "http://127.0.0.1:8080/email/sendMail";
 	// private final String UPLOAD_FILE_URL =
-	// "http://localhost:8080/uploadfile/ttsms/upload";
+	// "http://127.0.0.1:8080/uploadfile/ttsms/upload";
 
 	@Value("${email.url}")
 	private String email_URL;
@@ -74,6 +73,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	private PasswordRepo passwordRepository;
 
+	static {
+		// for 127.0.0.1 testing only
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
+
+			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
+				if (hostname.equals("127.0.0.1")) {
+					return true;
+				}
+				return false;
+			}
+		});
+	}
+
 	public EmployeeServiceImpl(RestTemplate restTemplate) {
 		logger = Logger.getLogger(EmployeeServiceImpl.class);
 		this.restTemplate = restTemplate;
@@ -88,39 +100,40 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return The newly created Country object if successful, otherwise null.
 	 */
 
-//	@Override
-//	public Employee updateEmployeeByEmployeeId(Employee employee, int employeeId) {
-//		// TODO Auto-generated method stub
-//		logger.debug("Entering updateEmployee");
-//
-//		// Initialize variables
-//		Employee toUpdatedEmployee = null;
-//		Employee updatedEmployee = null;
-//
-//		// Find the existing employee based on the provided employeeId
-//		toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
-//		logger.info("existing Employee :: " + toUpdatedEmployee);
-//
-//		// Check if an employee with the given ID exists
-//		if (toUpdatedEmployee != null) {
-//			logger.debug("setting new data of Employee to existing Employee");
-//
-//			// Update the existing employee's data with the provided employee data
-//			toUpdatedEmployee.setCountryId(employee.getCountryId());
-//			toUpdatedEmployee.setCompanyId(employee.getCompanyId());
-//			toUpdatedEmployee.setFirstName(employee.getFirstName());
-//			toUpdatedEmployee.setLastName(employee.getLastName());
-//			toUpdatedEmployee.setBirthDate(employee.getBirthDate());
-//			toUpdatedEmployee.setEmployeeEmail(employee.getEmployeeEmail());
-//
-//			// Save the updated employee in the database
-//			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
-//
-//			logger.info("updated Employee :" + updatedEmployee);
-//		}
-//
-//		return updatedEmployee;
-//	}
+	// @Override
+	// public Employee updateEmployeeByEmployeeId(Employee employee, int employeeId)
+	// {
+	// // TODO Auto-generated method stub
+	// logger.debug("Entering updateEmployee");
+	//
+	// // Initialize variables
+	// Employee toUpdatedEmployee = null;
+	// Employee updatedEmployee = null;
+	//
+	// // Find the existing employee based on the provided employeeId
+	// toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
+	// logger.info("existing Employee :: " + toUpdatedEmployee);
+	//
+	// // Check if an employee with the given ID exists
+	// if (toUpdatedEmployee != null) {
+	// logger.debug("setting new data of Employee to existing Employee");
+	//
+	// // Update the existing employee's data with the provided employee data
+	// toUpdatedEmployee.setCountryId(employee.getCountryId());
+	// toUpdatedEmployee.setCompanyId(employee.getCompanyId());
+	// toUpdatedEmployee.setFirstName(employee.getFirstName());
+	// toUpdatedEmployee.setLastName(employee.getLastName());
+	// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
+	// toUpdatedEmployee.setEmployeeEmail(employee.getEmployeeEmail());
+	//
+	// // Save the updated employee in the database
+	// updatedEmployee = employeeRepo.save(toUpdatedEmployee);
+	//
+	// logger.info("updated Employee :" + updatedEmployee);
+	// }
+	//
+	// return updatedEmployee;
+	// }
 
 	/**
 	 * Saves the employee and their password information.
@@ -147,15 +160,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setShowAllTasks(dto.isShowAllTasks());
 		employee.setOnBench(dto.isOnBench());
 
-//	    // Parse the date string from the DTO and set it as the employee's birth date
-//	    Date dob;
-//	    try {
-//	        dob = new SimpleDateFormat("yyyy-dd-MM").parse(dto.getBirthDate());
-//	        employee.setBirthDate(dob);
-//	    } catch (ParseException e) {
-//	        // TODO Auto-generated catch block
-//	        e.printStackTrace();
-//	    }
+		// // Parse the date string from the DTO and set it as the employee's birth date
+		// Date dob;
+		// try {
+		// dob = new SimpleDateFormat("yyyy-dd-MM").parse(dto.getBirthDate());
+		// employee.setBirthDate(dob);
+		// } catch (ParseException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 
 		employee.setBirthDate(dto.getBirthDate());
 		employee.setEmployeeEmail(dto.getEmployeeEmail());
@@ -211,8 +224,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setLastName(emp.getLastName());
 				dto.setBirthDate(emp.getBirthDate());
 				// Format dob as a String (assuming it's already in Date format in the entity)
-//	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//	            dto.setBirthDate(dateFormat.format(emp.getBirthDate()));
+				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				// dto.setBirthDate(dateFormat.format(emp.getBirthDate()));
 				dto.setPasswordId(password.getPasswordId());
 				dto.setEmployeeEmail(emp.getEmployeeEmail());
 				dto.setUsername(password.getUsername());
@@ -309,7 +322,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		if (toUpdatePassword != null) {
 
-//			toUpdatePassword.setUsername(password.getUsername());
+			// toUpdatePassword.setUsername(password.getUsername());
 			toUpdatePassword.setPassword(password.getPassword());
 			toUpdatePassword.setForgotPassword(false);
 
@@ -426,8 +439,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String oldPassword = password.getPassword();
 		password.setForgotPassword(true);
 		passwordRepository.save(password);
-//		String oldPassword = generateRandomPassword();
-//		password.setPassword(oldPassword);
+		// String oldPassword = generateRandomPassword();
+		// password.setPassword(oldPassword);
 
 		// Update the password value in the Password object
 		// password.setPassword(newPassword);
@@ -477,35 +490,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String NUMBERS = "0123456789";
 		String SPECIAL_CHARS = "@#$&";
 
-		String ALL_CHARS = UPPERCASE_CHARS + LOWERCASE_CHARS + NUMBERS + SPECIAL_CHARS;
+		// String ALL_CHARS = UPPERCASE_CHARS + LOWERCASE_CHARS + NUMBERS +
+		// SPECIAL_CHARS;
 		// SecureRandom randomPass = new SecureRandom();
 		for (int i = 0; i < 8; i++) {
-			int randomIndex =0;
+			int randomIndex = 0;
 			char randomChar;
 			int rem = i % 4;
 			switch (rem) {
-			case 0:
-				randomIndex = random.nextInt(ALL_CHARS.length());
-				randomChar = UPPERCASE_CHARS.charAt(randomIndex);
-				password.append(randomChar);
-				break;
-			case 1:
-				randomIndex = random.nextInt(ALL_CHARS.length());
-				randomChar = SPECIAL_CHARS.charAt(randomIndex);
-				password.append(randomChar);
-				break;
-			case 2:
-				randomIndex = random.nextInt(ALL_CHARS.length());
-				randomChar = LOWERCASE_CHARS.charAt(randomIndex);
-				password.append(randomChar);
-				break;
-			case 3:
-				randomIndex = random.nextInt(ALL_CHARS.length());
-				randomChar = NUMBERS.charAt(randomIndex);
-				password.append(randomChar);
-				break;
+				case 0:
+					randomIndex = random.nextInt(UPPERCASE_CHARS.length());
+					randomChar = UPPERCASE_CHARS.charAt(randomIndex);
+					password.append(randomChar);
+					break;
+				case 1:
+					randomIndex = random.nextInt(SPECIAL_CHARS.length());
+					randomChar = SPECIAL_CHARS.charAt(randomIndex);
+					password.append(randomChar);
+					break;
+				case 2:
+					randomIndex = random.nextInt(LOWERCASE_CHARS.length());
+					randomChar = LOWERCASE_CHARS.charAt(randomIndex);
+					password.append(randomChar);
+					break;
+				case 3:
+					randomIndex = random.nextInt(NUMBERS.length());
+					randomChar = NUMBERS.charAt(randomIndex);
+					password.append(randomChar);
+					break;
 			}
-		
+
 		}
 
 		return password.toString();

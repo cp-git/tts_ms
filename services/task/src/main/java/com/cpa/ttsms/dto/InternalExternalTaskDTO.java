@@ -923,4 +923,28 @@ public class InternalExternalTaskDTO {
 		this.minBillingRate = minBillingRate;
 	}
 
+	@Override
+	public String toString() {
+		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
+				+ taskDescription + ", taskCreatedBy=" + taskCreatedBy + ", taskAssignedTo=" + taskAssignedTo
+				+ ", taskStatus=" + taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate=" + taskEndDate
+				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
+				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild
+				+ ", placementId=" + placementId + ", reason=" + reason + ", employeeId=" + employeeId + ", internalId="
+				+ internalId + ", hiringCompanyName=" + hiringCompanyName + ", jobTitle=" + jobTitle
+				+ ", jobLocationId=" + jobLocationId + ", jobAddress=" + jobAddress + ", jobCity=" + jobCity
+				+ ", jobState=" + jobState + ", experienceRequired=" + experienceRequired + ", rate=" + rate
+				+ ", datePosted=" + datePosted + ", jobLink=" + jobLink + ", jobPortalId=" + jobPortalId
+				+ ", jobReferenceNumber=" + jobReferenceNumber + ", taxTypeId=" + taxTypeId + ", recruiterName="
+				+ recruiterName + ", recruiterEmail=" + recruiterEmail + ", recruiterPhone=" + recruiterPhone
+				+ ", jobSubmissionPortalId=" + jobSubmissionPortalId + ", portalName=" + portalName
+				+ ", commentOnCandidate=" + commentOnCandidate + ", minBillingRate=" + minBillingRate + ", externalId="
+				+ externalId + ", candidateName=" + candidateName + ", candidateCompany=" + candidateCompany
+				+ ", companyAddress=" + companyAddress + ", visaId=" + visaId + ", candidateExperience="
+				+ candidateExperience + ", expectedMaxSalary=" + expectedMaxSalary + ", expectedMinSalary="
+				+ expectedMinSalary + ", willingToRelocate=" + willingToRelocate + ", willingToNegotiateSalary="
+				+ willingToNegotiateSalary + ", reasonToFitForJob=" + reasonToFitForJob + ", hiringCompanyId="
+				+ hiringCompanyId + ", benchCandidateId=" + benchCandidateId + "]";
+	}
+
 }

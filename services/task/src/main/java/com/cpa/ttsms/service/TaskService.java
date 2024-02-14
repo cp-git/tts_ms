@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.ExternalTaskDTO;
+import com.cpa.ttsms.dto.InternalExternalListDTO;
 import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
@@ -130,4 +131,6 @@ public interface TaskService {
 	List<InternalTaskDTO> getInternalTaskAndTaskByBenchCandidateId(int employeeId);
 
 	List<ExternalTaskDTO> getExternalTaskAndTaskByHiringCompanyId(int hiringCompanyId);
+
+	InternalExternalListDTO getTodaysInternalAndExternalTaskByCompanyId(int companyId);
 }

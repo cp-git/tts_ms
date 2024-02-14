@@ -27,6 +27,7 @@ public class InternalExternalTaskDTO {
 	private int taskParent;
 	private boolean havingChild;
 	private int placementId;
+	private Date taskChangeDate;
 	private String reason;
 	private int employeeId;
 
@@ -80,7 +81,7 @@ public class InternalExternalTaskDTO {
 
 	public InternalExternalTaskDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy,
 			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
-			Date taskActualEndDate, int companyId, int taskParent, boolean havingChild, int placementId, String reason,
+			Date taskActualEndDate, int companyId, int taskParent, boolean havingChild, int placementId,Date taskChangeDate, String reason,
 			int employeeId, int internalId, String hiringCompanyName, String jobTitle, int jobLocationId,
 			String jobAddress, String jobCity, String jobState, int experienceRequired, float rate, Date datePosted,
 			String jobLink, int jobPortalId, String jobReferenceNumber, int taxTypeId, String recruiterName,
@@ -104,6 +105,7 @@ public class InternalExternalTaskDTO {
 		this.taskParent = taskParent;
 		this.havingChild = havingChild;
 		this.placementId = placementId;
+		this.taskChangeDate = taskChangeDate;
 		this.reason = reason;
 		this.employeeId = employeeId;
 		this.internalId = internalId;
@@ -157,7 +159,7 @@ public class InternalExternalTaskDTO {
 		this.taskParent = task.getTaskParent();
 		this.havingChild = task.isHavingChild();
 		this.placementId = task.getPlacementId();
-
+this.taskChangeDate = task.getTaskChangeDate();
 		this.internalId = internalTask.getInternalId();
 		this.benchCandidateId = internalTask.getBenchCandidateId();
 		this.jobPortalId = internalTask.getJobPortalId();
@@ -198,7 +200,7 @@ public class InternalExternalTaskDTO {
 		this.taskParent = task.getTaskParent();
 		this.havingChild = task.isHavingChild();
 		this.placementId = task.getPlacementId();
-
+this.taskChangeDate = task.getTaskChangeDate();
 		this.externalId = externalTask.getExternalId();
 		this.candidateName = externalTask.getCandidateName();
 		this.candidateCompany = externalTask.getCandidateCompany();
@@ -417,6 +419,17 @@ public class InternalExternalTaskDTO {
 	 */
 	public void setPlacementId(int placementId) {
 		this.placementId = placementId;
+	}
+	
+	public Date getTaskChangeDate() {
+		return taskChangeDate;
+	}
+
+	/**
+	 * @param placementId the placementId to set
+	 */
+	public void setTaskChangeDate(Date taskChangeDate) {
+		this.taskChangeDate = taskChangeDate;
 	}
 
 	/**

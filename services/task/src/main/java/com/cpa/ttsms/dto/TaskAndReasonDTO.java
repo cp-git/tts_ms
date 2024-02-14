@@ -35,6 +35,16 @@ public class TaskAndReasonDTO {
 	private String fileName;
 
 	private boolean havingChild;
+	
+	private Date taskChangeDate;
+
+	public Date getTaskChangeDate() {
+		return taskChangeDate;
+	}
+
+	public void setTaskChangeDate(Date taskChangeDate) {
+		this.taskChangeDate = taskChangeDate;
+	}
 
 	/**
 	 * @return the taskId
@@ -278,9 +288,11 @@ public class TaskAndReasonDTO {
 	 * @param fileName
 	 * @param havingChild
 	 */
+
 	public TaskAndReasonDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
 			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
-			int companyId, int taskParent, String reason, int employeeId, String fileName, boolean havingChild) {
+			int companyId, int taskParent, String reason, int employeeId, String fileName, boolean havingChild,
+			Date taskChangeDate) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -298,11 +310,10 @@ public class TaskAndReasonDTO {
 		this.employeeId = employeeId;
 		this.fileName = fileName;
 		this.havingChild = havingChild;
+		this.taskChangeDate = taskChangeDate;
 	}
 
-	/**
-	 * 
-	 */
+	
 	public TaskAndReasonDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -315,7 +326,10 @@ public class TaskAndReasonDTO {
 				+ taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate=" + taskEndDate
 				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
 				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", reason=" + reason + ", employeeId="
-				+ employeeId + ", fileName=" + fileName + ", havingChild=" + havingChild + "]";
+				+ employeeId + ", fileName=" + fileName + ", havingChild=" + havingChild + ", taskChangeDate="
+				+ taskChangeDate + "]";
 	}
+
+	
 
 }

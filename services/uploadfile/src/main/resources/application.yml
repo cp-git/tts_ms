@@ -28,4 +28,4 @@ server:
     key-alias: ttscertificate
 
 file:
-  base-path: ${DEMO_TTS_PATH}
+  base-path: /demo/tts

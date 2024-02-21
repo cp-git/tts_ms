@@ -47,9 +47,9 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	// private final String email_URL = "http://127.0.0.1:8080/email/sendMail";
+	// private final String email_URL = "http://44.193.95.50:8080/email/sendMail";
 	// private final String UPLOAD_FILE_URL =
-	// "http://127.0.0.1:8080/uploadfile/ttsms/upload";
+	// "http://44.193.95.50:8080/uploadfile/ttsms/upload";
 
 	@Value("${email.url}")
 	private String email_URL;
@@ -74,11 +74,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private PasswordRepo passwordRepository;
 
 	static {
-		// for 127.0.0.1 testing only
+		// for 44.193.95.50 testing only
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
 
 			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
-				if (hostname.equals("127.0.0.1")) {
+				if (hostname.equals("44.193.95.50")) {
 					return true;
 				}
 				return false;

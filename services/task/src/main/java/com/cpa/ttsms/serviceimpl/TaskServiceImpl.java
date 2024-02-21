@@ -75,15 +75,15 @@ public class TaskServiceImpl implements TaskService {
 	private String basePath;
 
 	// private final String REASON_API_URL =
-	// "http://127.0.0.1:8080/reason/ttsms/reason";
+	// "http://44.193.95.50:8080/reason/ttsms/reason";
 	// private final String UPLOAD_FILE_URL =
-	// "http://127.0.0.1:8080/uploadfile/ttsms/upload";
-	// private final String email_URL = "http://127.0.0.1:8080/email/taskMail";
+	// "http://44.193.95.50:8080/uploadfile/ttsms/upload";
+	// private final String email_URL = "http://44.193.95.50:8080/email/taskMail";
 	// private final String employee_URL =
-	// "http://127.0.0.1:8080/employee/ttsms/employee/";
+	// "http://44.193.95.50:8080/employee/ttsms/employee/";
 	// private final String status_URL =
-	// "http://127.0.0.1:8080/status/ttsms/status/";
-	// private final String task_URL = "http://127.0.0.1:8080/task/ttsms/task/";
+	// "http://44.193.95.50:8080/status/ttsms/status/";
+	// private final String task_URL = "http://44.193.95.50:8080/task/ttsms/task/";
 
 	@Value("${external-services.reason-api-url}")
 	private String REASON_API_URL;
@@ -129,11 +129,11 @@ public class TaskServiceImpl implements TaskService {
 	private final RestTemplate restTemplate;
 
 	static {
-		// for 127.0.0.1 testing only
+		// for 44.193.95.50 testing only
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
 
 			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
-				if (hostname.equals("127.0.0.1")) {
+				if (hostname.equals("44.193.95.50")) {
 					return true;
 				}
 				return false;

@@ -11,7 +11,7 @@ spring.jpa:
 
 spring.datasource:
   driverClassName: org.postgresql.Driver
-  url: jdbc:postgresql://127.0.0.1:5432/tts
+  url: jdbc:postgresql://44.193.95.50:5432/tts
   username: postgres
   password: "7$Rt6&m,6&Ui4!as9^Yu2"
 
@@ -31,9 +31,9 @@ file:
 
   # Define the URLs for external services
 external-services:
-  reason-api-url: https://127.0.0.1:8443/reason/ttsms/reason
-  upload-file-url: https://127.0.0.1:8443/uploadfile/ttsms/upload
-  email-url: https://127.0.0.1:8443/email/taskMail
-  employee-url: https://127.0.0.1:8443/employee/ttsms/employee/
-  status-url: https://127.0.0.1:8443/status/ttsms/status/
-  task-url: https://127.0.0.1:8443/task/ttsms/task/
+  reason-api-url: https://44.193.95.50:8443/reason/ttsms/reason
+  upload-file-url: https://44.193.95.50:8443/uploadfile/ttsms/upload
+  email-url: https://44.193.95.50:8443/email/taskMail
+  employee-url: https://44.193.95.50:8443/employee/ttsms/employee/
+  status-url: https://44.193.95.50:8443/status/ttsms/status/
+  task-url: https://44.193.95.50:8443/task/ttsms/task/

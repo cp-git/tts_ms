@@ -44,7 +44,7 @@ import com.cpa.ttsms.service.CompanyService;
 public class CompanyServiceImpl implements CompanyService {
 
 	// private final String UPLOAD_FILE_URL =
-	// "http://127.0.0.1:8080/uploadfile/ttsms/upload";
+	// "http://44.193.95.50:8080/uploadfile/ttsms/upload";
 
 	// Inject the value of 'file.upload-url' from application.properties or
 	// application.yml
@@ -68,11 +68,11 @@ public class CompanyServiceImpl implements CompanyService {
 	private final RestTemplate restTemplate;
 
 	static {
-		// for 127.0.0.1 testing only
+		// for 44.193.95.50 testing only
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
 
 			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
-				if (hostname.equals("127.0.0.1")) {
+				if (hostname.equals("44.193.95.50")) {
 					return true;
 				}
 				return false;

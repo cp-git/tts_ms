@@ -51,35 +51,20 @@ public class BenchCandidateController {
 	public ResponseEntity<Object> createBenchCandidate(@RequestBody BenchCandidate benchCandidate) throws CPException {
 		logger.debug("Entering createBenchCandidate");
 		logger.info("data of creating BenchCandidate  :" + benchCandidate.toString());
-
-		BenchCandidate createdBenchCandidate = null;
 		try {
-
-			BenchCandidate toCheckBenchCandidate = benchCandidateService
-					.getBenchCandidateByBenchCandidateId(benchCandidate.getBenchCandidateId());
-			logger.debug("existing benchCandidate :" + toCheckBenchCandidate);
-
-			if (toCheckBenchCandidate == null) {
-
-				// TODO: Uncomment below 2 lines and change the method name as per your Entity
-				// class
-				// benchCandidate.setCreatedby("admin");
-				// benchCandidate.setUpdatedby("admin");
-
-				createdBenchCandidate = benchCandidateService.createBenchCandidate(benchCandidate);
-				logger.info("BenchCandidate created :" + createdBenchCandidate);
-
-				return ResponseHandler.generateResponse(createdBenchCandidate, HttpStatus.CREATED);
-
+			BenchCandidate createdBenchCandidate = benchCandidateService.createBenchCandidate(benchCandidate);
+			if (createdBenchCandidate == null) {
+				logger.error(resourceBunde.getString("err007"));
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resourceBunde.getString("err007"));
 			} else {
-
-				logger.error(resourceBunde.getString("err003"));
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+				logger.info("created BenchCandidate :" + createdBenchCandidate);
+				return ResponseEntity.status(HttpStatus.CREATED).body(createdBenchCandidate);
 			}
 
-		} catch (Exception ex) {
-			logger.error("Failed BenchCandidate creation : " + ex.getMessage());
-			throw new CPException("err003", resourceBunde.getString("err003"));
+		} catch (CPException ex) {
+			System.out.println("hello " + ex.getErrorCode());
+			String errorMessage = resourceBunde.getString(ex.getErrorCode());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
 		}
 	}
 
@@ -174,24 +159,19 @@ public class BenchCandidateController {
 		logger.debug("Entering updateBenchCandidate");
 		logger.info("entered  updateBenchCandidate :" + benchCandidate);
 
-		BenchCandidate updatedBenchCandidate = null;
-
 		try {
-			updatedBenchCandidate = benchCandidateService.updateBenchCandidateByBenchCandidateId(benchCandidate,
-					benchCandidateId);
-
-			if (updatedBenchCandidate == null) {
-				logger.info(resourceBunde.getString("err004"));
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
+			BenchCandidate createdBenchCandidate = benchCandidateService.createBenchCandidate(benchCandidate);
+			if (createdBenchCandidate == null) {
+				logger.error(resourceBunde.getString("err010"));
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resourceBunde.getString("err010"));
 			} else {
-				logger.info("updated benchCandidate : " + updatedBenchCandidate);
-				return ResponseHandler.generateResponse(updatedBenchCandidate, HttpStatus.CREATED);
+				logger.info("Update BenchCandidate :" + createdBenchCandidate);
+				return ResponseEntity.status(HttpStatus.CREATED).body(createdBenchCandidate);
 			}
 
-		} catch (Exception ex) {
-			logger.error("Failed update BenchCandidate : " + ex.getMessage());
-			throw new CPException("err004", resourceBunde.getString("err004"));
-
+		} catch (CPException ex) {
+			String errorMessage = resourceBunde.getString(ex.getErrorCode());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
 		}
 
 	}

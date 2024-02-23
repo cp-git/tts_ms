@@ -10,7 +10,7 @@ participant ${Cservice}Repository as repo
 database DATABASE as db
 activate tts
 activate user
-  user-->tts : Enter URL-[http://44.193.95.50:8090/ttsms/${service}?${param}=all]
+  user-->tts : Enter URL-[http://127.0.0.1:8090/ttsms/${service}?${param}=all]
     alt#Gold Case:If any Exception occur
     tts-> main : 
     activate main

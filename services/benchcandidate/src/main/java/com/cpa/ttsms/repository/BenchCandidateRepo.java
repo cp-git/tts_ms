@@ -20,6 +20,8 @@ import com.cpa.ttsms.entity.BenchCandidate;
 @Repository
 public interface BenchCandidateRepo extends JpaRepository<BenchCandidate, Integer> {
 
+	public BenchCandidate findByBenchCandidateIdAndEmail(int benchcandidateid, String email);
+
 	public BenchCandidate findByBenchCandidateId(int benchcandidateid);
 
 	public List<Object> findAllByCompanyId(int companyId);
@@ -28,4 +30,5 @@ public interface BenchCandidateRepo extends JpaRepository<BenchCandidate, Intege
 	@Modifying
 	public int deleteByBenchCandidateId(int benchcandidateid);
 
+	public BenchCandidate findByEmail(String email);
 }

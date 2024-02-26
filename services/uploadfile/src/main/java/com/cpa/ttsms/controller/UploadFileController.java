@@ -1,6 +1,9 @@
 package com.cpa.ttsms.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,4 +160,50 @@ public class UploadFileController {
                 return uploadType;
         }
     }
+    
+    @GetMapping("/backup")
+	public void backupDirectory(HttpServletResponse response) {
+		try {
+			// Define the directory path to be backed up
+			Path directoryPath = Paths.get(basePath);
+			// Set content type and headers for the response
+			response.setContentType("application/zip");
+			response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=backup.zip");
+			// Get the response output stream
+			ServletOutputStream outputStream = response.getOutputStream();
+			// Create a ZipOutputStream to write to the response output stream
+			try (ZipOutputStream zipOut = new ZipOutputStream(outputStream)) {
+				// Compress each file/directory in the directory structure
+				compressDirectory(directoryPath, directoryPath.toFile(), zipOut);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+				throw new RuntimeException("Error occurred during backup", ex);
+			}
+		} catch (IOException ex) {
+			// If an IOException occurs during backup creation, return an error response
+			ex.printStackTrace();
+			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		}
+	}
+
+	// Method to recursively compress a directory and its contents
+	private void compressDirectory(Path rootPath, File file, ZipOutputStream zipOut) throws IOException {
+		if (file.isDirectory()) {
+			for (File child : file.listFiles()) {
+				compressDirectory(rootPath, child, zipOut);
+			}
+		} else {
+			String relativePath = rootPath.relativize(file.toPath()).toString();
+			zipOut.putNextEntry(new ZipEntry(relativePath));
+			try (InputStream is = new FileInputStream(file)) {
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+				while ((bytesRead = is.read(buffer)) != -1) {
+					zipOut.write(buffer, 0, bytesRead);
+				}
+			}
+			zipOut.closeEntry();
+		}
+	}
+
 }

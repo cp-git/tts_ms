@@ -28,4 +28,4 @@ server:
     key-alias: ttscertificate
 
 file:
-  base-path: D:/demo/tts
+  base-path: /demo/tts

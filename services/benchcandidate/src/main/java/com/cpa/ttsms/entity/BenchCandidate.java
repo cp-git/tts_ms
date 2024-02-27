@@ -58,9 +58,19 @@ public class BenchCandidate {
 
 	@Column(name = "willingtorelocate")
 	private boolean willingToRelocate;
+	
+	
+	@Column(name = "candidateplaced")
+	private boolean candidatePlaced;
+	
+	
 
 //	@Column(name = "minbillingrate")
 //	private int minBillingRate;
+	
+	
+	
+	
 
 	/**
 	 * @return the benchCandidateId
@@ -243,6 +253,17 @@ public class BenchCandidate {
 	public void setWillingToRelocate(boolean willingToRelocate) {
 		this.willingToRelocate = willingToRelocate;
 	}
+
+	public boolean isCandidatePlaced() {
+		return candidatePlaced;
+	}
+
+	public void setCandidatePlaced(boolean candidatePlaced) {
+		this.candidatePlaced = candidatePlaced;
+	}
+	
+	
+	
 
 //	/**
 //	 * @return the minBillingRate

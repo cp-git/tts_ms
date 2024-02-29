@@ -34,9 +34,16 @@ public class JobLocation {
 
 	@Column(name = "isforbench")
 	private boolean isForBench;
+	
+	
 
 	@Column(name = "isforsourcing")
 	private boolean isForSourcing;
+	
+	
+
+	@Column(name = "locationActive")
+	private boolean locationActive;
 
 	/**
 	 * @return the locationId
@@ -121,6 +128,16 @@ public class JobLocation {
 	public void setForSourcing(boolean isForSourcing) {
 		this.isForSourcing = isForSourcing;
 	}
+	
+	
+
+	public boolean isLocationActive() {
+		return locationActive;
+	}
+
+	public void setLocationActive(boolean locationActive) {
+		this.locationActive = locationActive;
+	}
 
 	/**
 	 * @param locationId
@@ -130,8 +147,9 @@ public class JobLocation {
 	 * @param isForBench
 	 * @param isForSourcing
 	 */
+	
 	public JobLocation(int locationId, String locationType, String locationDescription, int companyId,
-			boolean isForBench, boolean isForSourcing) {
+			boolean isForBench, boolean isForSourcing, boolean locationActive) {
 		super();
 		this.locationId = locationId;
 		this.locationType = locationType;
@@ -139,7 +157,11 @@ public class JobLocation {
 		this.companyId = companyId;
 		this.isForBench = isForBench;
 		this.isForSourcing = isForSourcing;
+		this.locationActive = locationActive;
 	}
+	
+	
+	
 
 	/**
 	 * 
@@ -153,8 +175,14 @@ public class JobLocation {
 	public String toString() {
 		return "JobLocation [locationId=" + locationId + ", locationType=" + locationType + ", locationDescription="
 				+ locationDescription + ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing="
-				+ isForSourcing + "]";
+				+ isForSourcing + ", locationActive=" + locationActive + "]";
 	}
+	
+	
+
+	
+
+	
 
 //TODO - add attributed and genrate setters and getters
 

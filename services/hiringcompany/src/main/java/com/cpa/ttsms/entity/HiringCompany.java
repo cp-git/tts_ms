@@ -66,6 +66,12 @@ public class HiringCompany {
 
 	@Column(name = "portalName")
 	private String portalName;
+	
+	
+	@Column(name = "userActive")
+	private boolean userActive;
+	
+	
 
 	/**
 	 * @return the hiringCompanyId
@@ -262,5 +268,15 @@ public class HiringCompany {
 	public void setPortalName(String portalName) {
 		this.portalName = portalName;
 	}
+
+	public boolean isUserActive() {
+		return userActive;
+	}
+
+	public void setUserActive(boolean userActive) {
+		this.userActive = userActive;
+	}
+	
+	
 
 }

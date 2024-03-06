@@ -38,6 +38,10 @@ public class JobPortal {
 
 	@Column(name = "isforsourcing")
 	private boolean isForSourcing;
+	
+	
+	@Column(name = "jobActive")
+	private boolean jobActive;
 
 	/**
 	 * @return the portalId
@@ -122,6 +126,16 @@ public class JobPortal {
 	public void setForSourcing(boolean isForSourcing) {
 		this.isForSourcing = isForSourcing;
 	}
+	
+	
+
+	public boolean isJobActive() {
+		return jobActive;
+	}
+
+	public void setJobActive(boolean jobActive) {
+		this.jobActive = jobActive;
+	}
 
 	/**
 	 * @param portalId
@@ -131,8 +145,10 @@ public class JobPortal {
 	 * @param isForBench
 	 * @param isForSourcing
 	 */
+	
+
 	public JobPortal(int portalId, String portalName, String portalDescription, int companyId, boolean isForBench,
-			boolean isForSourcing) {
+			boolean isForSourcing, boolean jobActive) {
 		super();
 		this.portalId = portalId;
 		this.portalName = portalName;
@@ -140,8 +156,10 @@ public class JobPortal {
 		this.companyId = companyId;
 		this.isForBench = isForBench;
 		this.isForSourcing = isForSourcing;
+		this.jobActive = jobActive;
 	}
-
+	
+	
 	/**
 	 * 
 	 */
@@ -154,7 +172,9 @@ public class JobPortal {
 	public String toString() {
 		return "JobPortal [portalId=" + portalId + ", portalName=" + portalName + ", portalDescription="
 				+ portalDescription + ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing="
-				+ isForSourcing + "]";
+				+ isForSourcing + ", jobActive=" + jobActive + "]";
 	}
+
+	
 
 }

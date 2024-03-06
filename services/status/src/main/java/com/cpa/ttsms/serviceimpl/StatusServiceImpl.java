@@ -131,6 +131,8 @@ public class StatusServiceImpl implements StatusService {
 			toStatusAlreadyPresent.setActualStartDate(status.isActualStartDate());
 			toStatusAlreadyPresent.setActualEndDate(status.isActualEndDate());
 			toStatusAlreadyPresent.setFinalStatus(status.isFinalStatus());
+			toStatusAlreadyPresent.setStatusActive(status.isStatusActive());
+			
 
 			updatedStatus = statusRepo.save(toStatusAlreadyPresent);
 

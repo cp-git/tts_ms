@@ -38,6 +38,9 @@ public class Visa {
 
 	@Column(name = "isforsourcing")
 	private boolean isForSourcing;
+	
+	@Column(name = "visaActive")
+	private boolean visaActive;
 
 	/**
 	 * @return the visaId
@@ -122,6 +125,16 @@ public class Visa {
 	public void setForSourcing(boolean isForSourcing) {
 		this.isForSourcing = isForSourcing;
 	}
+	
+	
+
+	public boolean isVisaActive() {
+		return visaActive;
+	}
+
+	public void setVisaActive(boolean visaActive) {
+		this.visaActive = visaActive;
+	}
 
 	/**
 	 * @param visaId
@@ -131,8 +144,9 @@ public class Visa {
 	 * @param isForBench
 	 * @param isForSourcing
 	 */
+	
 	public Visa(int visaId, String visaType, String visaDescription, int companyId, boolean isForBench,
-			boolean isForSourcing) {
+			boolean isForSourcing, boolean visaActive) {
 		super();
 		this.visaId = visaId;
 		this.visaType = visaType;
@@ -140,7 +154,10 @@ public class Visa {
 		this.companyId = companyId;
 		this.isForBench = isForBench;
 		this.isForSourcing = isForSourcing;
+		this.visaActive = visaActive;
 	}
+	
+	
 
 	/**
 	 * 
@@ -153,7 +170,12 @@ public class Visa {
 	@Override
 	public String toString() {
 		return "Visa [visaId=" + visaId + ", visaType=" + visaType + ", visaDescription=" + visaDescription
-				+ ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing=" + isForSourcing + "]";
+				+ ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing=" + isForSourcing
+				+ ", visaActive=" + visaActive + "]";
 	}
+
+	
+
+	
 
 }

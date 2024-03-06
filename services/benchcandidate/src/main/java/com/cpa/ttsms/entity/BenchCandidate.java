@@ -58,6 +58,9 @@ public class BenchCandidate {
 
 	@Column(name = "willingtorelocate")
 	private boolean willingToRelocate;
+	
+	@Column(name = "userActive")
+	private boolean userActive;
 
 //	@Column(name = "minbillingrate")
 //	private int minBillingRate;
@@ -243,6 +246,17 @@ public class BenchCandidate {
 	public void setWillingToRelocate(boolean willingToRelocate) {
 		this.willingToRelocate = willingToRelocate;
 	}
+
+	public boolean isUserActive() {
+		return userActive;
+	}
+
+	public void setUserActive(boolean userActive) {
+		this.userActive = userActive;
+	}
+	
+	
+	
 
 //	/**
 //	 * @return the minBillingRate

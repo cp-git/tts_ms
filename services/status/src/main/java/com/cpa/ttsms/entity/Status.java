@@ -43,6 +43,10 @@ public class Status {
 
 	@Column(name = "finalstatus", nullable = false)
 	private boolean finalStatus;
+	
+	
+	@Column(name = "statusActive")
+	private boolean statusActive;
 
 	/**
 	 * @return the statusId
@@ -155,6 +159,16 @@ public class Status {
 	public void setFinalStatus(boolean finalStatus) {
 		this.finalStatus = finalStatus;
 	}
+	
+	
+
+	public boolean isStatusActive() {
+		return statusActive;
+	}
+
+	public void setStatusActive(boolean statusActive) {
+		this.statusActive = statusActive;
+	}
 
 	/**
 	 * @param statusId
@@ -166,8 +180,11 @@ public class Status {
 	 * @param actualEndDate
 	 * @param finalStatus
 	 */
+
+
+
 	public Status(int statusId, String statusCode, String statusDescription, int statusOrder, int companyId,
-			boolean actualStartDate, boolean actualEndDate, boolean finalStatus) {
+			boolean actualStartDate, boolean actualEndDate, boolean finalStatus, boolean statusActive) {
 		super();
 		this.statusId = statusId;
 		this.statusCode = statusCode;
@@ -177,8 +194,10 @@ public class Status {
 		this.actualStartDate = actualStartDate;
 		this.actualEndDate = actualEndDate;
 		this.finalStatus = finalStatus;
+		this.statusActive = statusActive;
 	}
 
+	
 	/**
 	 * 
 	 */
@@ -190,7 +209,11 @@ public class Status {
 	@Override
 	public String toString() {
 		return "Status [statusId=" + statusId + ", statusCode=" + statusCode + ", statusDescription="
-				+ statusDescription + ", statusOrder=" + statusOrder + "]";
+				+ statusDescription + ", statusOrder=" + statusOrder + ", companyId=" + companyId + ", actualStartDate="
+				+ actualStartDate + ", actualEndDate=" + actualEndDate + ", finalStatus=" + finalStatus
+				+ ", statusActive=" + statusActive + "]";
 	}
+
+	
 
 }

@@ -37,6 +37,13 @@ public class Taxtype {
 
 	@Column(name = "isforsourcing")
 	private boolean isForSourcing;
+	
+	
+	@Column(name = "taxActive")
+	private boolean taxActive;
+	
+	
+	
 
 	/**
 	 * @return the taxTypeId
@@ -121,6 +128,17 @@ public class Taxtype {
 	public void setForSourcing(boolean isForSourcing) {
 		this.isForSourcing = isForSourcing;
 	}
+	
+	
+	
+
+	public boolean isTaxActive() {
+		return taxActive;
+	}
+
+	public void setTaxActive(boolean taxActive) {
+		this.taxActive = taxActive;
+	}
 
 	/**
 	 * @param taxTypeId
@@ -130,8 +148,9 @@ public class Taxtype {
 	 * @param isForBench
 	 * @param isForSourcing
 	 */
+	
 	public Taxtype(int taxTypeId, String taxTypeName, String taxTypeDescription, int companyId, boolean isForBench,
-			boolean isForSourcing) {
+			boolean isForSourcing, boolean taxActive) {
 		super();
 		this.taxTypeId = taxTypeId;
 		this.taxTypeName = taxTypeName;
@@ -139,7 +158,11 @@ public class Taxtype {
 		this.companyId = companyId;
 		this.isForBench = isForBench;
 		this.isForSourcing = isForSourcing;
+		this.taxActive = taxActive;
 	}
+	
+	
+	
 
 	/**
 	 * 
@@ -153,7 +176,12 @@ public class Taxtype {
 	public String toString() {
 		return "Taxtype [taxTypeId=" + taxTypeId + ", taxTypeName=" + taxTypeName + ", taxTypeDescription="
 				+ taxTypeDescription + ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing="
-				+ isForSourcing + "]";
+				+ isForSourcing + ", taxActive=" + taxActive + "]";
 	}
+	
+	
+
+	
+
 
 }

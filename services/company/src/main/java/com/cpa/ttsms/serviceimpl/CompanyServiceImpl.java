@@ -418,6 +418,8 @@ public class CompanyServiceImpl implements CompanyService {
 			status.setStatusDescription("Description for " + statusCode);
 			status.setStatusOrder(statusOrderMap.get(statusCode)); // Set the status order
 			status.setCompanyId(companyId);
+			status.setStatusActive(true);
+		
 
 			if (statusCode.equals("In-progress")) {
 				status.setActualStartDate(true);

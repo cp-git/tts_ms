@@ -35,121 +35,120 @@ import com.cpa.ttsms.service.UploadFileService;
 @RequestMapping("/ttsms")
 public class UploadFileController {
 
-    @Autowired
-    private UploadFileService uploadFileService;
+	@Autowired
+	private UploadFileService uploadFileService;
 
-    // The ResourceBundle is used to retrieve localized messages.
-    private ResourceBundle resourceBundle;
+	// The ResourceBundle is used to retrieve localized messages.
+	private ResourceBundle resourceBundle;
 
-    // The logger is used for logging messages related to this class.
-    private static Logger logger;
+	// The logger is used for logging messages related to this class.
+	private static Logger logger;
 
-    // Inject the value of 'file.base-path' from application.yml file
-    @Value("${file.base-path}")
-    private String basePath;
+	// Inject the value of 'file.base-path' from application.yml file
+	@Value("${file.base-path}")
+	private String basePath;
 
-    // Constructor
-    UploadFileController() {
-        // Initialize the ResourceBundle for error messages with the US locale
-        resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
-        
-        // Initialize the logger for this class
-        logger = Logger.getLogger(UploadFileController.class);
-    }
+	// Constructor
+	UploadFileController() {
+		// Initialize the ResourceBundle for error messages with the US locale
+		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 
-    // Handling file upload
-    @PostMapping("/upload")
-    public ResponseEntity<Object> uploadFile(@RequestParam("filename") String fileName,
-                                             @RequestParam("file") MultipartFile file,
-                                             @RequestParam("folder") String folderName) throws CPException {
-        try {
-            boolean isFileCreated = false;
+		// Initialize the logger for this class
+		logger = Logger.getLogger(UploadFileController.class);
+	}
 
-            // Call the uploadFileService to upload the file to the specified folder
-            isFileCreated = uploadFileService.uploadFile(basePath, folderName, fileName, file);
-            
-            if (isFileCreated) {
-                // Generate a success response if the file was uploaded successfully
-                return ResponseHandler.generateResponse(HttpStatus.OK, "msg001");
-            } else {
-                // Generate an internal server error response if the file upload failed
-                return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err001");
-            }
-        } catch (Exception ex) {
-            // Log the error and throw a custom CPException with an error code and message.
-            logger.error("Failed to upload " + ex.getMessage());
-            throw new CPException("err001", resourceBundle.getString("err001"));
-        }
-    }
+	// Handling file upload
+	@PostMapping("/upload")
+	public ResponseEntity<Object> uploadFile(@RequestParam("filename") String fileName,
+			@RequestParam("file") MultipartFile file, @RequestParam("folder") String folderName) throws CPException {
+		try {
+			boolean isFileCreated = false;
 
-    // Handling file download
-    @GetMapping("/downloadfile")
-    public ResponseEntity<Resource> downloadFile(@RequestParam("foldername") String type,
-                                                 @RequestParam("filename") String filename) {
-        try {
-            // Determine the subdirectory based on the type (employee, company, task)
-            String uploadSubDir = determineUploadSubDir(type);
+			// Call the uploadFileService to upload the file to the specified folder
+			isFileCreated = uploadFileService.uploadFile(basePath, folderName, fileName, file);
 
-            // Resolve the complete file path using the specified type and filename
-            Path filePath = Paths.get(basePath, uploadSubDir, filename);
+			if (isFileCreated) {
+				// Generate a success response if the file was uploaded successfully
+				return ResponseHandler.generateResponse(HttpStatus.OK, "msg001");
+			} else {
+				// Generate an internal server error response if the file upload failed
+				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err001");
+			}
+		} catch (Exception ex) {
+			// Log the error and throw a custom CPException with an error code and message.
+			logger.error("Failed to upload " + ex.getMessage());
+			throw new CPException("err001", resourceBundle.getString("err001"));
+		}
+	}
 
-            // Create a Resource from the file's URI
-            Resource resource = new UrlResource(filePath.toUri());
+	// Handling file download
+	@GetMapping("/downloadfile")
+	public ResponseEntity<Resource> downloadFile(@RequestParam("foldername") String type,
+			@RequestParam("filename") String filename) {
+		try {
+			// Determine the subdirectory based on the type (employee, company, task)
+			String uploadSubDir = determineUploadSubDir(type);
 
-            // Prepare the response with appropriate headers for file download
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                    .body(resource);
-        } catch (MalformedURLException e) {
-            // If the file's URL cannot be formed, respond with a not found status
-            return ResponseEntity.notFound().build();
-        }
-    }
+			// Resolve the complete file path using the specified type and filename
+			Path filePath = Paths.get(basePath, uploadSubDir, filename);
 
-    // Get a list of files by type
-    @GetMapping("/downloadfile/getfiles/{type}")
-    public ResponseEntity<List<String>> getFilesByType(@PathVariable String type) {
-        // Create a list to store file names
-        List<String> fileNames = new ArrayList<>();
+			// Create a Resource from the file's URI
+			Resource resource = new UrlResource(filePath.toUri());
 
-        // Determine the subdirectory based on the type (employee, company, task)
-        String uploadSubDir = determineUploadSubDir(type);
+			// Prepare the response with appropriate headers for file download
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+					.body(resource);
+		} catch (MalformedURLException e) {
+			// If the file's URL cannot be formed, respond with a not found status
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-        // Create a File object for the specified subdirectory
-        File uploadDir = new File(basePath, uploadSubDir);
+	// Get a list of files by type
+	@GetMapping("/downloadfile/getfiles/{type}")
+	public ResponseEntity<List<String>> getFilesByType(@PathVariable String type) {
+		// Create a list to store file names
+		List<String> fileNames = new ArrayList<>();
 
-        // Check if the subdirectory exists and is a directory
-        if (uploadDir.exists() && uploadDir.isDirectory()) {
-            // List all files in the subdirectory
-            File[] files = uploadDir.listFiles();
+		// Determine the subdirectory based on the type (employee, company, task)
+		String uploadSubDir = determineUploadSubDir(type);
 
-            // Iterate through the files and add file names to the list
-            if (files != null) {
-                for (File file : files) {
-                    // Check if the current item is a regular file
-                    if (file.isFile()) {
-                        // Add the name of the file to the list
-                        fileNames.add(file.getName());
-                    }
-                }
-            }
-        }
+		// Create a File object for the specified subdirectory
+		File uploadDir = new File(basePath, uploadSubDir);
 
-        // Respond with the list of file names as a ResponseEntity
-        return ResponseEntity.ok(fileNames);
-    }
+		// Check if the subdirectory exists and is a directory
+		if (uploadDir.exists() && uploadDir.isDirectory()) {
+			// List all files in the subdirectory
+			File[] files = uploadDir.listFiles();
 
-    // Determine the upload subdirectory based on the upload type
-    private String determineUploadSubDir(String uploadType) {
-        switch (uploadType) {
-            case "employee":
-                return "employee";
-            case "company":
-                return "company";
-            case "task":
-                return "task";
-            default:
-                return uploadType;
-        }
-    }
+			// Iterate through the files and add file names to the list
+			if (files != null) {
+				for (File file : files) {
+					// Check if the current item is a regular file
+					if (file.isFile()) {
+						// Add the name of the file to the list
+						fileNames.add(file.getName());
+					}
+				}
+			}
+		}
+
+		// Respond with the list of file names as a ResponseEntity
+		return ResponseEntity.ok(fileNames);
+	}
+
+	// Determine the upload subdirectory based on the upload type
+	private String determineUploadSubDir(String uploadType) {
+		switch (uploadType) {
+		case "employee":
+			return "employee";
+		case "company":
+			return "company";
+		case "task":
+			return "task";
+		default:
+			return uploadType;
+		}
+	}
 }

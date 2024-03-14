@@ -1314,7 +1314,7 @@ public class TaskServiceImpl implements TaskService {
 				if (file != null) {
 
 					reason.setReasonText(internalExternalTaskDTO.getReason() + " ( File Attached: "
-							+ file.getOriginalFilename() + ")");
+							+ file.getOriginalFilename() + " )");
 
 				} else {
 					reason.setReasonText(internalExternalTaskDTO.getReason());

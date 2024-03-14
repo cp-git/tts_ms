@@ -121,4 +121,5 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 	public List<Task> findByCompanyId(int companyId);
 
 	List<Task> findByCompanyIdAndTaskChangeDateAndPlacementId(int companyId, Date today, int id);
+
 }

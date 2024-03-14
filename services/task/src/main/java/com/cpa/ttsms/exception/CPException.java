@@ -18,6 +18,11 @@ public class CPException extends Exception {
 		this.message = message;
 	}
 
+	public CPException(CPException e) {
+		this.errorCode = e.getErrorCode();
+		this.message = e.getMessage();
+	}
+
 	/**
 	 * @return the errorCode
 	 */

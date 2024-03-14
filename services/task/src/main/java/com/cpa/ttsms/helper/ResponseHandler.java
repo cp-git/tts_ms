@@ -90,4 +90,9 @@ public class ResponseHandler {
 		return new ResponseEntity<List<Object>>(list, status);
 	}
 
+	public static ResponseEntity<Object> generateResponseForErrorMessage(HttpStatus status, String code) {
+		String errorMessage = resourceBunde.getString(code);
+		return ResponseEntity.status(status).body(errorMessage);
+	}
+
 }

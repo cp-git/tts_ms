@@ -23,6 +23,7 @@ import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.entity.ExternalTask;
 import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Task;
+import com.cpa.ttsms.exception.CPException;
 
 public interface TaskService {
 
@@ -110,7 +111,7 @@ public interface TaskService {
 	 * @param task The Task object to be created.
 	 * @return The created Task object.
 	 */
-	InternalExternalTaskDTO createOrUpdateTask(InternalExternalTaskDTO task, MultipartFile file);
+	InternalExternalTaskDTO createOrUpdateTask(InternalExternalTaskDTO task, MultipartFile file) throws CPException;
 
 	/**
 	 * Retrieves a task by its unique ID.
@@ -133,4 +134,6 @@ public interface TaskService {
 	List<ExternalTaskDTO> getExternalTaskAndTaskByHiringCompanyId(int hiringCompanyId);
 
 	InternalExternalListDTO getTodaysInternalAndExternalTaskByCompanyId(int companyId);
+
+	int deleteFileByTaskIdAndFileName(int taskId, String fileName) throws CPException;
 }

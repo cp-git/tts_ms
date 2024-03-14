@@ -475,18 +475,56 @@ public class TaskController {
 				// response
 				// with HTTP status INTERNAL_SERVER_ERROR and an error message "err003"
 				logger.error(resourceBundle.getString("err003"));
-				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+				return ResponseHandler.generateResponseForErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 			}
 
-		} catch (Exception ex) {
+		} catch (CPException ex) {
 			// If an exception occurs during task creation, log the error and throw a custom
 			// CPException
 			// with the error message "err003" and the localized error message from the
 			// resource bundle.
+
 			logger.error("Failed Task creation: " + ex.getMessage());
-			throw new CPException("err003", resourceBundle.getString("err003"));
+			return ResponseHandler.generateResponseForErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getErrorCode());
+
 		}
 	}
+//	@PostMapping("/addtask")
+//	public ResponseEntity<Object> createOrUpdateTask(
+//			@RequestPart("task") InternalExternalTaskDTO internalExternalTaskDTO,
+//			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+//		// Log that the method has been entered and print task details
+//		logger.debug("Entering createOrUpdateTask");
+//		logger.info("Data of creating Task: " + internalExternalTaskDTO.toString());
+//
+//		try {
+//
+//			InternalExternalTaskDTO createdTask = taskService.createOrUpdateTask(internalExternalTaskDTO, file);
+//			logger.info("createdTask " + createdTask);
+//
+//			if (createdTask != null) {
+//				logger.info("Task created: " + createdTask.getTaskName());
+//
+//				// Return a successful response with the created task and HTTP status CREATED
+//				return ResponseHandler.generateResponse(createdTask, HttpStatus.CREATED);
+//
+//			} else {
+//				// If the task with the provided task name already exists, return an error
+//				// response
+//				// with HTTP status INTERNAL_SERVER_ERROR and an error message "err003"
+//				logger.error(resourceBundle.getString("err003"));
+//				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+//			}
+//
+//		} catch (Exception ex) {
+//			// If an exception occurs during task creation, log the error and throw a custom
+//			// CPException
+//			// with the error message "err003" and the localized error message from the
+//			// resource bundle.
+//			logger.error("Failed Task creation: " + ex.getMessage());
+//			throw new CPException("err003", resourceBundle.getString("err003"));
+//		}
+//	}
 
 	/**
 	 * Endpoint to get a task and internal or external task by its ID.
@@ -741,4 +779,5 @@ public class TaskController {
 	public InternalExternalListDTO getTodaysInternalAndExternalTaskByCompanyId(@PathVariable int companyId) {
 		return taskService.getTodaysInternalAndExternalTaskByCompanyId(companyId);
 	}
+
 }

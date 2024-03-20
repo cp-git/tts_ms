@@ -1292,20 +1292,28 @@ public class TaskServiceImpl implements TaskService {
 
 					// building request entity using values and header
 					HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
+					try {
+						// calling api for uploading file
+						ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
+								String.class);
+						logger.info("response" + response);
+						if (response != null && response.getStatusCode() == HttpStatus.OK) {
+							logger.info("file uploaded");
+						} else {
+							logger.debug("failed to upload file");
+							String message = resourceBundle.getString("err010");
+							logger.error(
+									"Error uploading data to remote microservice: " + response.getStatusCodeValue());
 
-					// calling api for uploading file
-					ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
-							String.class);
-
-					if (response.getStatusCode() == HttpStatus.OK) {
-						logger.info("file uploaded");
-					} else {
-						logger.debug("failed to upload file");
+							throw new CPException("err010", message);
+						}
+					} catch (Exception e) {
 						String message = resourceBundle.getString("err010");
-						logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
+						logger.error("Error uploading data to remote microservice2: ");
 
 						throw new CPException("err010", message);
 					}
+
 				}
 
 				// adding reason
@@ -1339,10 +1347,10 @@ public class TaskServiceImpl implements TaskService {
 				return internalExternalTaskDTO;
 			}
 		} catch (CPException e) {
-			logger.error("Error while processing data: " + e.getMessage(), e);
+			logger.error("Error while processing data2: " + e.getMessage(), e);
 			throw new CPException(e);
 		} catch (Exception ex) {
-			logger.error("Error while processing data: " + ex.getMessage(), ex);
+			logger.error("Error while processing data3: " + ex.getMessage(), ex);
 		}
 //		logger.debug("failed to create/update task");
 //		String message = resourceBundle.getString("err012");

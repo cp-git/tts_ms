@@ -1,6 +1,7 @@
 package com.cpa.ttsms.controller;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -92,8 +93,25 @@ public class JwtController {
     public RefreshToken createRefreshToken(@RequestParam String username) {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
         // Map RefreshToken to RefreshTokenDTO if needed
+        System.out.println(refreshToken);
         return refreshToken;
     }
+    
+//    @PostMapping("/create-refresh-token")
+//    public ResponseEntity<?> createRefreshToken(@RequestParam String username) {
+//        Optional<RefreshToken> existingTokenOptional = refreshTokenService.findByUsername(username);
+//        System.out.println("entered refresh token");
+//        if (existingTokenOptional.isPresent()) {
+//        	System.out.println("entered in If");
+//            // If a refresh token already exists for the given username, return a response indicating that
+//            return ResponseEntity.badRequest().body("Refresh token already exists for the username.");
+//        } else {
+//            // Create a new refresh token since one doesn't exist for the given username
+//            RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
+//            // Map RefreshToken to RefreshTokenDTO if needed
+//            return ResponseEntity.ok(refreshToken);
+//        }
+//    }
     
     @PostMapping("/login")
     public JwtResponse authenticateAndGetToken(@RequestBody AuthRequest authRequest) {

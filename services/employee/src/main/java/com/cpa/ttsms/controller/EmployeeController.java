@@ -98,6 +98,8 @@ public class EmployeeController {
 	    // Constructor to initialize WebClient
 	    public EmployeeController(WebClient.Builder webClientBuilder, RestTemplate restTemplate) {
 	        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8010/security").build();
+//	        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8090").build();
+
 	        System.out.println("Entered in Controller class");
 	        System.out.println(webClient);
 	        resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
@@ -128,7 +130,8 @@ public class EmployeeController {
 	            HttpEntity<String> entity = new HttpEntity<>(headers);
 
 	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
-	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+//	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+	            String checkTokenUrl = BASE_URL + "token/checkToken";
 
 	            // Make the HTTP GET request to the checkToken endpoint.
 	            ResponseEntity<String> response = restTemplate.exchange(
@@ -637,14 +640,14 @@ public class EmployeeController {
 	    try {
 	        // Call the employeeService to validate the username and password.
 	        isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
-
+	        System.out.println("Entered in Controllr after service");
 	        // If the password is valid, return the Password object.
 	        if (isPasswordValid != null) {
-	            RefreshToken refreshToken = webClient.post()
-	                    .uri("/token/create-refresh-token?username={username}", username)
-	                    .retrieve()
-	                    .bodyToMono(RefreshToken.class)
-	                    .block();
+//	            RefreshToken refreshToken = webClient.post()
+//	                    .uri("/token/create-refresh-token?username={username}", username)
+//	                    .retrieve()
+//	                    .bodyToMono(RefreshToken.class)
+//	                    .block();
 	            JwtResponse jwtResponse = new JwtResponse();
 	            String token = webClient.post()
 	                    .uri("/token/generateToken")
@@ -667,7 +670,7 @@ public class EmployeeController {
 //	              );
 
 	            jwtResponse.setAccessToken(token);
-	            jwtResponse.setTokenUniqueID(refreshToken.getTokenUniqueID());
+//	            jwtResponse.setTokenUniqueID(refreshToken.getTokenUniqueID());
 
 	            response.put("jwtResponse", jwtResponse);
 	            response.put("isPasswordValid", isPasswordValid);

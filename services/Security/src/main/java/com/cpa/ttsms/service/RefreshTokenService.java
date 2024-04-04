@@ -46,6 +46,10 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByTokenUniqueID(token);
     }
 
+    public Optional<RefreshToken> findByUsername(String username) {
+        return refreshTokenRepository.findByPassword(userInfoRepository.findByUsername(username));
+    }
+
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {

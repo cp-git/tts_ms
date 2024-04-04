@@ -54,10 +54,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Value("${email.url}")
 	private String email_URL;
 
-	@Value("${upload.file.url}")
-	private String UPLOAD_FILE_URL;
+//	@Value("${upload.file.url}")
+//	private String UPLOAD_FILE_URL;
 
 	private final RestTemplate restTemplate;
+	
+	private final String UPLOAD_FILE_URL = "http://127.0.0.1:8010/uploadfile/ttsms/upload";
 
 	// Inject the value of 'file.base-path' from application.yml file
 	@Value("${file.base-path}")

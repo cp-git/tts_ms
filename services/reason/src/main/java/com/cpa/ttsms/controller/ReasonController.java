@@ -11,15 +11,21 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cpa.ttsms.entity.Reason;
 import com.cpa.ttsms.exception.CPException;
@@ -37,11 +43,44 @@ public class ReasonController {
 	private ResourceBundle resourceBundle;
 	private static Logger logger;
 
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
+
+	@Autowired
+	RestTemplate restTemplate;
+
 	ReasonController() {
 		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(ReasonController.class);
 	}
 
+
+	  private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
 	/**
 	 * Handles the creation of a new reason.
 	 *
@@ -83,11 +122,13 @@ public class ReasonController {
 	 * @throws CPException
 	 */
 	@GetMapping("/reason/{taskId}")
-	public ResponseEntity<List<Object>> getReasonsByTaskId(@PathVariable("taskId") int taskId) throws CPException {
+	public ResponseEntity<List<Object>> getReasonsByTaskId(@PathVariable("taskId") int taskId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.info("Getting reasons for Task ID: " + taskId);
 		List<Object> reasons = null;
 
 		try {
+			callCheckToken(authHeader);
 			// Call the reasonService to retrieve reasons for the specified task ID
 			reasons = reasonService.getReasonsByTaskId(taskId);
 

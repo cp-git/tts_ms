@@ -45,8 +45,10 @@ public class UploadFileController {
 	private static Logger logger;
 
 	// Inject the value of 'file.base-path' from application.yml file
-	@Value("${file.base-path}")
-	private String basePath;
+//	@Value("${file.base-path}")
+//	private String basePath;
+	 private final String basePath = "D:/demo/tts";
+	
 
 	// Constructor
 	UploadFileController() {
@@ -64,9 +66,10 @@ public class UploadFileController {
 		try {
 			boolean isFileCreated = false;
 
+		
 			// Call the uploadFileService to upload the file to the specified folder
 			isFileCreated = uploadFileService.uploadFile(basePath, folderName, fileName, file);
-
+			System.out.println("isFileCreated"+isFileCreated);
 			if (isFileCreated) {
 				// Generate a success response if the file was uploaded successfully
 				return ResponseHandler.generateResponse(HttpStatus.OK, "msg001");
@@ -80,6 +83,29 @@ public class UploadFileController {
 			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
 	}
+//	@PostMapping("/upload")
+//	public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file,
+//	        @RequestParam("filename") String fileName, @RequestParam("folder") String folderName) throws Exception {
+//	    try {
+//	        boolean isFileCreated = false;
+//
+//	        // Call the uploadFileService to upload the file to the specified folder
+//	        isFileCreated = uploadFileService.uploadFile(basePath, folderName, fileName, file);
+//
+//	        if (isFileCreated) {
+//	            // Generate a success response if the file was uploaded successfully
+//	            return ResponseHandler.generateResponse(HttpStatus.OK, "msg001");
+//	        } else {
+//	            // Generate an internal server error response if the file upload failed
+//	            return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err001");
+//	        }
+//	    } catch (Exception ex) {
+//	        // Log the error and throw a custom CPException with an error code and message.
+//	        logger.error("Failed to upload " + ex.getMessage());
+//	        throw new CPException("err001", resourceBundle.getString("err001"));
+//	    }
+//	}
+
 
 	// Handling file download
 	@GetMapping("/downloadfile")

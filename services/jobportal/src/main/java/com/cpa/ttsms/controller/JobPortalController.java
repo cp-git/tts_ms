@@ -13,7 +13,11 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,8 +26,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cpa.ttsms.entity.JobPortal;
 import com.cpa.ttsms.exception.CPException;
@@ -38,22 +44,55 @@ public class JobPortalController {
 	@Autowired
 	private JobPortalService jobportalService;;
 
+	@Autowired
+	private RestTemplate restTemplate;
 	private ResourceBundle resourceBunde;
 	private static Logger logger;
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
 
 	JobPortalController() {
 		resourceBunde = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(JobPortalController.class);
 	}
 
+	  private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
+	  
+	  
 	@PostMapping("/jobportal")
-	public ResponseEntity<Object> createJobPortal(@RequestBody JobPortal jobportal) throws CPException {
+	public ResponseEntity<Object> createJobPortal(@RequestBody JobPortal jobportal,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering createJobPortal");
 		logger.info("data of creating JobPortal  :" + jobportal.toString());
 
 		JobPortal createdJobPortal = null;
 		try {
-
+			callCheckToken(authHeader);
 			JobPortal toCheckJobPortal = jobportalService.getJobPortalByjobPortalId(jobportal.getPortalId());
 			logger.debug("existing jobportal :" + toCheckJobPortal);
 
@@ -163,13 +202,15 @@ public class JobPortalController {
 
 	@PutMapping("/jobportal/{portalId}")
 	public ResponseEntity<Object> updateJobPortalByjobPortalId(@RequestBody JobPortal jobportal,
-			@PathVariable("portalId") int portalId) throws CPException {
+			@PathVariable("portalId") int portalId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering updateJobPortal");
 		logger.info("entered  updateJobPortal :" + jobportal);
-
+		
 		JobPortal updatedJobPortal = null;
 
 		try {
+			callCheckToken(authHeader);
 			updatedJobPortal = jobportalService.updateJobPortalByjobPortalId(jobportal, portalId);
 
 			if (updatedJobPortal == null) {
@@ -189,13 +230,14 @@ public class JobPortalController {
 	}
 
 	@GetMapping("/jobportals/{companyId}")
-	public ResponseEntity<List<Object>> getJobPortalByCompanyId(@PathVariable("companyId") int companyId)
+	public ResponseEntity<List<Object>> getJobPortalByCompanyId(@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader)
 			throws CPException {
 		logger.debug("Entering getAllVisa");
 
 		List<Object> portals = null;
 
 		try {
+			callCheckToken(authHeader);
 			portals = jobportalService.getAllPortalsByCompanyId(companyId);
 
 			if (portals != null && !portals.isEmpty()) {

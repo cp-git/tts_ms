@@ -19,11 +19,12 @@ public class UploadFileServiceImpl implements UploadFileService {
 		try {
 			// Define the subdirectory where the file will be uploaded
 			String uploadSubDir = folderName;
-
+			System.out.println(uploadSubDir);
 			// Create a File object representing the directory where the file will be
 			// uploaded
 			File uploadDir = new File(basePath, uploadSubDir);
-
+			System.out.println("uploadDir");
+			System.out.println(uploadDir);
 			// If the directory does not exist, create it
 			if (!uploadDir.exists()) {
 				uploadDir.mkdirs();
@@ -31,7 +32,8 @@ public class UploadFileServiceImpl implements UploadFileService {
 
 			// Create a Path object representing the complete file path
 			Path filePath = Path.of(uploadDir.getAbsolutePath(), fileName);
-
+			System.out.println("filePath");
+			System.out.println(filePath);
 			// Copy the content of the uploaded file to the specified file path, replacing
 			// if it already exists
 			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);

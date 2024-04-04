@@ -8,7 +8,11 @@
 package com.cpa.ttsms.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,7 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,21 +38,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.cpa.ttsms.dto.EmployeeAndEmployeePhotosDTO;
 import com.cpa.ttsms.dto.EmployeeAndPasswordDTO;
 import com.cpa.ttsms.dto.EmployeePasswordAndEmployeePhotosDTO;
+import com.cpa.ttsms.dto.JwtResponse;
 import com.cpa.ttsms.entity.Employee;
 import com.cpa.ttsms.entity.EmployeePhotos;
 import com.cpa.ttsms.entity.Password;
+import com.cpa.ttsms.entity.RefreshToken;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.EmployeeService;
+import com.cpa.ttsms.service.TokenHandler;
+
+
 
 @CrossOrigin
 @RestController
@@ -53,19 +70,77 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;;
+	
+	private final RestTemplate restTemplate;
 
 	private ResourceBundle resourceBundle;
 	private static Logger logger;
+	 // Define base URL as a private static final String variable
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
+	 private WebClient webClient;
+	 
+
+		static {
+			// for 127.0.0.1 testing only
+			javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
+
+				public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
+					if (hostname.equals("127.0.0.1")) {
+						return true;
+					}
+					return false;
+				}
+			});
+		}
+		
+
+
+	    // Constructor to initialize WebClient
+	    public EmployeeController(WebClient.Builder webClientBuilder, RestTemplate restTemplate) {
+	        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8010/security").build();
+	        System.out.println("Entered in Controller class");
+	        System.out.println(webClient);
+	        resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
+			logger = Logger.getLogger(EmployeeController.class);
+			this.restTemplate = restTemplate;
+	    }
 
 	// Inject the value of 'file.base-path' from application.yml file
 	@Value("${file.base-path}")
 	private String basePath;
 
-	EmployeeController() {
-		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
-		logger = Logger.getLogger(EmployeeController.class);
-	}
 
+	
+	
+
+
+	  private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
 	/**
 	 * Creates a new employee along with their password information based on the
 	 * provided EmployeePasswordAndEmployeePhotosDTO object and an accompanying
@@ -86,7 +161,7 @@ public class EmployeeController {
 	@PostMapping("/employee")
 	public ResponseEntity<Object> createEmployee(
 			@RequestPart("employee") EmployeePasswordAndEmployeePhotosDTO employeePasswordAndEmployeePhotosDTO,
-			@RequestParam("file") MultipartFile file) throws CPException {
+			@RequestParam("file") MultipartFile file,@RequestHeader("Authorization") String authHeader) throws CPException {
 		// Log the entry of the method
 		logger.debug("Entering createEmployee");
 
@@ -94,6 +169,7 @@ public class EmployeeController {
 		logger.info("Data of creating Employee: " + employeePasswordAndEmployeePhotosDTO.toString());
 
 		try {
+			callCheckToken(authHeader);
 			// Call the employeeService to create an employee with the provided data
 			EmployeePasswordAndEmployeePhotosDTO createdDTO = employeeService
 					.createEmployee(employeePasswordAndEmployeePhotosDTO, file);
@@ -228,10 +304,10 @@ public class EmployeeController {
 	public ResponseEntity<Object> updateEmployeeByEmployeeId(
 			@RequestPart("employee") EmployeeAndEmployeePhotosDTO employeeAndEmployeePhotosDTO,
 			@RequestParam(value = "file", required = false) MultipartFile file,
-			@PathVariable("employeeId") int employeeId) throws CPException {
+			@PathVariable("employeeId") int employeeId,@RequestHeader("Authorization") String authHeader) throws CPException {
 
 		logger.info("Updating employee by id: " + employeeAndEmployeePhotosDTO);
-
+		callCheckToken(authHeader);
 		// Call the service to update the employee
 		EmployeeAndEmployeePhotosDTO updatedEmployeeDTO = employeeService
 				.updateEmployeeByEmployeeId(employeeAndEmployeePhotosDTO, employeeId, file);
@@ -260,7 +336,7 @@ public class EmployeeController {
 	 *                     generating the response.
 	 */
 	@DeleteMapping("/employee/{employeeId}")
-	public ResponseEntity<Object> deleteEmployeeByEmployeeId(@PathVariable("employeeId") int employeeId)
+	public ResponseEntity<Object> deleteEmployeeByEmployeeId(@PathVariable("employeeId") int employeeId,@RequestHeader("Authorization") String authHeader)
 			throws CPException {
 		// Log the entry of the method
 		logger.info("entered deleteEmployee  :" + employeeId);
@@ -269,6 +345,7 @@ public class EmployeeController {
 		int count = 0;
 
 		try {
+			callCheckToken(authHeader);
 			// Attempt to delete the employee using the employeeService
 			count = employeeService.deleteEmployeeByEmployeeId(employeeId);
 			if (count >= 1) {
@@ -436,11 +513,27 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/allemployees")
-	public ResponseEntity<List<Object>> getAllEmployees() throws CPException {
+	public ResponseEntity<List<Object>> getAllEmployees(@RequestHeader("Authorization") String authHeader) throws Exception {
 		logger.debug("Entering getAllEmployees");
-
+	   	String token = authHeader.substring(7);
+	    // Generate a random AES key
+	   	// Use 16 bytes for AES-128
+//	   	String encryptedToken = TokenHandler.encrypt(token);
+	   	
+//	   	System.out.println("Token Before encryption"+token);
+//	   	System.out.println("Encrypted Token"+encryptedToken);
 		List<Object> employees = null;
 		try {
+//			String result = webClient.get()
+//	                .uri(uriBuilder -> uriBuilder
+//	                    .path("/token/getEncryptedToken")
+//	                    .queryParam("encryptedParam", encryptedToken)
+//	                    .build())
+//	                .accept(MediaType.APPLICATION_JSON)
+//	                .retrieve()
+//	                .bodyToMono(String.class)
+//	                .block();
+			callCheckToken(authHeader);
 			// Retrieve all active employees from the service layer.
 			employees = employeeService.getAllEmployees();
 
@@ -461,6 +554,31 @@ public class EmployeeController {
 		}
 	}
 
+	@GetMapping("/passworddto/{username}")
+	public ResponseEntity<Object> getPasswordfromUsername(@PathVariable String username) throws CPException {
+		logger.debug("Entering getPasswordfromUsername");
+
+		Password password = null;
+		try {
+			// Retrieve all active employees from the service layer.
+			password = employeeService.getPasswordObjectByUsername(username);
+
+			if (password != null ) {
+				// If active employees are found, generate a success response with the list of
+
+				logger.info("Fetched PasswordDTO: " + password);
+				return ResponseHandler.generateResponse(password, HttpStatus.OK);
+			} else {
+
+				// logger.info(resourceBundle.getString("err002"));
+				return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err002");
+			}
+		} catch (Exception ex) {
+			// Log and throw a custom exception for error response.
+			logger.error("Failed getting all employees: " + ex.getMessage());
+			throw new CPException("err002", "Error while retrieving all employees");
+		}
+	}
 	/**
 	 * Endpoint to check the validity of a password for a given username.
 	 *
@@ -472,28 +590,139 @@ public class EmployeeController {
 	 * @throws CPException If there's an error while retrieving or checking the
 	 *                     password.
 	 */
+//	@GetMapping("password/{username}/{password}")
+//	public JwtResponse checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
+//		Password isPasswordValid = null;
+//		try {
+//			// Call the employeeService to validate the username and password.
+//			isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
+//
+//			// If the password is valid, return the Password object.
+//			if (isPasswordValid != null) {
+//	            RefreshToken refreshToken = webClient.post()
+//	                    .uri("/token/create-refresh-token?username={username}", username)
+//	                    .retrieve()
+//	                    .bodyToMono(RefreshToken.class)
+//	                    .block();
+//				 JwtResponse jwtResponse = new JwtResponse();
+//				  String token = webClient.post()
+//		                    .uri("/token/generateToken")
+//		                    .body(BodyInserters.fromValue(username))
+//		                    .retrieve()
+//		                    .bodyToMono(String.class)
+//		                    .block();
+//				  
+//				  jwtResponse.setAccessToken(token);
+////				  jwtResponse.setTokenUniqueID("guhgtddv1258fbfv");
+//			  jwtResponse.setTokenUniqueID(refreshToken.getTokenUniqueID());
+//
+//				return jwtResponse;
+//			} else {
+//				// If the password is not valid, return null.
+//				return null;
+//			}
+//		} catch (Exception ex) {
+//			// If an exception occurs while trying to validate the password,
+//			// log the error message and throw a custom exception (CPException) with an
+//			// error code and message.
+//			logger.error("Failed generating access token: " + ex.getMessage());
+//			throw new CPException("err002", "Error while retrieving all employees");
+//		}
+//	}
+//	
 	@GetMapping("password/{username}/{password}")
-	public Password checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
-		Password isPasswordValid = null;
-		try {
-			// Call the employeeService to validate the username and password.
-			isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
+	public Map<String, Object> checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
+	    Map<String, Object> response = new HashMap<>();
+	    Password isPasswordValid = null;
+	    try {
+	        // Call the employeeService to validate the username and password.
+	        isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
 
-			// If the password is valid, return the Password object.
-			if (isPasswordValid != null) {
-				return isPasswordValid;
-			} else {
-				// If the password is not valid, return null.
-				return null;
-			}
-		} catch (Exception ex) {
-			// If an exception occurs while trying to validate the password,
-			// log the error message and throw a custom exception (CPException) with an
-			// error code and message.
-			logger.error("Failed getting all employees: " + ex.getMessage());
-			throw new CPException("err002", "Error while retrieving all employees");
-		}
+	        // If the password is valid, return the Password object.
+	        if (isPasswordValid != null) {
+	            RefreshToken refreshToken = webClient.post()
+	                    .uri("/token/create-refresh-token?username={username}", username)
+	                    .retrieve()
+	                    .bodyToMono(RefreshToken.class)
+	                    .block();
+	            JwtResponse jwtResponse = new JwtResponse();
+	            String token = webClient.post()
+	                    .uri("/token/generateToken")
+	                    .body(BodyInserters.fromValue(username))
+	                    .retrieve()
+	                    .bodyToMono(String.class)
+	                    .block();
+//	        	  RefreshToken refreshToken = restTemplate.postForObject(
+//	                      "http://127.0.0.1:8010/security/token/create-refresh-token?username={username}",
+//	                      null,
+//	                      RefreshToken.class,
+//	                      username
+//	              );
+//
+//	              JwtResponse jwtResponse = new JwtResponse();
+//	              String token = restTemplate.postForObject(
+//	                      "http://127.0.0.1:8010/security/token/generateToken",
+//	                      username,
+//	                      String.class
+//	              );
+
+	            jwtResponse.setAccessToken(token);
+	            jwtResponse.setTokenUniqueID(refreshToken.getTokenUniqueID());
+
+	            response.put("jwtResponse", jwtResponse);
+	            response.put("isPasswordValid", isPasswordValid);
+
+	            return response;
+	        } else {
+	            // If the password is not valid, return null.
+	            return null;
+	        }
+	    } catch (Exception ex) {
+	        // If an exception occurs while trying to validate the password,
+	        // log the error message and throw a custom exception (CPException) with an
+	        // error code and message.
+	        logger.error("Failed generating access token: " + ex.getMessage());
+	        throw new CPException("err002", "Error while retrieving all employees");
+	    }
 	}
+
+	
+
+	
+//	@GetMapping("password/{username}/{password}")
+//	public Password checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
+//		Password isPasswordValid = null;
+//		try {
+//			// Call the employeeService to validate the username and password.
+//			isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
+//
+//			// If the password is valid, return the Password object.
+//			if (isPasswordValid != null) {
+//		
+//				 JwtResponse jwtResponse = new JwtResponse();
+//				  String token = webClient.post()
+//		                    .uri("/token/generateToken")
+//		                    .body(BodyInserters.fromValue(username))
+//		                    .retrieve()
+//		                    .bodyToMono(String.class)
+//		                    .block();
+//				  
+//				  jwtResponse.setAccessToken(token);
+//				  jwtResponse.setToken("ghghjghghghgj");
+//				 
+//				return isPasswordValid;
+//			} else {
+//				// If the password is not valid, return null.
+//				return null;
+//			}
+//		} catch (Exception ex) {
+//			// If an exception occurs while trying to validate the password,
+//			// log the error message and throw a custom exception (CPException) with an
+//			// error code and message.
+//			logger.error("Failed getting all employees: " + ex.getMessage());
+//			throw new CPException("err002", "Error while retrieving all employees");
+//		}
+//	}
 
 	/**
 	 * Endpoint to handle password reset for a forgotten password.
@@ -503,6 +732,7 @@ public class EmployeeController {
 	 *         reset.
 	 */
 
+	
 	@PostMapping("/forgotpass")
 	public ResponseEntity<Object> forgotPasswordByUsername(@RequestBody Map<String, String> request)
 			throws CPException {
@@ -555,6 +785,7 @@ public class EmployeeController {
 			HttpServletResponse response) {
 		try {
 			Employee myFile;
+		
 			myFile = employeeService.getEmployeeByEmployeeId(id);
 			System.out.println("-------------------------" + myFile);
 
@@ -627,11 +858,21 @@ public class EmployeeController {
 	 */
 	@GetMapping("/comEmpPwd/{companyId}")
 	public ResponseEntity<List<Object>> getAllCompnayEmployeeAndPasswordByCompanyId(
-			@PathVariable("companyId") int companyId) throws CPException {
+			@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader) throws CPException {
 
 		// Initialize a list to store employee data.
 		List<Object> employees = null;
+		
 		try {
+//			String result = webClient.get()
+//	                .uri("/token/checkToken")
+//	                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+//	                .accept(MediaType.APPLICATION_JSON)
+//	                .retrieve()
+//	                .bodyToMono(String.class)
+//	                .block();
+//			
+			callCheckToken(authHeader);
 			// Check if the companyId is a valid non-negative integer.
 			if (companyId >= 0) {
 				// Call a service method to fetch all employees and their passwords by
@@ -659,42 +900,12 @@ public class EmployeeController {
 			// Throw a custom exception with an error code and message.
 			throw new CPException("err002", resourceBundle.getString("err002"));
 		}
+	
 	}
-
-	@GetMapping("/onBench/{companyId}")
-	public ResponseEntity<List<Object>> getEmployeeOnBenchByCompanyId(@PathVariable("companyId") int companyId)
-			throws CPException {
-
-		// Initialize a list to store employee data.
-		List<Object> employees = null;
-		try {
-			// Check if the companyId is a valid non-negative integer.
-			if (companyId >= 0) {
-				// Call a service method to fetch all employees and their passwords by
-				// companyId.
-				employees = employeeService.getEmployeesOnBenchByCompanyId(companyId);
-
-				// Log a message indicating that employees were successfully fetched.
-				logger.info("Fetched all employees: " + employees);
-
-				// Generate a response with the list of employees and a HTTP status code of 200
-				// (OK).
-				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
-			} else {
-				// Log an error message indicating an invalid companyId.
-				logger.info(resourceBundle.getString("err002"));
-
-				// Generate a response with a HTTP status code of 404 (Not Found) and an error
-				// message.
-				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
-			}
-		} catch (Exception ex) {
-			// Log an error message if an exception occurs during the process.
-			logger.error("Failed getting all employees: " + ex.getMessage());
-
-			// Throw a custom exception with an error code and message.
-			throw new CPException("err002", resourceBundle.getString("err002"));
-		}
-	}
-
+	
+	
+	
+	
+	
+	
 }

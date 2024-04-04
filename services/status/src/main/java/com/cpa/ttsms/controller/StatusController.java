@@ -14,7 +14,11 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +27,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cpa.ttsms.entity.Status;
 import com.cpa.ttsms.exception.CPException;
@@ -44,12 +50,46 @@ public class StatusController {
 
 	// The logger is used for logging messages related to this class.
 	private static Logger logger;
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
+    
 
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	StatusController() {
 		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(StatusController.class);
 	}
 
+
+	  private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
+	  
 	/**
 	 * Create a new status.
 	 * 
@@ -58,12 +98,13 @@ public class StatusController {
 	 * @throws CPException If there was an error creating the status.
 	 */
 	@PostMapping("/status")
-	public ResponseEntity<Object> createStatus(@RequestBody Status status) throws CPException {
+	public ResponseEntity<Object> createStatus(@RequestBody Status status,@RequestHeader("Authorization") String authHeader) throws CPException {
 		logger.debug("Entering createStatus");
 		logger.info("Received request to create status for code : " + status.getStatusCode());
 
 		Status createdStatus = null;
 		try {
+			callCheckToken(authHeader);
 			// If the status doesn't exist, create it.
 			createdStatus = statusService.createStatus(status);
 
@@ -195,13 +236,14 @@ public class StatusController {
 	 * @return the updated status object, or null if the status was not found
 	 */
 	@PutMapping("/status/{id}")
-	public ResponseEntity<Object> updateStatusByStatusId(@RequestBody Status status, @PathVariable("id") int statusId)
+	public ResponseEntity<Object> updateStatusByStatusId(@RequestBody Status status, @PathVariable("id") int statusId,@RequestHeader("Authorization") String authHeader)
 			throws CPException {
 		logger.info("Updating status by code : " + statusId);
 
 		Status updatedStatus = null;
 
 		try {
+			callCheckToken(authHeader);
 			// Call the statusService to perform the update operation.
 			updatedStatus = statusService.updateStatusByStatusId(status, statusId);
 
@@ -226,10 +268,11 @@ public class StatusController {
 	}
 
 	@GetMapping("/statuses/{companyId}")
-	public ResponseEntity<List<Status>> getStatusesByCompanyId(@PathVariable("companyId") int companyId)
+	public ResponseEntity<List<Status>> getStatusesByCompanyId(@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader)
 			throws CPException {
 		logger.info("Received request to retrieve statuses for company with ID: " + companyId);
 		try {
+			callCheckToken(authHeader);
 			List<Status> statuses = statusService.getStatusesByCompanyId(companyId);
 			if (statuses.isEmpty()) {
 				logger.warn("No statuses found for company with ID: " + companyId);

@@ -13,7 +13,11 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,8 +26,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cpa.ttsms.entity.Visa;
 import com.cpa.ttsms.exception.CPException;
@@ -38,22 +44,55 @@ public class VisaController {
 	@Autowired
 	private VisaService visaService;;
 
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	private ResourceBundle resourceBunde;
 	private static Logger logger;
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
 
 	VisaController() {
 		resourceBunde = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(VisaController.class);
 	}
 
+	 private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
+	 
 	@PostMapping("/visa")
-	public ResponseEntity<Object> createVisa(@RequestBody Visa visa) throws CPException {
+	public ResponseEntity<Object> createVisa(@RequestBody Visa visa,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering createVisa");
 		logger.info("data of creating Visa  :" + visa.toString());
 
 		Visa createdVisa = null;
 		try {
-
+			callCheckToken(authHeader);
 			Visa toCheckVisa = visaService.getVisaByvisaId(visa.getVisaId());
 			logger.debug("existing visa :" + toCheckVisa);
 
@@ -82,14 +121,15 @@ public class VisaController {
 	}
 
 	@GetMapping("/visa/{visaId}")
-	public ResponseEntity<Object> getVisaByvisaId(@PathVariable("visaId") int visaId) throws CPException {
+	public ResponseEntity<Object> getVisaByvisaId(@PathVariable("visaId") int visaId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering getVisaByvisaId");
 		logger.info("entered user name :" + visaId);
 
 		Visa visa = null;
 
 		try {
-
+			callCheckToken(authHeader);
 			visa = visaService.getVisaByvisaId(visaId);
 			logger.info("fetched Visa :" + visa);
 
@@ -159,7 +199,8 @@ public class VisaController {
 	}
 
 	@PutMapping("/visa/{visaId}")
-	public ResponseEntity<Object> updateVisaByvisaId(@RequestBody Visa visa, @PathVariable("visaId") int visaId)
+	public ResponseEntity<Object> updateVisaByvisaId(@RequestBody Visa visa, @PathVariable("visaId") int visaId,@RequestHeader("Authorization") String authHeader
+)
 			throws CPException {
 		logger.debug("Entering updateVisa");
 		logger.info("entered  updateVisa :" + visa);
@@ -167,6 +208,7 @@ public class VisaController {
 		Visa updatedVisa = null;
 
 		try {
+			callCheckToken(authHeader);
 			updatedVisa = visaService.updateVisaByvisaId(visa, visaId);
 
 			if (updatedVisa == null) {
@@ -186,13 +228,15 @@ public class VisaController {
 	}
 
 	@GetMapping("/visas/{companyId}")
-	public ResponseEntity<List<Object>> getVisasByCompanyId(@PathVariable("companyId") int companyId)
+	public ResponseEntity<List<Object>> getVisasByCompanyId(@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader
+)
 			throws CPException {
 		logger.debug("Entering getAllVisa");
 
 		List<Object> visas = null;
 
 		try {
+			callCheckToken(authHeader);
 			visas = visaService.getAllVisasByCompanyId(companyId);
 
 			if (visas != null && !visas.isEmpty()) {

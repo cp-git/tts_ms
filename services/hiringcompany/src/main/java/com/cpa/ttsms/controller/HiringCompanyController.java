@@ -13,7 +13,11 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,9 +26,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cpa.ttsms.entity.HiringCompany;
 import com.cpa.ttsms.exception.CPException;
@@ -42,20 +48,53 @@ public class HiringCompanyController {
 	private ResourceBundle resourceBunde;
 
 	private static Logger logger;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
 
 	HiringCompanyController() {
 		resourceBunde = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(HiringCompanyController.class);
 	}
+	
+	 private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
 
 	@PostMapping("/create")
-	public ResponseEntity<Object> createHiringCompany(@RequestBody HiringCompany hiringCompany) throws CPException {
+	public ResponseEntity<Object> createHiringCompany(@RequestBody HiringCompany hiringCompany,@RequestHeader("Authorization") String authHeader) throws CPException {
 		logger.debug("Entering createHiringCompany");
 		logger.info("data of creating HiringCompany  :" + hiringCompany.toString());
 
 		HiringCompany createdHiringCompany = null;
 		try {
-
+			callCheckToken(authHeader);
 			HiringCompany toCheckHiringCompany = hiringCompanyService
 					.getHiringCompanyByHiringCompanyId(hiringCompany.getHiringCompanyId());
 			logger.debug("existing hiringCompany :" + toCheckHiringCompany);
@@ -81,14 +120,15 @@ public class HiringCompanyController {
 
 	@GetMapping("/{hiringCompanyId}")
 	public ResponseEntity<Object> getHiringCompanyByHiringCompanyId(
-			@PathVariable("hiringCompanyId") int hiringCompanyId) throws CPException {
+			@PathVariable("hiringCompanyId") int hiringCompanyId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering getHiringCompanyByhiringCompanyId");
 		logger.info("entered user name :" + hiringCompanyId);
 
 		HiringCompany hiringCompany = null;
 
 		try {
-
+			callCheckToken(authHeader);
 			hiringCompany = hiringCompanyService.getHiringCompanyByHiringCompanyId(hiringCompanyId);
 			logger.info("fetched HiringCompany :" + hiringCompany);
 
@@ -109,7 +149,7 @@ public class HiringCompanyController {
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Object>> getAllHiringCompanys(@RequestParam(name = "companyId") int companyId)
+	public ResponseEntity<List<Object>> getAllHiringCompanys(@RequestParam(name = "companyId") int companyId,@RequestHeader("Authorization") String authHeader)
 			throws CPException {
 		logger.debug("Entering getAllHiringCompany");
 		logger.info("Parameter  :" + companyId);
@@ -117,7 +157,7 @@ public class HiringCompanyController {
 		List<Object> hiringCompanys = null;
 
 		try {
-
+			callCheckToken(authHeader);
 			if (companyId > 0) {
 
 				hiringCompanys = hiringCompanyService.getAllHiringCompanysByCompanyId(companyId);
@@ -140,7 +180,8 @@ public class HiringCompanyController {
 
 	@DeleteMapping("/{hiringCompanyId}")
 	public ResponseEntity<Object> deleteHiringCompanyByHiringCompanyId(
-			@PathVariable("hiringCompanyId") int hiringCompanyId) throws CPException {
+			@PathVariable("hiringCompanyId") int hiringCompanyId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering deleteAuthUser");
 		logger.info("entered deleteHiringCompany  :" + hiringCompanyId);
 		// TODO - implement the business logic
@@ -148,6 +189,8 @@ public class HiringCompanyController {
 		int count = 0;
 
 		try {
+			
+			callCheckToken(authHeader);
 			count = hiringCompanyService.deleteHiringCompanyByHiringCompanyId(hiringCompanyId);
 			if (count >= 1) {
 				logger.info("deleted HiringCompany : HiringCompanyId = " + hiringCompanyId);
@@ -166,13 +209,15 @@ public class HiringCompanyController {
 
 	@PutMapping("/{hiringCompanyId}")
 	public ResponseEntity<Object> updateHiringCompanyByHiringCompanyId(@RequestBody HiringCompany hiringCompany,
-			@PathVariable("hiringCompanyId") int hiringCompanyId) throws CPException {
+			@PathVariable("hiringCompanyId") int hiringCompanyId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering updateHiringCompany");
 		logger.info("entered  updateHiringCompany :" + hiringCompany);
 
 		HiringCompany updatedHiringCompany = null;
 
 		try {
+			callCheckToken(authHeader);
 			updatedHiringCompany = hiringCompanyService.updateHiringCompanyByHiringCompanyId(hiringCompany,
 					hiringCompanyId);
 

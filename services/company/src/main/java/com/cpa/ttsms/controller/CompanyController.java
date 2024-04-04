@@ -7,6 +7,8 @@
 
 package com.cpa.ttsms.controller;
 
+import static org.mockito.Mockito.calls;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,6 +22,9 @@ import org.springframework.http.MediaType;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,10 +33,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -50,7 +57,38 @@ public class CompanyController {
 	@Autowired
 	private CompanyService companyService;
 	
+	@Autowired
+	RestTemplate restTemplate;
 	
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
+
+    private String callCheckToken(String authHeader) {
+        try {
+            // Extract the token from the Authorization header.
+            String token = authHeader.substring(7);
+
+            // Set the authorization header with the token.
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Bearer " + token);
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            // Create the request entity with headers.
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+            // Make the HTTP GET request to the checkToken endpoint.
+            ResponseEntity<String> response = restTemplate.exchange(
+                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+            // Return the response body.
+            return response.getBody();
+        } catch (Exception ex) {
+            // Handle exceptions if any.
+            return null;
+        }
+    }
 
 	// The ResourceBundle is used to retrieve localized messages.
 	private ResourceBundle resourceBundle;
@@ -86,11 +124,13 @@ public class CompanyController {
 	@PostMapping("/company")
 	public ResponseEntity<Object> createCompany(
 			@RequestPart("company") CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
-			@RequestParam("file") MultipartFile file) throws CPException {
+			@RequestParam("file") MultipartFile file,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Log that a request to create a company has been received
 		logger.info("Received request to create company ");
 
 		try {
+			callCheckToken(authHeader);
 			// Call the companyService to create a company with the provided data
 			CompanyAndCompanyPhotosDTO createdCompanyAndCompanyPhotosDTO = companyService
 					.createCompany(companyAndCompanyPhotosDTO, file);
@@ -154,13 +194,15 @@ public class CompanyController {
 	 * @throws CPException if an error occurs while performing the operation.
 	 */
 	@DeleteMapping("/company/{code}")
-	public ResponseEntity<Object> deleteCompanyByCompanyCode(@PathVariable("code") String companyCode)
+	public ResponseEntity<Object> deleteCompanyByCompanyCode(@PathVariable("code") String companyCode,@RequestHeader("Authorization") String authHeader
+)
 			throws CPException {
 		logger.info("Deleting company by companyCode : " + companyCode);
 
 		boolean success = false;
 
 		try {
+			callCheckToken(authHeader);
 
 			// Call the companyService to perform the soft delete operation.
 			success = companyService.deleteCompanyByCompanyCode(companyCode);
@@ -239,10 +281,10 @@ public class CompanyController {
 	public ResponseEntity<Object> updateCompanyByCompanyCode(
 			@RequestPart("company") CompanyAndCompanyPhotosDTO companyAndCompanyPhotosDTO,
 			@RequestParam(value = "file", required = false) MultipartFile file,
-			@PathVariable("code") String companyCode) throws CPException {
+			@PathVariable("code") String companyCode,@RequestHeader("Authorization") String authHeader) throws CPException {
 
 		logger.info("Updating company by code: " + companyCode);
-
+		callCheckToken(authHeader);
 		// Call the service to update the company
 		CompanyAndCompanyPhotosDTO updatedCompanyDTO = companyService
 				.updateCompanyByCompanyCode(companyAndCompanyPhotosDTO, companyCode, file);
@@ -265,12 +307,13 @@ public class CompanyController {
 	 *                     with an error code and message is thrown
 	 */
 	@GetMapping("/company/all")
-	public ResponseEntity<List<Object>> getAllCompany() throws CPException {
+	public ResponseEntity<List<Object>> getAllCompany(@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.info("Getting all companies");
 		List<Object> companies = null;
 
 		try {
-
+			callCheckToken(authHeader);
 			// Call the companyService to retrieve all companies
 			companies = companyService.getAllCompanies();
 

@@ -13,7 +13,11 @@ import java.util.ResourceBundle;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,8 +26,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cpa.ttsms.entity.Country;
 import com.cpa.ttsms.exception.CPException;
@@ -38,14 +44,45 @@ public class CountryController {
 	@Autowired
 	private CountryService countryService;;
 
+	@Autowired
+	RestTemplate restTemplate;
+	
 	private ResourceBundle resourceBundle;
 	private static Logger logger;
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
 
 	CountryController() {
 		resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 		logger = Logger.getLogger(CountryController.class);
 	}
 
+	 private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
 	/**
 	 * Create a new country.
 	 *
@@ -54,12 +91,14 @@ public class CountryController {
 	 * @throws CPException If there was an error creating the country.
 	 */
 	@PostMapping("/country")
-	public ResponseEntity<Object> createCountry(@RequestBody Country country) throws CPException {
+	public ResponseEntity<Object> createCountry(@RequestBody Country country,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering createCountry");
 		logger.info("Data of creating Country: " + country.toString());
 
 		Country createdCountry = null;
 		try {
+			callCheckToken(authHeader);
 			// Check if the country with the provided country code already exists in the
 			// database.
 			Country toCheckCountry = countryService.getCountryByCountryCode(country.getCountryCode());
@@ -124,11 +163,13 @@ public class CountryController {
 	 * @throws CPException If there was an error retrieving the countries.
 	 */
 	@GetMapping("/country/allcountry")
-	public ResponseEntity<List<Object>> getAllCountries() throws CPException {
+	public ResponseEntity<List<Object>> getAllCountries(@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering getAllCountry");
 
 		List<Object> countries = null;
 		try {
+			callCheckToken(authHeader);
 			// Retrieve all active countries from the service layer.
 			countries = countryService.getAllCountries();
 
@@ -158,12 +199,14 @@ public class CountryController {
 	 * @throws CPException If there was an error deleting the country.
 	 */
 	@DeleteMapping("/country/{code}")
-	public ResponseEntity<Object> deleteCountryCountryCode(@PathVariable("code") int countryCode) throws CPException {
+	public ResponseEntity<Object> deleteCountryCountryCode(@PathVariable("code") int countryCode,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering deleteCountryBycode");
 		logger.info("Entered deleteCountry: " + countryCode);
 
 		int count = 0;
 		try {
+			callCheckToken(authHeader);
 			// Delete the country by country code in the service layer and get the count of
 			// deleted records.
 			count = countryService.deleteCountryByCountryCode(countryCode);
@@ -197,12 +240,14 @@ public class CountryController {
 	 */
 	@PutMapping("/country/{code}")
 	public ResponseEntity<Object> updateCountryByCountryCode(@RequestBody Country country,
-			@PathVariable("code") int code) throws CPException {
+			@PathVariable("code") int code,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering updateCountry");
 		logger.info("Entered  updateCountry :" + country);
 
 		Country updatedCountry = null;
 		try {
+			callCheckToken(authHeader);
 			// Update the country by country code in the service layer.
 			updatedCountry = countryService.updateCountryByCountryCode(country, code);
 

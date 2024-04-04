@@ -17,7 +17,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +29,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cpa.ttsms.dto.ExternalTaskDTO;
@@ -54,6 +58,12 @@ public class TaskController {
 
 	@Autowired
 	private TaskService taskService;;
+	
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+    private static final String BASE_URL = "http://127.0.0.1:8010/";
 
 	// The ResourceBundle is used to retrieve localized messages.
 	private ResourceBundle resourceBundle;
@@ -70,6 +80,34 @@ public class TaskController {
 		logger = Logger.getLogger(TaskController.class);
 	}
 
+
+	  private String callCheckToken(String authHeader) {
+	        try {
+	            // Extract the token from the Authorization header.
+	            String token = authHeader.substring(7);
+
+	            // Set the authorization header with the token.
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set("Authorization", "Bearer " + token);
+	            headers.setContentType(MediaType.APPLICATION_JSON);
+
+	            // Create the request entity with headers.
+	            HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
+	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
+
+	            // Make the HTTP GET request to the checkToken endpoint.
+	            ResponseEntity<String> response = restTemplate.exchange(
+	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+
+	            // Return the response body.
+	            return response.getBody();
+	        } catch (Exception ex) {
+	            // Handle exceptions if any.
+	            return null;
+	        }
+	    }
 	/**
 	 * Creates a new task in the system based on the provided Task object.
 	 *
@@ -336,12 +374,14 @@ public class TaskController {
 
 	// Get a list of files by type
 	@GetMapping("/task/getfiles")
-	public ResponseEntity<List<Object>> getFilesByTaskId(@RequestParam("taskid") int taskId) {
+	public ResponseEntity<List<Object>> getFilesByTaskId(@RequestParam("taskid") int taskId,@RequestHeader("Authorization") String authHeader
+) {
 		// Create a list to store file names
 		List<Object> fileNames = new ArrayList<>();
 
 		logger.info("inside getFilesByTaskId");
 		try {
+			callCheckToken(authHeader);
 			fileNames = taskService.getFilesUsingTaskId(taskId);
 			if (fileNames.size() > 0) {
 
@@ -410,7 +450,8 @@ public class TaskController {
 	}
 
 	@GetMapping("/allparents")
-	public ResponseEntity<Object> getAllParentTasksByCompanyId(@RequestParam("companyid") int companyId) {
+	public ResponseEntity<Object> getAllParentTasksByCompanyId(@RequestParam("companyid") int companyId,@RequestHeader("Authorization") String authHeader
+) {
 
 		// Log that the method has been entered and print the statuses, createdBy,
 		// assignedTo received
@@ -418,6 +459,7 @@ public class TaskController {
 
 		ParentAndChildTaskDTO parentTasks = null;
 		try {
+			callCheckToken(authHeader);
 			parentTasks = taskService.getAllParentTasksByCompanyId(companyId);
 
 			// Log the fetched parent tasks
@@ -454,13 +496,14 @@ public class TaskController {
 	@PostMapping("/addtask")
 	public ResponseEntity<Object> createOrUpdateTask(
 			@RequestPart("task") InternalExternalTaskDTO internalExternalTaskDTO,
-			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+			@RequestParam(value = "file", required = false) MultipartFile file,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateTask");
 		logger.info("Data of creating Task: " + internalExternalTaskDTO.toString());
 
 		try {
-
+			callCheckToken(authHeader);
 			InternalExternalTaskDTO createdTask = taskService.createOrUpdateTask(internalExternalTaskDTO, file);
 			logger.info("createdTask " + createdTask);
 

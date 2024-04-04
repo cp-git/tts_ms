@@ -1,0 +1,24 @@
+
+spring.jpa:
+  database: POSTGRESQL
+  hibernate.ddl-auto: update
+  show-sql: true
+  hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+spring.datasource:
+  driverClassName: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/tts
+  username: postgres
+  password: Pass1word
+  
+server:
+  port : 8010
+
+#server:
+##   port: 8010
+#  port: 8443
+#  ssl:
+#    key-store-type: PKCS12
+#    key-store: src/main/resources/keystore/ttscertificate.p12
+#    key-store-password: sslpassword
+#    key-alias: ttscertificate

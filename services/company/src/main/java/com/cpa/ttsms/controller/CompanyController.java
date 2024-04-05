@@ -160,11 +160,12 @@ public class CompanyController {
 	 * @throws CPException
 	 */
 	@GetMapping("/company/{id}")
-	public ResponseEntity<Object> getCompanyByCompanyId(@PathVariable("id") int id) throws CPException {
+	public ResponseEntity<Object> getCompanyByCompanyId(@PathVariable("id") int id,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.info("Received request to retrieve company with ID: " + id);
 
 		try {
-
+			callCheckToken(authHeader);
 			Company company = companyService.getCompanyByCompanyId(id);
 			if (company == null) {
 				logger.warn("No company found with ID: " + id);
@@ -344,8 +345,10 @@ public class CompanyController {
      * @return ResponseEntity containing the company photos as a byte array, or a NOT_FOUND response if no photos exist.
      */
     @GetMapping(value = "/company/photos/{id}")
-    public ResponseEntity<byte[]> getCompanyPhotosByCompanyId(@PathVariable("id") int id, HttpServletResponse response) {
+    public ResponseEntity<byte[]> getCompanyPhotosByCompanyId(@PathVariable("id") int id, HttpServletResponse response
+) {
         try {
+        	
         	Company myFile;
    		 myFile =companyService.getCompanyByCompanyId(id);
            System.out.println("-------------------------"+myFile);
@@ -394,7 +397,8 @@ public class CompanyController {
     
     
     @GetMapping("/company/companyPhotos/{companyId}")
-    public CompanyPhotos getPhotosByCompanyId(@PathVariable int companyId) {
+    public CompanyPhotos getPhotosByCompanyId(@PathVariable int companyId
+) {
         return companyService.getPhotosByCompanyId(companyId);
     }
 

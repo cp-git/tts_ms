@@ -134,10 +134,11 @@ public class StatusController {
 	 */
 
 	@GetMapping("/status/{id}")
-	public ResponseEntity<Object> getStatusByStatusId(@PathVariable("id") int statusId) throws CPException {
+	public ResponseEntity<Object> getStatusByStatusId(@PathVariable("id") int statusId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.info("Received request to retrieve status with ID: " + statusId);
 		try {
-
+			callCheckToken(authHeader);
 			Status status = statusService.getStatusByStatusId(statusId);
 			if (status == null) {
 				logger.warn("No status found with ID: " + statusId);
@@ -166,11 +167,13 @@ public class StatusController {
 	 *                     with an error code and message is thrown
 	 */
 	@GetMapping("/allstatus")
-	public ResponseEntity<List<Object>> getAllStatus() throws CPException {
+	public ResponseEntity<List<Object>> getAllStatus(@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.info("Getting all status");
 		List<Object> status = null;
 
 		try {
+			callCheckToken(authHeader);
 			// Call the statusService to retrieve all status
 			status = statusService.getAllStatus();
 
@@ -202,12 +205,14 @@ public class StatusController {
 	 * @throws CPException if an error occurs while performing the operation.
 	 */
 	@DeleteMapping("/status/{id}")
-	public ResponseEntity<Object> deleteStatusByStatusId(@PathVariable("id") int statusId) throws CPException {
+	public ResponseEntity<Object> deleteStatusByStatusId(@PathVariable("id") int statusId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.info("Deleting status by statusId : " + statusId);
 
 		boolean success = false;
 
 		try {
+			callCheckToken(authHeader);
 
 			// Call the statusService to perform the hard delete operation.
 			success = statusService.deleteStatusByStatusId(statusId);

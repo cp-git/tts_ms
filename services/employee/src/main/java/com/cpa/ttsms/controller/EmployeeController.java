@@ -217,11 +217,13 @@ public class EmployeeController {
 	 * @throws CPException
 	 */
 	@GetMapping("/allemployee")
-	public ResponseEntity<List<Object>> getAllEmployeeAndPasswordData() throws CPException {
+	public ResponseEntity<List<Object>> getAllEmployeeAndPasswordData(@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Retrieve a list of all employees and their associated password information
 		// using the employeeService
 		List<Object> employees = null;
 		try {
+			callCheckToken(authHeader);
 			employees = employeeService.getAllEmployeesAndPasswords();
 			if (employees != null && !employees.isEmpty()) {
 
@@ -384,7 +386,8 @@ public class EmployeeController {
 	 *                     generating the response.
 	 */
 	@GetMapping("/employee/{employeeId}")
-	public ResponseEntity<Object> getEmployeeDetailsByEmployeeId(@PathVariable("employeeId") int employeeId)
+	public ResponseEntity<Object> getEmployeeDetailsByEmployeeId(@PathVariable("employeeId") int employeeId
+)
 			throws CPException {
 		// Log the entry of the method
 		logger.debug("Entering getEmployeeByempId");
@@ -394,6 +397,7 @@ public class EmployeeController {
 		Employee employee = null;
 
 		try {
+		
 			// Fetch the employee details using the employeeService
 			employee = employeeService.getEmployeeByEmployeeId(employeeId);
 			logger.info("fetched Employee :" + employee);
@@ -418,11 +422,13 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/companyemp/{companyId}")
-	public ResponseEntity<List<Object>> getAllCompnayEmployeeByCompanyId(@PathVariable("companyId") int companyId)
+	public ResponseEntity<List<Object>> getAllCompnayEmployeeByCompanyId(@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader
+)
 			throws CPException {
 
 		List<Object> employees = null;
 		try {
+			callCheckToken(authHeader);
 			if (companyId >= 0) {
 				employees = employeeService.getAllEmployeeOfCompanyByCompanyId(companyId);
 				logger.info("Fetched all emp :" + employees);
@@ -449,12 +455,14 @@ public class EmployeeController {
 	 */
 	@PutMapping("/password/{employeeId}")
 	public ResponseEntity<Object> updatePasswordByEmployeeId(@RequestBody Password password,
-			@PathVariable("employeeId") int employeeId) throws CPException {
+			@PathVariable("employeeId") int employeeId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering updatePassword");
 		logger.info("Entered  updatePassword :" + password);
 
 		Password updatedPassword = null;
 		try {
+			callCheckToken(authHeader);
 			// Update password by employeeId in the service layer.
 			updatedPassword = employeeService.updatePasswordByEmployeeId(password, employeeId);
 
@@ -489,14 +497,15 @@ public class EmployeeController {
 
 	@PutMapping("/emppass/{employeeId}")
 	public ResponseEntity<Object> updateEmployeeAndPasswordByEmployeeId(@RequestBody EmployeeAndPasswordDTO dto,
-			@PathVariable("employeeId") int employeeId) throws CPException {
+			@PathVariable("employeeId") int employeeId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering updateemployeepassword");
 		logger.info("Entered  updateemployeepassword :" + dto);
 
 		boolean updateEmployeePassword = false;
 
 		try {
-
+			callCheckToken(authHeader);
 			updateEmployeePassword = employeeService.updateEmployeeAndPasswordByEmployeeId(dto, employeeId);
 
 			if (!updateEmployeePassword) {
@@ -558,11 +567,13 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/passworddto/{username}")
-	public ResponseEntity<Object> getPasswordfromUsername(@PathVariable String username) throws CPException {
+	public ResponseEntity<Object> getPasswordfromUsername(@PathVariable String username,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering getPasswordfromUsername");
 
 		Password password = null;
 		try {
+			callCheckToken(authHeader);
 			// Retrieve all active employees from the service layer.
 			password = employeeService.getPasswordObjectByUsername(username);
 
@@ -785,8 +796,10 @@ public class EmployeeController {
 
 	@GetMapping(value = "/employee/photos/{id}")
 	public ResponseEntity<byte[]> getEmployeePhotosByEmployeeId(@PathVariable("id") int id,
-			HttpServletResponse response) {
+			HttpServletResponse response
+) {
 		try {
+			
 			Employee myFile;
 		
 			myFile = employeeService.getEmployeeByEmployeeId(id);

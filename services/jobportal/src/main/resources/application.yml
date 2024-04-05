@@ -11,7 +11,7 @@ spring.datasource:
   password: "7$Rt6&m,6&Ui4!as9^Yu2"
 
 server:
-  port: 8080
+  port: 8010
 
 #server:
 #  port: 8443

@@ -121,14 +121,14 @@ public class JobPortalController {
 	}
 
 	@GetMapping("/jobportal/{portalId}")
-	public ResponseEntity<Object> getJobPortalByjobPortalId(@PathVariable("portalId") int portalId) throws CPException {
+	public ResponseEntity<Object> getJobPortalByjobPortalId(@PathVariable("portalId") int portalId,@RequestHeader("Authorization") String authHeader) throws CPException {
 		logger.debug("Entering getJobPortalByportalId");
 		logger.info("entered user name :" + portalId);
 
 		JobPortal jobportal = null;
 
 		try {
-
+			callCheckToken(authHeader);
 			jobportal = jobportalService.getJobPortalByjobPortalId(portalId);
 			logger.info("fetched JobPortal :" + jobportal);
 
@@ -149,13 +149,14 @@ public class JobPortalController {
 	}
 
 	@GetMapping("/jobportal")
-	public ResponseEntity<List<Object>> getAllJobPortals() throws CPException {
+	public ResponseEntity<List<Object>> getAllJobPortals(@RequestHeader("Authorization") String authHeader) throws CPException {
 		logger.debug("Entering getAllJobPortal");
 		// logger.info("Parameter :" + portalId);
 
 		List<Object> jobportals = null;
 
 		try {
+			callCheckToken(authHeader);
 			jobportals = jobportalService.getAllJobPortals();
 			logger.info("Fetched all JobPortal :" + jobportals);
 
@@ -175,7 +176,7 @@ public class JobPortalController {
 	}
 
 	@DeleteMapping("/jobportal/{portalId}")
-	public ResponseEntity<Object> deleteJobPortalByjobPortalId(@PathVariable("portalId") int portalId)
+	public ResponseEntity<Object> deleteJobPortalByjobPortalId(@PathVariable("portalId") int portalId,@RequestHeader("Authorization") String authHeader)
 			throws CPException {
 		logger.debug("Entering deleteAuthUser");
 		logger.info("entered deleteJobPortal  :" + portalId);
@@ -184,6 +185,7 @@ public class JobPortalController {
 		int count = 0;
 
 		try {
+			callCheckToken(authHeader);
 			count = jobportalService.deleteJobPortalByjobPortalId(portalId);
 			if (count >= 1) {
 				logger.info("deleted JobPortal : jobPortalId = " + portalId);

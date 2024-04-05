@@ -86,10 +86,12 @@ public class BenchCandidateController {
 	    }
 
 	@PostMapping("/benchcandidate")
-	public ResponseEntity<Object> createBenchCandidate(@RequestBody BenchCandidate benchCandidate) throws CPException {
+	public ResponseEntity<Object> createBenchCandidate(@RequestBody BenchCandidate benchCandidate,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering createBenchCandidate");
 		logger.info("data of creating BenchCandidate  :" + benchCandidate.toString());
 		try {
+			callCheckToken(authHeader);
 			BenchCandidate createdBenchCandidate = benchCandidateService.createBenchCandidate(benchCandidate);
 			if (createdBenchCandidate == null) {
 				logger.error(resourceBunde.getString("err007"));
@@ -170,7 +172,8 @@ public class BenchCandidateController {
 
 	@DeleteMapping("/benchcandidate/{benchCandidateId}")
 	public ResponseEntity<Object> deleteBenchCandidateByBenchCandidateId(
-			@PathVariable("benchCandidateId") int benchCandidateId) throws CPException {
+			@PathVariable("benchCandidateId") int benchCandidateId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering deleteAuthUser");
 		logger.info("entered deleteBenchCandidate  :" + benchCandidateId);
 		// TODO - implement the business logic
@@ -178,6 +181,7 @@ public class BenchCandidateController {
 		int count = 0;
 
 		try {
+			callCheckToken(authHeader);
 			count = benchCandidateService.deleteBenchCandidateByBenchCandidateId(benchCandidateId);
 			if (count >= 1) {
 				logger.info("deleted BenchCandidate : BenchCandidateId = " + benchCandidateId);
@@ -196,11 +200,13 @@ public class BenchCandidateController {
 
 	@PutMapping("/benchcandidate/{benchCandidateId}")
 	public ResponseEntity<Object> updateBenchCandidateByBenchCandidateId(@RequestBody BenchCandidate benchCandidate,
-			@PathVariable("benchCandidateId") int benchCandidateId) throws CPException {
+			@PathVariable("benchCandidateId") int benchCandidateId,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering updateBenchCandidate");
 		logger.info("entered  updateBenchCandidate :" + benchCandidate);
 
 		try {
+			callCheckToken(authHeader);
 			BenchCandidate createdBenchCandidate = benchCandidateService.createBenchCandidate(benchCandidate);
 			if (createdBenchCandidate == null) {
 				logger.error(resourceBunde.getString("err010"));

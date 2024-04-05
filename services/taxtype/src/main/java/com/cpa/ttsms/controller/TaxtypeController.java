@@ -145,13 +145,14 @@ public class TaxtypeController {
 	}
 
 	@GetMapping("/taxtypes")
-	public ResponseEntity<List<Object>> getAllTaxtypes() throws CPException {
+	public ResponseEntity<List<Object>> getAllTaxtypes(@RequestHeader("Authorization") String authHeader) throws CPException {
 		logger.debug("Entering getAllTaxtype");
 		// logger.info("Parameter :" + taxtypeid);
 
 		List<Object> taxtypes = null;
 
 		try {
+			callCheckToken(authHeader);
 			taxtypes = taxtypeService.getAllTaxtypes();
 
 			if (taxtypes != null && !taxtypes.isEmpty()) {
@@ -170,7 +171,7 @@ public class TaxtypeController {
 	}
 
 	@DeleteMapping("/taxtype/{taxtypeid}")
-	public ResponseEntity<Object> deleteTaxtypeBytaxtypeid(@PathVariable("taxtypeid") int taxtypeid)
+	public ResponseEntity<Object> deleteTaxtypeBytaxtypeid(@PathVariable("taxtypeid") int taxtypeid,@RequestHeader("Authorization") String authHeader)
 			throws CPException {
 		logger.debug("Entering deleteAuthUser");
 		logger.info("entered deleteTaxtype  :" + taxtypeid);
@@ -179,6 +180,7 @@ public class TaxtypeController {
 		int count = 0;
 
 		try {
+			callCheckToken(authHeader);
 			count = taxtypeService.deleteTaxtypeBytaxtypeid(taxtypeid);
 			if (count >= 1) {
 				logger.info("deleted Taxtype : taxtypeid = " + taxtypeid);

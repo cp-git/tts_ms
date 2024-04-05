@@ -125,13 +125,14 @@ public class TaskController {
 	// external task data
 	@PostMapping("/savetask")
 	public ResponseEntity<Object> createOrUpdateTaskAndAddReason(@RequestPart("task") TaskAndReasonDTO taskAndReasonDTO,
-			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+			@RequestParam(value = "file", required = false) MultipartFile file,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateTaskAndAddReason");
 		logger.info("Data of creating Task: " + taskAndReasonDTO.getTaskName());
 
 		try {
-
+			callCheckToken(authHeader);
 			TaskAndReasonDTO createdTask = taskService.createOrUpdateTaskAndAddReason(taskAndReasonDTO, file);
 			logger.info("createdTask " + createdTask);
 
@@ -171,7 +172,8 @@ public class TaskController {
 	 *                     meaningful error response to the client.
 	 */
 	@GetMapping("/task/{id}")
-	public ResponseEntity<Object> getTaskById(@PathVariable("id") int id) throws CPException {
+	public ResponseEntity<Object> getTaskById(@PathVariable("id") int id,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Log that the method has been entered and print the task ID received
 		logger.debug("Entering getTaskById");
 		logger.info("Entered task ID: " + id);
@@ -180,6 +182,7 @@ public class TaskController {
 		Task task = null;
 
 		try {
+			callCheckToken(authHeader);
 			// Fetch the task by its ID using the taskService
 			task = taskService.getTaskById(id);
 			logger.info("Fetched Task: " + task);
@@ -252,12 +255,14 @@ public class TaskController {
 	 *         INTERNAL_SERVER_ERROR if an exception occurs during the retrieval.
 	 */
 	@GetMapping("/allchilds/{parentid}")
-	public ResponseEntity<Object> getAllChildTasksByParentId(@PathVariable("parentid") int parentId) {
+	public ResponseEntity<Object> getAllChildTasksByParentId(@PathVariable("parentid") int parentId,@RequestHeader("Authorization") String authHeader
+) {
 		// Log that the method has been entered and print the parentId received
 		logger.debug("Entering getAllChildTasksByParentId");
 		logger.info("Entered parentid: " + parentId);
 
 		try {
+			callCheckToken(authHeader);
 			// Fetch all child tasks with the specified parentId using the taskService
 			List<Task> childTasks = taskService.getAllChildTasksByParentId(parentId);
 
@@ -291,8 +296,10 @@ public class TaskController {
 	 *         INTERNAL_SERVER_ERROR if an exception occurs during the update.
 	 */
 	@PutMapping("/update/{taskid}")
-	public ResponseEntity<Object> updateTask(@PathVariable int taskid, @RequestBody TaskDTO taskDTO) {
+	public ResponseEntity<Object> updateTask(@PathVariable int taskid, @RequestBody TaskDTO taskDTO,@RequestHeader("Authorization") String authHeader
+) {
 		try {
+			callCheckToken(authHeader);
 			// Check if the taskid in the path variable matches the taskid in the TaskDTO
 			if (taskid != taskDTO.getTaskId()) {
 				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "err006");
@@ -337,7 +344,8 @@ public class TaskController {
 			@RequestParam("parentid") int parentId, @RequestParam("status") List<String> statuses, // Accept a list of
 																									// statuses
 			@RequestParam("createdby") int createdBy, @RequestParam("assignedto") int assignedTo,
-			@RequestParam("companyid") int companyId) {
+			@RequestParam("companyid") int companyId,@RequestHeader("Authorization") String authHeader
+) {
 
 		// Log that the method has been entered and print the statuses, createdBy,
 		// assignedTo received
@@ -347,6 +355,7 @@ public class TaskController {
 
 		List<Task> parentTasks = null;
 		try {
+			callCheckToken(authHeader);
 			// Fetch parent tasks with the specified statuses, createdBy, assignedTo using
 			// the taskService
 			parentTasks = taskService.findTasksByParentByStatusAndCreatorAndAssigneeOfCompany(parentId, statuses,
@@ -398,10 +407,12 @@ public class TaskController {
 
 	@GetMapping("/download/{taskid}")
 	public ResponseEntity<Object> downloadFile(@PathVariable("taskid") int taskId,
-			@RequestParam("filename") String fileName) {
+			@RequestParam("filename") String fileName,@RequestHeader("Authorization") String authHeader
+) {
 
 		logger.info("download file + " + fileName);
 		try {
+			callCheckToken(authHeader);
 			Resource resource = taskService.downloadFileByTaskIdAndFileName(taskId, fileName);
 
 			if (!resource.exists() || !resource.isReadable()) {
@@ -431,9 +442,11 @@ public class TaskController {
 	 *         employee.
 	 */
 	@GetMapping("/created/{employeeId}")
-	public ResponseEntity<Object> getAllTaskCreatedByMeAndAssignToMe(@PathVariable int employeeId) {
+	public ResponseEntity<Object> getAllTaskCreatedByMeAndAssignToMe(@PathVariable int employeeId,@RequestHeader("Authorization") String authHeader
+) {
 
 		try {
+			callCheckToken(authHeader);
 			// Retrieve tasks created and assigned by the specified employee using the
 			// service method
 			ParentAndChildTaskDTO taskList = taskService.getAllTaskCreatedByMeAndAssignToMe(employeeId);
@@ -581,7 +594,8 @@ public class TaskController {
 	 *                     meaningful error response to the client.
 	 */
 	@GetMapping("/taskby/{id}")
-	public ResponseEntity<Object> getInternalOrExternalTaskByTaskId(@PathVariable("id") int id) throws CPException {
+	public ResponseEntity<Object> getInternalOrExternalTaskByTaskId(@PathVariable("id") int id,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Log that the method has been entered and print the task ID received
 		logger.debug("Entering getTaskByTaskId");
 		logger.info("Entered task ID: " + id);
@@ -590,6 +604,7 @@ public class TaskController {
 		InternalExternalTaskDTO internalExternalTaskDTO = null;
 
 		try {
+			callCheckToken(authHeader);
 			// Fetch the task by its ID using the taskService
 			internalExternalTaskDTO = taskService.getInternalOrExternalTaskByTaskId(id);
 			logger.info("Fetched Task: " + internalExternalTaskDTO);
@@ -618,13 +633,14 @@ public class TaskController {
 
 	@PostMapping("/internal/add_update")
 	public ResponseEntity<Object> createOrUpdateInternalTask(@RequestPart("task") InternalTaskDTO internalTaskDTO,
-			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+			@RequestParam(value = "file", required = false) MultipartFile file,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateInternalTask");
 		logger.info("Data of creating Task: " + internalTaskDTO.getBenchCandidateId());
 
 		try {
-
+			callCheckToken(authHeader);
 			InternalTaskDTO createdTask = taskService.createOrUpdateInternalTask(internalTaskDTO, file);
 			logger.info("createdTask " + createdTask);
 
@@ -654,13 +670,14 @@ public class TaskController {
 
 	@PostMapping("/external/add_update")
 	public ResponseEntity<Object> createOrUpdateExternalTask(@RequestPart("task") ExternalTaskDTO externalTaskDTO,
-			@RequestParam(value = "file", required = false) MultipartFile file) throws CPException {
+			@RequestParam(value = "file", required = false) MultipartFile file,@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateInternalTask");
 		logger.info("Data of creating Task: " + externalTaskDTO.getHiringCompanyId());
 
 		try {
-
+			callCheckToken(authHeader);
 			ExternalTaskDTO createdTask = taskService.createOrUpdateExternalTask(externalTaskDTO, file);
 			logger.info("createdTask " + createdTask);
 
@@ -689,7 +706,8 @@ public class TaskController {
 	}
 
 	@GetMapping("/internalTask/{candidateId}")
-	public ResponseEntity<Object> getInternalTaskByCandidateId(@PathVariable("candidateId") int candidateId) {
+	public ResponseEntity<Object> getInternalTaskByCandidateId(@PathVariable("candidateId") int candidateId,@RequestHeader("Authorization") String authHeader
+) {
 		System.out.println(candidateId + "conterolloeeellllllllllll");
 		// Log that the method has been entered and print the statuses, createdBy,
 		// assignedTo received
@@ -698,6 +716,7 @@ public class TaskController {
 		List<InternalTask> internalTask = null;
 
 		try {
+			callCheckToken(authHeader);
 			internalTask = taskService.getAllParentAndChildTaskByBenchCandidateId(candidateId);
 
 			logger.info("Fetched  tasks :  " + candidateId);
@@ -718,7 +737,8 @@ public class TaskController {
 	}
 
 	@GetMapping("/internal/{candidateId}")
-	public ResponseEntity<Object> getInternalTask(@PathVariable("candidateId") int candidateId) {
+	public ResponseEntity<Object> getInternalTask(@PathVariable("candidateId") int candidateId,@RequestHeader("Authorization") String authHeader
+) {
 		System.out.println(candidateId + "conterolloeeellllllllllll");
 		// Log that the method has been entered and print the statuses, createdBy,
 		// assignedTo received
@@ -727,6 +747,7 @@ public class TaskController {
 		List<InternalTaskDTO> internalTask = null;
 
 		try {
+			callCheckToken(authHeader);
 			internalTask = taskService.getInternalTaskAndTaskByBenchCandidateId(candidateId);
 
 			logger.info("Fetched  tasks :  " + candidateId);
@@ -747,11 +768,13 @@ public class TaskController {
 	}
 
 	@GetMapping("/externalTask/{companyId}")
-	public ResponseEntity<Object> getExternalTaskByCompanyId(@PathVariable("companyId") int companyId) {
+	public ResponseEntity<Object> getExternalTaskByCompanyId(@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader
+) {
 
 		List<ExternalTask> externalTask = null;
 
 		try {
+			callCheckToken(authHeader);
 			externalTask = taskService.getAllTasksOfSourcingCandidateByCompanyId(companyId);
 
 			logger.info("Fetched  tasks :  " + companyId);
@@ -771,11 +794,13 @@ public class TaskController {
 	}
 
 	@GetMapping("/external/{companyId}")
-	public ResponseEntity<Object> getExternalTask(@PathVariable("companyId") int companyId) {
+	public ResponseEntity<Object> getExternalTask(@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader
+) {
 
 		List<ExternalTaskDTO> externalTask = null;
 
 		try {
+			callCheckToken(authHeader);
 			externalTask = taskService.getExternalTaskAndTaskByHiringCompanyId(companyId);
 
 			logger.info("Fetched  tasks :  " + companyId);
@@ -795,11 +820,13 @@ public class TaskController {
 	}
 
 	@GetMapping("/tasklist/{companyId}")
-	public ResponseEntity<Object> getAllList(@PathVariable("companyId") int companyId) {
+	public ResponseEntity<Object> getAllList(@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader
+) {
 
 		InternalExternalListDTO dto = null;
 
 		try {
+			callCheckToken(authHeader);
 			dto = taskService.getTodaysInternalAndExternalTaskByCompanyId(companyId);
 
 			logger.info("Fetched  tasks :  " + companyId);

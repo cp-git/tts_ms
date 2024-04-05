@@ -116,7 +116,8 @@ public class JobLocationController {
 	}
 
 	@GetMapping("/joblocation/{locationId}")
-	public ResponseEntity<Object> getJobLocationBylocationId(@PathVariable("locationId") int locationId)
+	public ResponseEntity<Object> getJobLocationBylocationId(@PathVariable("locationId") int locationId,@RequestHeader("Authorization") String authHeader
+)
 			throws CPException {
 		logger.debug("Entering getJobLocationBylocationId");
 		logger.info("entered user name :" + locationId);
@@ -124,7 +125,7 @@ public class JobLocationController {
 		JobLocation joblocation = null;
 
 		try {
-
+			callCheckToken(authHeader);
 			joblocation = joblocationService.getJobLocationBylocationId(locationId);
 			logger.info("fetched JobLocation :" + joblocation);
 
@@ -145,12 +146,14 @@ public class JobLocationController {
 	}
 
 	@GetMapping("/joblocation")
-	public ResponseEntity<List<Object>> getAllJobLocations() throws CPException {
+	public ResponseEntity<List<Object>> getAllJobLocations(@RequestHeader("Authorization") String authHeader
+) throws CPException {
 		logger.debug("Entering getAllJobLocation");
 
 		List<Object> joblocations = null;
 
 		try {
+			callCheckToken(authHeader);
 			joblocations = joblocationService.getAllJobLocations();
 
 			if (joblocations != null && !joblocations.isEmpty()) {
@@ -169,7 +172,8 @@ public class JobLocationController {
 	}
 
 	@DeleteMapping("/joblocation/{locationId}")
-	public ResponseEntity<Object> deleteJobLocationBylocationId(@PathVariable("locationId") int locationId)
+	public ResponseEntity<Object> deleteJobLocationBylocationId(@PathVariable("locationId") int locationId,@RequestHeader("Authorization") String authHeader
+)
 			throws CPException {
 		logger.debug("Entering deleteAuthUser");
 		logger.info("entered deleteJobLocation  :" + locationId);
@@ -178,6 +182,7 @@ public class JobLocationController {
 		int count = 0;
 
 		try {
+			callCheckToken(authHeader);
 			count = joblocationService.deleteJobLocationBylocationId(locationId);
 			if (count >= 1) {
 				logger.info("deleted JobLocation : locationId = " + locationId);

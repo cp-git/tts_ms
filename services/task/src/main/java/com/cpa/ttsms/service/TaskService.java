@@ -19,7 +19,7 @@ import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
-import com.cpa.ttsms.dto.TaskDTO;
+import com.cpa.ttsms.dto.TaskDTO2;
 import com.cpa.ttsms.entity.ExternalTask;
 import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Task;
@@ -69,7 +69,7 @@ public interface TaskService {
 	 * @return The updated Task object.
 	 * @throws Exception If an error occurs during the update process.
 	 */
-	Task updateTask(TaskDTO taskDTO) throws Exception;
+	Task updateTask(TaskDTO2 taskDTO) throws Exception;
 
 	/**
 	 * Retrieves all parent tasks in the system with the specified status,

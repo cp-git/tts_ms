@@ -39,7 +39,7 @@ import com.cpa.ttsms.dto.InternalExternalTaskDTO;
 import com.cpa.ttsms.dto.InternalTaskDTO;
 import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
-import com.cpa.ttsms.dto.TaskDTO;
+import com.cpa.ttsms.dto.TaskDTO2;
 import com.cpa.ttsms.entity.ExternalTask;
 import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Task;
@@ -253,7 +253,7 @@ public class TaskController {
 	 *         INTERNAL_SERVER_ERROR if an exception occurs during the update.
 	 */
 	@PutMapping("/update/{taskid}")
-	public ResponseEntity<Object> updateTask(@PathVariable int taskid, @RequestBody TaskDTO taskDTO) {
+	public ResponseEntity<Object> updateTask(@PathVariable int taskid, @RequestBody TaskDTO2 taskDTO) {
 		try {
 			// Check if the taskid in the path variable matches the taskid in the TaskDTO
 			if (taskid != taskDTO.getTaskId()) {

@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cpa.ttsms.entity.Task;
@@ -119,6 +120,9 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 //			int employeeId);
 
 	public List<Task> findByCompanyId(int companyId);
+
+	@Query(value = "SELECT task.*, it.benchcandidateid, et.hiringcompanyid FROM task LEFT JOIN internaltask AS it ON task.id = it.taskid LEFT JOIN externaltask AS et ON task.id = et.taskid WHERE task.companyid = :companyId", nativeQuery = true)
+	public List<Object> findAllTaskByCompanyId(@Param("companyId") int companyId);
 
 	List<Task> findByCompanyIdAndTaskChangeDateAndPlacementId(int companyId, Date today, int id);
 

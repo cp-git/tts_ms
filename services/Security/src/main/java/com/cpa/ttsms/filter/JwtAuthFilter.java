@@ -76,38 +76,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     				allowForRefreshToken(ex, request);
     			} else
     				request.setAttribute("exception", ex);
-
-                
             }
         
         filterChain.doFilter(request, response);
     }
 
-
-//    public boolean validateToken(String token)  throws ExpiredJwtException{
-//    	System.out.println("entered in validateToken");
-//        String username = jwtService.extractUsername(token);
-//        System.out.println();
-//        try {
-//        if (username != null) {
-//            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//            if (jwtService.validateToken(token, userDetails)) {
-//            	System.out.println("Entered in if loop");
-//                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null,userDetails.getAuthorities());
-//                System.out.println("After UsernamePasswordAuthenticationToken");
-//                System.out.println("After authtoken");
-//                SecurityContextHolder.getContext().setAuthentication(authToken);
-//                return true; // Token is valid
-//            }
-//        }
-//        }
-//        catch (ExpiredJwtException ex) {
-//            // Handle expired JWT exception
-//        	System.out.println("Token has Expired");
-//            
-//        }
-//        return false; // Token is invalid
-//    }
     public boolean validateToken(String token) throws ExpiredJwtException {
         System.out.println("entered in validateToken");
         String username = jwtService.extractUsername(token);

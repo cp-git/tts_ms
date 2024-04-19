@@ -177,13 +177,6 @@ public class JobLocation {
 				+ locationDescription + ", companyId=" + companyId + ", isForBench=" + isForBench + ", isForSourcing="
 				+ isForSourcing + ", locationActive=" + locationActive + "]";
 	}
-	
-	
 
-	
-
-	
-
-//TODO - add attributed and genrate setters and getters
 
 }

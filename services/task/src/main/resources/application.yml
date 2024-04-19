@@ -37,9 +37,4 @@ external-services:
   employee-url: https://127.0.0.1:8443/employee/ttsms/employee/
   status-url: https://127.0.0.1:8443/status/ttsms/status/
   task-url: https://127.0.0.1:8443/task/ttsms/task/
-#  reason-api-url: http://127.0.0.1:8010/reason/ttsms/reason
-#  upload-file-url: http://127.0.0.1:8010/uploadfile/ttsms/upload
-#  email-url: http://127.0.0.1:8010/email/taskMail
-#  employee-url: http://127.0.0.1:8010/employee/ttsms/employee/
-#  status-url: http://127.0.0.1:8010/status/ttsms/status/
-#  task-url: http://127.0.0.1:8010/task/ttsms/task/
+

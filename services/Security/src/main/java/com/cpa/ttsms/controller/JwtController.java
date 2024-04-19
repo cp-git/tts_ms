@@ -41,7 +41,7 @@ import com.cpa.ttsms.service.TokenHandler;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.impl.DefaultClaims;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 @RestController
 @RequestMapping("/token")
 public class JwtController {
@@ -94,12 +94,8 @@ public class JwtController {
     @GetMapping("/checkToken")
     public ResponseEntity<String> checkToken(@RequestHeader("Authorization") String authHeader) throws Exception {
     	System.out.println("chkTok enter");
-//    	String decryptedToken = TokenHandler.decrypt(authHeader.substring(7));
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-//            if (jwtAuthFilter.validateToken(token)) {
-//                return ResponseEntity.ok("Token is valid");
-//            }
             try {
                 if (jwtAuthFilter.validateToken(token)) {
                     return ResponseEntity.ok("Token is valid");
@@ -121,7 +117,6 @@ public class JwtController {
     @PostMapping("/create-refresh-token")
     public RefreshToken createRefreshToken(@RequestParam String username) {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
-        // Map RefreshToken to RefreshTokenDTO if needed
         System.out.println(refreshToken);
         return refreshToken;
     }
@@ -135,32 +130,12 @@ public class JwtController {
             JwtResponse jwtResponse = new JwtResponse();
             jwtResponse.setAccessToken(jwtService.generateToken(authRequest.getUsername()));
             jwtResponse.setToken(refreshToken.getTokenUniqueID());
-//            return JwtResponse.builder()
-//                    .accessToken(jwtService.generateToken(authRequest.getUsername()))
-//                    .token(refreshToken.getToken()).build();
             return jwtResponse;
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
     }
-//        @PostMapping("/refreshToken")
-//        public JwtResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-//            JwtResponse jwtResponse = new JwtResponse();
-//            System.out.println("Inside refreshTokenS");
-//            System.out.println(refreshTokenRequest.getTokenUniqueId());
-//            return refreshTokenService.findByToken(refreshTokenRequest.getTokenUniqueId())
-////                    .map(refreshTokenService::verifyExpiration)
-//                    .map(RefreshToken::getPassword)
-//                    .map(userInfo -> {
-//                    	System.out.println("userInfo Object");
-//                    	System.out.println(userInfo);
-//                        String accessToken = jwtService.generateToken(userInfo.getUsername());
-//                        jwtResponse.setAccessToken(accessToken);
-//                        jwtResponse.setToken(refreshTokenRequest.getTokenUniqueId());
-//                        return jwtResponse; // Return JwtResponse here
-//                    })
-//                    .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
-//        }
+
         
     @PostMapping("/refreshToken")
     public JwtResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest,HttpServletRequest request) {
@@ -182,13 +157,13 @@ public class JwtController {
         refreshTokenRepository.save(refreshToken); // You need to implement this method if it's not already implemented
 
         // Generate a new access token using the updated tokenUniqueId
-//        String accessToken = jwtService.generateToken(refreshToken.getPassword().getUsername());
+        String accessToken = jwtService.generateToken(refreshToken.getPassword().getUsername());
         DefaultClaims claims = (io.jsonwebtoken.impl.DefaultClaims) request.getAttribute("claims");
 
 		Map<String, Object> expectedMap = getMapFromIoJsonwebtokenClaims(claims);
 		String token = jwtService.doGenerateRefreshToken(expectedMap, expectedMap.get("sub").toString());
-        // Set the new access token and tokenUniqueId in the JwtResponse
-        jwtResponse.setAccessToken(token);
+//        jwtResponse.setAccessToken(token);
+        jwtResponse.setAccessToken(accessToken);
         jwtResponse.setToken(newTokenUniqueId);
 
         return jwtResponse;

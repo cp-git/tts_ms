@@ -232,37 +232,6 @@ public class CompanyController {
 	 * @param company     the updated company object
 	 * @return the updated company object, or null if the company was not found
 	 */
-//	@PutMapping("/company/{code}")
-//	public ResponseEntity<Object> updateCompanyByCompanyCode(@RequestBody Company company,
-//			@PathVariable("code") String companyCode) throws CPException {
-//
-//		logger.info("Updating company by code : " + companyCode);
-//
-//		Company updatedCompany = null;
-//
-//		try {
-//			// Call the companyService to perform the update operation.
-//			updatedCompany = companyService.updateCompanyByCompanyCode(company, companyCode);
-//
-//			if (updatedCompany == null) {
-//				// If the company not exists, return an error response.
-//				logger.info(resourceBundle.getString("err004"));
-//				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
-//			} else {
-//				// Return the updated company.
-//				logger.info("Company updated : " + updatedCompany);
-//				return ResponseHandler.generateResponse(updatedCompany, HttpStatus.OK);
-//			}
-//
-//		} catch (Exception ex) {
-//			// If an exception occurs, log the error and throw an CPException with an error
-//			// code and message.
-//			logger.error("Failed update Company : " + ex.getMessage());
-//			throw new CPException("err004", resourceBundle.getString("err004"));
-//
-//		}
-//
-//	}
 
 	/**
 	 * Updates an existing company's information, including its logo, based on the

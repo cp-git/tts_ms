@@ -97,6 +97,5 @@ public class Country {
 				+ "]";
 	}
 
-//TODO - add attributed and genrate setters and getters
 
 }

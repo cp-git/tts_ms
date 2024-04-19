@@ -41,7 +41,6 @@ public class RefreshTokenService {
 	    refreshToken.setPassword(userInfoRepository.findByUsername(username).get());
 
                refreshToken.setTokenUniqueID(UUID.randomUUID().toString());
-//               refreshToken.setExpiryDate(Instant.now().plusMillis(60000*2));//10
                refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenExpiryMillis));//10
 
                 

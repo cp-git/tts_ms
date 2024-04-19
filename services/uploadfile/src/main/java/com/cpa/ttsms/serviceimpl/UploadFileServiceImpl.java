@@ -38,7 +38,6 @@ public class UploadFileServiceImpl implements UploadFileService {
 			// if it already exists
 			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-			// Return true to indicate that the file was successfully uploaded
 			return true;
 		} catch (IOException ex) {
 			// If an IOException occurs during the file upload, print the exception details

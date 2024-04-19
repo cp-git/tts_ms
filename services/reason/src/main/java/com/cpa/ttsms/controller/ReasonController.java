@@ -145,8 +145,7 @@ public class ReasonController {
 			}
 
 		} catch (Exception ex) {
-			// If an exception occurs, log the error and return an error response with an
-			// appropriate status code and message.
+		
 			logger.error("Failed to get reasons for Task ID " + taskId + ": " + ex.getMessage());
 			throw new CPException("err001", resourceBundle.getString("err001"));
 		}
@@ -180,8 +179,7 @@ public class ReasonController {
 			}
 
 		} catch (Exception ex) {
-			// If an exception occurs, log the error and throw a CPException with an error
-			// code and message.
+	
 			logger.error("Failed to get all reasons: " + ex.getMessage());
 			throw new CPException("err004", resourceBundle.getString("err004"));
 		}

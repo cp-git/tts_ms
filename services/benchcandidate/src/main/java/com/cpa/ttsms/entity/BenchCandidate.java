@@ -258,18 +258,5 @@ public class BenchCandidate {
 	
 	
 
-//	/**
-//	 * @return the minBillingRate
-//	 */
-//	public int getMinBillingRate() {
-//		return minBillingRate;
-//	}
-//
-//	/**
-//	 * @param minBillingRate the minBillingRate to set
-//	 */
-//	public void setMinBillingRate(int minBillingRate) {
-//		this.minBillingRate = minBillingRate;
-//	}
 
 }

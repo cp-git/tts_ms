@@ -94,8 +94,6 @@ public class TaxtypeServiceImpl implements TaxtypeService {
 
 		if (toUpdatedTaxtype != null) {
 			logger.debug("setting new data of Taxtype to exisitng Taxtype");
-
-//			taxtype.setModifiedBy("admin");
 			toUpdatedTaxtype.setTaxTypeName(taxtype.getTaxTypeName());
 			toUpdatedTaxtype.setTaxTypeDescription(taxtype.getTaxTypeDescription());
 			toUpdatedTaxtype.setCompanyId(taxtype.getCompanyId());
@@ -121,7 +119,6 @@ public class TaxtypeServiceImpl implements TaxtypeService {
 		logger.debug("Entering deleteTaxtypeBytaxtypeid");
 
 		int typeId = taxtypeRepo.deleteTaxTypeById(taxtypeid);
-		// logger.info("deleted Taxtype count : " + count);
 		return typeId;
 	}
 

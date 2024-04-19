@@ -48,11 +48,7 @@ public class BenchCandidateServiceImpl implements BenchCandidateService {
 		logger.debug("Entering createBenchCandidate");
 		BenchCandidate createdBenchCandidate = null;
 
-//		BenchCandidate existing = benchCandidateRepo.findByEmail(benchCandidate.getEmail());
-//
-//		if (existing != null) {
-//			throw new CPException("err006", resourceBunde.getString("err006"));
-//		}
+
 		try {
 			createdBenchCandidate = benchCandidateRepo.save(benchCandidate);
 			logger.info("created BenchCandidate :" + createdBenchCandidate);
@@ -127,9 +123,7 @@ public class BenchCandidateServiceImpl implements BenchCandidateService {
 		if (toUpdatedBenchCandidate != null) {
 			logger.debug("setting new data of BenchCandidate to exisitng BenchCandidate");
 
-//			if (benchCandidate.getBenchCandidateId() <= 0) {
-//				benchCandidate.setBenchCandidateId(benchcandidateid);
-//			}
+
 
 			try {
 
@@ -140,8 +134,7 @@ public class BenchCandidateServiceImpl implements BenchCandidateService {
 			} catch (DataIntegrityViolationException ex) {
 				// To handle different error message for different scenarios
 				String errorMessage = "";
-				// constraints_unique_benchcandidateemail is the unique constraint name from
-				// database table for email
+		
 				if (ex.getMessage().contains("constraints_unique_benchcandidateemail")) {
 					logger.debug("constraints_unique_benchcandidateemail");
 					errorMessage = resourceBunde.getString("err009");

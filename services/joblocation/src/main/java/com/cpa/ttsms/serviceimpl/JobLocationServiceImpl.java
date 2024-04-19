@@ -40,8 +40,6 @@ public class JobLocationServiceImpl implements JobLocationService {
 		logger.debug("Entering createJobLocation");
 		JobLocation createdJobLocation = null;
 
-		// joblocation.setJobLocationCreatedBy("admin");
-		// joblocation.setJobLocationModifiedBy("admin");
 
 		createdJobLocation = joblocationRepo.save(joblocation);
 		logger.info("created JobLocation :" + createdJobLocation);
@@ -96,7 +94,7 @@ public class JobLocationServiceImpl implements JobLocationService {
 		if (toUpdatedJobLocation != null) {
 			logger.debug("setting new data of JobLocation to exisitng JobLocation");
 
-//			joblocation.setModifiedBy("admin");
+
 
 			toUpdatedJobLocation.setLocationType(joblocation.getLocationType());
 			toUpdatedJobLocation.setLocationDescription(joblocation.getLocationDescription());
@@ -123,8 +121,7 @@ public class JobLocationServiceImpl implements JobLocationService {
 		logger.debug("Entering deleteJobLocationBylocationId");
 
 		int jobLocationId = joblocationRepo.deleteJobLocationById(locationid);
-//		int count =  joblocationRepo.deleteJobLocationBylocationId(locationid);
-//		logger.info("deleted JobLocation count : " + count);
+
 		return jobLocationId;
 	}
 

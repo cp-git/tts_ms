@@ -98,11 +98,6 @@ public class JobPortalController {
 
 			if (toCheckJobPortal == null) {
 
-				// TODO: Uncomment below 2 lines and change the method name as per your Entity
-				// class
-				// jobportal.setCreatedby("admin");
-				// jobportal.setUpdatedby("admin");
-
 				createdJobPortal = jobportalService.createJobPortal(jobportal);
 				logger.info("JobPortal created :" + createdJobPortal);
 
@@ -151,7 +146,7 @@ public class JobPortalController {
 	@GetMapping("/jobportal")
 	public ResponseEntity<List<Object>> getAllJobPortals(@RequestHeader("Authorization") String authHeader) throws CPException {
 		logger.debug("Entering getAllJobPortal");
-		// logger.info("Parameter :" + portalId);
+		
 
 		List<Object> jobportals = null;
 
@@ -180,8 +175,6 @@ public class JobPortalController {
 			throws CPException {
 		logger.debug("Entering deleteAuthUser");
 		logger.info("entered deleteJobPortal  :" + portalId);
-		// TODO - implement the business logic
-
 		int count = 0;
 
 		try {
@@ -251,7 +244,6 @@ public class JobPortalController {
 				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
 			}
 		} catch (Exception ex) {
-			// Log and throw a custom exception for error response.
 
 			throw new CPException("err002", "Error while retrieving all portals");
 		}

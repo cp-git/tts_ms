@@ -27,10 +27,6 @@ public interface JobPortalRepo extends JpaRepository<JobPortal, Integer> {
 
 	public List<JobPortal> findByCompanyId(int companyId);
 
-//	@Transactional
-//	@Modifying
-//	@Query(value = "UPDATE jobportal SET is_active=false WHERE jobportalid = ?1", nativeQuery = true)
-//	public int deleteJobPortalByjobPortalId(String jobportalid);
 
 	@Transactional
 	@Modifying

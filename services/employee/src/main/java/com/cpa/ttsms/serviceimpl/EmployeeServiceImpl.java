@@ -47,15 +47,10 @@ import com.cpa.ttsms.service.EmployeeService;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-	// private final String email_URL = "http://127.0.0.1:8080/email/sendMail";
-	// private final String UPLOAD_FILE_URL =
-	// "http://127.0.0.1:8080/uploadfile/ttsms/upload";
+
 
 	@Value("${email.url}")
 	private String email_URL;
-
-//	@Value("${upload.file.url}")
-//	private String UPLOAD_FILE_URL;
 
 	private final RestTemplate restTemplate;
 	
@@ -102,40 +97,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return The newly created Country object if successful, otherwise null.
 	 */
 
-	// @Override
-	// public Employee updateEmployeeByEmployeeId(Employee employee, int employeeId)
-	// {
-	// // TODO Auto-generated method stub
-	// logger.debug("Entering updateEmployee");
-	//
-	// // Initialize variables
-	// Employee toUpdatedEmployee = null;
-	// Employee updatedEmployee = null;
-	//
-	// // Find the existing employee based on the provided employeeId
-	// toUpdatedEmployee = employeeRepo.findByEmployeeId(employeeId);
-	// logger.info("existing Employee :: " + toUpdatedEmployee);
-	//
-	// // Check if an employee with the given ID exists
-	// if (toUpdatedEmployee != null) {
-	// logger.debug("setting new data of Employee to existing Employee");
-	//
-	// // Update the existing employee's data with the provided employee data
-	// toUpdatedEmployee.setCountryId(employee.getCountryId());
-	// toUpdatedEmployee.setCompanyId(employee.getCompanyId());
-	// toUpdatedEmployee.setFirstName(employee.getFirstName());
-	// toUpdatedEmployee.setLastName(employee.getLastName());
-	// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
-	// toUpdatedEmployee.setEmployeeEmail(employee.getEmployeeEmail());
-	//
-	// // Save the updated employee in the database
-	// updatedEmployee = employeeRepo.save(toUpdatedEmployee);
-	//
-	// logger.info("updated Employee :" + updatedEmployee);
-	// }
-	//
-	// return updatedEmployee;
-	// }
+
+
 
 	/**
 	 * Saves the employee and their password information.
@@ -162,15 +125,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setShowAllTasks(dto.isShowAllTasks());
 		employee.setOnBench(dto.isOnBench());
 
-		// // Parse the date string from the DTO and set it as the employee's birth date
-		// Date dob;
-		// try {
-		// dob = new SimpleDateFormat("yyyy-dd-MM").parse(dto.getBirthDate());
-		// employee.setBirthDate(dob);
-		// } catch (ParseException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		
 
 		employee.setBirthDate(dto.getBirthDate());
 		employee.setEmployeeEmail(dto.getEmployeeEmail());
@@ -263,15 +218,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setLastName(emp.getLastName());
 				dto.setAdmin(emp.isAdmin());
 				dto.setShowAllTasks(emp.isShowAllTasks());
-				// Format dob as a String (assuming it's already in Date format in the entity)
-				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				dto.setPasswordId(password.getPasswordId());
 				dto.setBirthDate(emp.getBirthDate());
-				// dto.setBirthDate(emp.getBirthDate().toString());
 				dto.setEmployeeEmail(emp.getEmployeeEmail());
 				dto.setUsername(password.getUsername());
 				dto.setPassword(password.getPassword());
-
 				employeePasswordDTOList.add(dto);
 			}
 		}
@@ -323,8 +274,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		toUpdatePassword = passwordRepository.findByEmployeeId(employeeId);
 
 		if (toUpdatePassword != null) {
-
-			// toUpdatePassword.setUsername(password.getUsername());
 			toUpdatePassword.setPassword(password.getPassword());
 			toUpdatePassword.setForgotPassword(false);
 
@@ -354,12 +303,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 			toUpdatedEmployee.setCompanyId(dto.getCompanyId());
 			toUpdatedEmployee.setFirstName(dto.getFirstName());
 			toUpdatedEmployee.setLastName(dto.getLastName());
-			// toUpdatedEmployee.setBirthDate(employee.getBirthDate());
 			toUpdatedEmployee.setEmployeeEmail(dto.getEmployeeEmail());
 			toUpdatedEmployee.setAdmin(dto.isAdmin());
 			toUpdatedEmployee.setShowAllTasks(dto.isShowAllTasks());
 			toUpdatedEmployee.setOnBench(dto.isOnBench());
-
 			updatedEmployee = employeeRepo.save(toUpdatedEmployee);
 
 		}
@@ -441,16 +388,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String oldPassword = password.getPassword();
 		password.setForgotPassword(true);
 		passwordRepository.save(password);
-		// String oldPassword = generateRandomPassword();
-		// password.setPassword(oldPassword);
-
-		// Update the password value in the Password object
-		// password.setPassword(newPassword);
-
-		// Save the updated Password object to the repository
-		// passwordRepository.save(password);
-
-		// Retrieve employee information based on the employee ID
 		Employee employee = employeeRepo.findByEmployeeId(employeeId);
 
 		// Extract necessary information for sending the password reset email
@@ -491,10 +428,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
 		String NUMBERS = "0123456789";
 		String SPECIAL_CHARS = "@#$&";
-
-		// String ALL_CHARS = UPPERCASE_CHARS + LOWERCASE_CHARS + NUMBERS +
-		// SPECIAL_CHARS;
-		// SecureRandom randomPass = new SecureRandom();
 		for (int i = 0; i < 8; i++) {
 			int randomIndex = 0;
 			char randomChar;
@@ -772,11 +705,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				dto.setAdmin(emp.isAdmin());
 				dto.setShowAllTasks(emp.isShowAllTasks());
 				dto.setOnBench(emp.isOnBench());
-				// Format dob as a String (assuming it's already in Date format in the entity)
-				// SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				dto.setPasswordId(password.getPasswordId());
 				dto.setBirthDate(emp.getBirthDate());
-				// dto.setBirthDate(emp.getBirthDate().toString());
 				dto.setEmployeeEmail(emp.getEmployeeEmail());
 				dto.setUsername(password.getUsername());
 				dto.setPassword(password.getPassword());

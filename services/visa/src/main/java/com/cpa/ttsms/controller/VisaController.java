@@ -98,11 +98,6 @@ public class VisaController {
 
 			if (toCheckVisa == null) {
 
-				// TODO: Uncomment below 2 lines and change the method name as per your Entity
-				// class
-				// visa.setCreatedby("admin");
-				// visa.setUpdatedby("admin");
-
 				createdVisa = visaService.createVisa(visa);
 				logger.info("Visa created :" + createdVisa);
 

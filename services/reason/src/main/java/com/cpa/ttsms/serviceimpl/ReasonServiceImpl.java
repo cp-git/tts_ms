@@ -22,8 +22,7 @@ import com.cpa.ttsms.service.ReasonService;
 
 @Service
 public class ReasonServiceImpl implements ReasonService {
-
-	// Autowired annotation is used to inject the ReasonRepo instance.
+	
 	@Autowired
 	private ReasonRepo reasonRepo;
 

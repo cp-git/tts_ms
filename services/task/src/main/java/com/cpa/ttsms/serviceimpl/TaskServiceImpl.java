@@ -281,7 +281,6 @@ public class TaskServiceImpl implements TaskService {
 
 	void updateParentHavingChildIfChildIsExist(int parentId) {
 		// TODO Auto-generated method stub
-		System.out.println("*******************************8888888888888888888888888888888" + parentId);
 		taskRepo.updateHavingChildToTrueByParentId(parentId);
 	}
 
@@ -653,7 +652,6 @@ public class TaskServiceImpl implements TaskService {
 			}
 		}
 
-		// No valid response bodies were obtained, so the notification cannot be sent
 		return false;
 	}
 
@@ -800,26 +798,7 @@ public class TaskServiceImpl implements TaskService {
 	 * @return The list of parent tasks with the specified status.
 	 * @throws IllegalArgumentException If an invalid status is provided.
 	 */
-	// @Override
-	// public List<Task> getAllParentTasksByStatus(String status) {
-	// // Switch statement to handle different status values and fetch corresponding
-	// // tasks
-	// switch (status.toLowerCase()) {
-	// // If status is "created", fetch all parent tasks with status "Created"
-	// case "created":
-	// return taskRepo.findByTaskParentIsNullAndTaskStatus("CREATED");
-	// // If status is "done", fetch all parent tasks with status "Done"
-	// case "done":
-	// return taskRepo.findByTaskParentIsNullAndTaskStatus("DONE");
-	// // If status is "inprogress", fetch all parent tasks with status not in
-	// // "Created" or "Done"
-	// case "inprogress":
-	// return taskRepo.findByTaskParentIsNullAndTaskStatusNotIn("CREATED", "DONE");
-	// // If an invalid status is provided, throw an exception
-	// default:
-	// throw new IllegalArgumentException("Invalid status provided.");
-	// }
-	// }
+	
 
 	/**
 	 * Get all child tasks of a parent task with a specific ID.
@@ -1036,9 +1015,7 @@ public class TaskServiceImpl implements TaskService {
 			TaskDTO taskDto = new TaskDTO(intExtTask);
 			allTasks.add(taskDto);
 		}
-		// List<Integer> parentTaskIds = allTasks.stream().filter(task ->
-		// task.getTaskParent() == 0).map(Task::getTaskId)
-		// .collect(Collectors.toList());
+
 
 		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(TaskDTO::getTaskParent) // Get all parent task IDs
 																						// without
@@ -1094,9 +1071,7 @@ public class TaskServiceImpl implements TaskService {
 			TaskDTO taskDto = new TaskDTO(intExtTask);
 			allTasks.add(taskDto);
 		}
-		// List<Integer> parentTaskIds = allTasks.stream().filter(task ->
-		// task.getTaskParent() == 0).map(Task::getTaskId)
-		// .collect(Collectors.toList());
+
 
 		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(TaskDTO::getTaskParent) // Get all parent task IDs
 																						// without
@@ -1224,30 +1199,7 @@ public class TaskServiceImpl implements TaskService {
 					}
 
 					internalTask = InternalTask.setInternalTaskData(internalTask, internalExternalTaskDTO);
-					// internalTask.setBenchCandidateId(internalExternalTaskDTO.getBenchCandidateId());
-					// internalTask.setHiringCompanyName(internalExternalTaskDTO.getHiringCompanyName());
-					// internalTask.setJobPortalId(internalExternalTaskDTO.getJobPortalId());
-					// internalTask.setJobTitle(internalExternalTaskDTO.getJobTitle());
-					// internalTask.setExperienceRequired(internalExternalTaskDTO.getExperienceRequired());
-					// internalTask.setJobLocationId(internalExternalTaskDTO.getJobLocationId());
-					// internalTask.setRate(internalExternalTaskDTO.getRate());
-					// internalTask.setVendorName(internalExternalTaskDTO.getRecruiterName());
-					// internalTask.setVendorEmail(internalExternalTaskDTO.getRecruiterEmail());
-					// internalTask.setVendorPhone(internalExternalTaskDTO.getRecruiterPhone());
-					// internalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
-					// internalTask.setPortalName(internalExternalTaskDTO.getPortalName());
-					// internalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
-					// internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
-					// internalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
-					//
-					// internalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
-					// internalTask.setJobCity(internalExternalTaskDTO.getJobCity());
-					// internalTask.setJobState(internalExternalTaskDTO.getJobState());
-					// internalTask.setCommentOnCandidate(internalExternalTaskDTO.getCommentOnCandidate());
-					// internalTask.setMinBillingRate(internalExternalTaskDTO.getMinBillingRate());
-
 					internalTask.setTaskId((createdTask.getTaskId()));
-
 					internalCreatedTask = internalTaskRepo.save(internalTask);
 					internalExternalTaskDTO.setInternalId(internalCreatedTask.getInternalId());
 
@@ -1259,26 +1211,7 @@ public class TaskServiceImpl implements TaskService {
 					}
 
 					externalTask = ExternalTask.setExternalTaskData(externalTask, internalExternalTaskDTO);
-					// externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
-					// externalTask.setCandidateCompany(internalExternalTaskDTO.getCandidateCompany());
-					// externalTask.setCompanyAddress(internalExternalTaskDTO.getCompanyAddress());
-					// externalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());
-					// externalTask.setRecruiterName(internalExternalTaskDTO.getRecruiterName());
-					// externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
-					// externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
-					// externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
-
 					externalTask.setTaskId((createdTask.getTaskId()));
-
-					// externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
-					// externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
-					// externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
-					// externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
-					// externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
-					//
-					// externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
-					// externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
-
 					externalCreatedTask = externalTaskRepo.save(externalTask);
 					internalExternalTaskDTO.setExternalId(externalCreatedTask.getExternalId());
 
@@ -1370,225 +1303,10 @@ public class TaskServiceImpl implements TaskService {
 		} catch (Exception ex) {
 			logger.error("Error while processing data3: " + ex.getMessage(), ex);
 		}
-//		logger.debug("failed to create/update task");
-//		String message = resourceBundle.getString("err012");
-//
-//		throw new CPException("err012", message);
 		return null;
 
 	}
-//	public InternalExternalTaskDTO createOrUpdateTask(InternalExternalTaskDTO internalExternalTaskDTO,
-//			MultipartFile file) {
-//
-//		logger.info("Entering createOrUpdateTask " + internalExternalTaskDTO);
-//		try {
-//
-//			Task task = new Task();
-//			InternalTask internalTask = null;
-//			ExternalTask externalTask = null;
-//			ExternalTask externalCreatedTask = null;
-//			InternalTask internalCreatedTask = null;
-//
-//			// for updating need taskId, if there is no foreign key then new entry will
-//			// create
-//			int taskId = internalExternalTaskDTO.getTaskId();
-//			int parentId = internalExternalTaskDTO.getTaskParent();
-//
-//			// setting parent task's having child field to true
-//			if (parentId > 0) {
-//				updateParentHavingChildIfChildIsExist(parentId);
-//			}
-//
-//			// Set values in the Task object (if taskId is greater than 0 then we are
-//			// updating the data
-//			if (taskId > 0) {
-//				logger.info("Task id greator than 0");
-//				task.setTaskId(taskId);
-//				Status taskStatus = statusRepo.findById(internalExternalTaskDTO.getTaskStatus());
-//				logger.info("status " + taskStatus);
-//				// Check if the parent task's status can be updated
-//				if (isTaskStatusDoneOrCancel(taskStatus)) {
-//					logger.info("task status is done/cancelled");
-//					if (!canUpdateParentTaskStatus(task)) {
-//						logger.info("can update parenttaskstatus");
-//						return null; // Return null if it cannot be updated
-//					}
-//				}
-//				logger.info("before");
-//				checkAssignedToAndStatusIsUpdated(internalExternalTaskDTO);
-//				logger.info("after");
-//
-//			}
-//			task.setTaskName(internalExternalTaskDTO.getTaskName());
-//			task.setTaskDescription(internalExternalTaskDTO.getTaskDescription());
-//			task.setTaskCreatedBy(internalExternalTaskDTO.getTaskCreatedBy());
-//			task.setTaskAssignedTo(internalExternalTaskDTO.getTaskAssignedTo());
-//			task.setTaskStartDate(internalExternalTaskDTO.getTaskStartDate());
-//			task.setTaskEndDate(internalExternalTaskDTO.getTaskEndDate());
-//			task.setTaskActualStartDate(internalExternalTaskDTO.getTaskActualStartDate());
-//			task.setTaskActualEndDate(internalExternalTaskDTO.getTaskActualEndDate());
-//			task.setTaskStatus(internalExternalTaskDTO.getTaskStatus());
-//			task.setTaskParent(internalExternalTaskDTO.getTaskParent());
-//			task.setHavingChild(internalExternalTaskDTO.isHavingChild());
-//			task.setCompanyId(internalExternalTaskDTO.getCompanyId());
-//			task.setPlacementId(internalExternalTaskDTO.getPlacementId());
-//			task.setTaskChangeDate(new Date());
-//
-//			if (internalExternalTaskDTO.getPlacementId() <= 0) {
-//				if (internalExternalTaskDTO.getInternalId() > 0) {
-//					task.setPlacementId(INTERNAL_PLACEMENT_ID);
-//				} else if (internalExternalTaskDTO.getExternalId() > 0) {
-//					task.setPlacementId(EXTERNAL_PLACEMENT_ID);
-//				}
-//			}
-//
-//			// adding or updating row
-//			Task createdTask = taskRepo.save(task);
-//			System.out.println("created task " + createdTask.toString());
-//			internalExternalTaskDTO.setPlacementId(createdTask.getPlacementId());
-//			logger.info("created Task " + createdTask.getTaskName());
-//			if (createdTask != null) {
-//
-//				if (task.getPlacementId() == INTERNAL_PLACEMENT_ID) {
-//					internalTask = new InternalTask();
-//					// insert data in internal task table
-//
-//					if (internalExternalTaskDTO.getInternalId() > 0) {
-//						internalTask.setInternalId(internalExternalTaskDTO.getInternalId());
-//					}
-//
-//					internalTask = InternalTask.setInternalTaskData(internalTask, internalExternalTaskDTO);
-//					// internalTask.setBenchCandidateId(internalExternalTaskDTO.getBenchCandidateId());
-//					// internalTask.setHiringCompanyName(internalExternalTaskDTO.getHiringCompanyName());
-//					// internalTask.setJobPortalId(internalExternalTaskDTO.getJobPortalId());
-//					// internalTask.setJobTitle(internalExternalTaskDTO.getJobTitle());
-//					// internalTask.setExperienceRequired(internalExternalTaskDTO.getExperienceRequired());
-//					// internalTask.setJobLocationId(internalExternalTaskDTO.getJobLocationId());
-//					// internalTask.setRate(internalExternalTaskDTO.getRate());
-//					// internalTask.setVendorName(internalExternalTaskDTO.getRecruiterName());
-//					// internalTask.setVendorEmail(internalExternalTaskDTO.getRecruiterEmail());
-//					// internalTask.setVendorPhone(internalExternalTaskDTO.getRecruiterPhone());
-//					// internalTask.setJobSubmissionPortalId(internalExternalTaskDTO.getJobSubmissionPortalId());
-//					// internalTask.setPortalName(internalExternalTaskDTO.getPortalName());
-//					// internalTask.setDatePosted(internalExternalTaskDTO.getDatePosted());
-//					// internalTask.setJobLink(internalExternalTaskDTO.getJobLink());
-//					// internalTask.setJobReferenceNumber((internalExternalTaskDTO.getJobReferenceNumber()));
-//					//
-//					// internalTask.setJobAddress(internalExternalTaskDTO.getJobAddress());
-//					// internalTask.setJobCity(internalExternalTaskDTO.getJobCity());
-//					// internalTask.setJobState(internalExternalTaskDTO.getJobState());
-//					// internalTask.setCommentOnCandidate(internalExternalTaskDTO.getCommentOnCandidate());
-//					// internalTask.setMinBillingRate(internalExternalTaskDTO.getMinBillingRate());
-//
-//					internalTask.setTaskId((createdTask.getTaskId()));
-//
-//					internalCreatedTask = internalTaskRepo.save(internalTask);
-//					internalExternalTaskDTO.setInternalId(internalCreatedTask.getInternalId());
-//
-//				} else if (task.getPlacementId() == EXTERNAL_PLACEMENT_ID) {
-//					externalTask = new ExternalTask();
-//					System.out.println(internalExternalTaskDTO.toString());
-//					if (internalExternalTaskDTO.getExternalId() > 0) {
-//						externalTask.setExternalId(internalExternalTaskDTO.getExternalId());
-//					}
-//
-//					externalTask = ExternalTask.setExternalTaskData(externalTask, internalExternalTaskDTO);
-//					// externalTask.setCandidateName(internalExternalTaskDTO.getCandidateName());
-//					// externalTask.setCandidateCompany(internalExternalTaskDTO.getCandidateCompany());
-//					// externalTask.setCompanyAddress(internalExternalTaskDTO.getCompanyAddress());
-//					// externalTask.setTaxTypeId(internalExternalTaskDTO.getTaxTypeId());
-//					// externalTask.setRecruiterName(internalExternalTaskDTO.getRecruiterName());
-//					// externalTask.setRecruiterEmail(internalExternalTaskDTO.getRecruiterEmail());
-//					// externalTask.setRecruiterPhone(internalExternalTaskDTO.getRecruiterPhone());
-//					// externalTask.setVisaId(internalExternalTaskDTO.getVisaId());
-//
-//					externalTask.setTaskId((createdTask.getTaskId()));
-//
-//					// externalTask.setCandidateExperience(internalExternalTaskDTO.getCandidateExperience());
-//					// externalTask.setExpectedMinSalary(internalExternalTaskDTO.getExpectedMinSalary());
-//					// externalTask.setExpectedMaxSalary(internalExternalTaskDTO.getExpectedMaxSalary());
-//					// externalTask.setWillingToRelocate(internalExternalTaskDTO.isWillingToRelocate());
-//					// externalTask.setWillingToNegotiateSalary(internalExternalTaskDTO.isWillingToNegotiateSalary());
-//					//
-//					// externalTask.setReasonToFitForJob(internalExternalTaskDTO.getReasonToFitForJob());
-//					// externalTask.setHiringCompanyId(internalExternalTaskDTO.getHiringCompanyId());
-//
-//					externalCreatedTask = externalTaskRepo.save(externalTask);
-//					internalExternalTaskDTO.setExternalId(externalCreatedTask.getExternalId());
-//
-//				}
-//
-//				if (file != null && (externalCreatedTask != null || internalCreatedTask != null)) {
-//					// adding attachement file
-//					TaskAttachment taskAttachment = new TaskAttachment();
-//					taskAttachment.setTaskID(createdTask.getTaskId());
-//					taskAttachment.setFileName(file.getOriginalFilename());
-//					taskAttachment.setAttachedBy(internalExternalTaskDTO.getEmployeeId());
-//					taskAttachmentRepo.save(taskAttachment);
-//
-//					File tempFile = null;
-//
-//					// converting multi part file into file
-//					tempFile = File.createTempFile("temp", file.getOriginalFilename());
-//					file.transferTo(tempFile);
-//
-//					// building form-data to pass in request for uploading file
-//					MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-//					map.add("filename", file.getOriginalFilename());
-//					map.add("file", new FileSystemResource(tempFile));
-//					map.add("folder", "task_attachement/" + createdTask.getTaskName() + "_" + createdTask.getTaskId());
-//
-//					// setting content type for header
-//					HttpHeaders headers = new HttpHeaders();
-//					headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-//
-//					// building request entity using values and header
-//					HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headers);
-//
-//					// calling api for uploading file
-//					ResponseEntity<String> response = restTemplate.postForEntity(UPLOAD_FILE_URL, requestEntity,
-//							String.class);
-//
-//					if (response.getStatusCode() == HttpStatus.OK) {
-//						logger.info("file uploaded");
-//					} else {
-//						logger.error("Error uploading data to remote microservice: " + response.getStatusCodeValue());
-//					}
-//				}
-//
-//				// adding reason
-//				Reason reason = new Reason();
-//				// setting values in reasonDTO object
-//
-//				if (file != null) {
-//
-//					reason.setReasonText(internalExternalTaskDTO.getReason() + " ( File Attached: "
-//							+ file.getOriginalFilename() + ")");
-//
-//				} else {
-//					reason.setReasonText(internalExternalTaskDTO.getReason());
-//				}
-//
-//				reason.setTaskId(createdTask.getTaskId());
-//				reason.setEmployeeId(internalExternalTaskDTO.getEmployeeId());
-//				reason.setStatusId(internalExternalTaskDTO.getTaskStatus());
-//				reason.setAssignedTo(internalExternalTaskDTO.getTaskAssignedTo());
-//				Reason createdReason = this.reasonRepo.save(reason);
-//
-//				logger.info("created Reason " + createdReason.getReasonText());
-//				if (createdReason != null) {
-//					internalExternalTaskDTO.setTaskId(createdTask.getTaskId());
-//				}
-//
-//				return internalExternalTaskDTO;
-//			}
-//		} catch (Exception e) {
-//			logger.error("Error while processing data: " + e.getMessage(), e);
-//		}
-//
-//		return null;
-//
-//	}
+
 
 	/**
 	 * Get a task by its ID.
@@ -1625,20 +1343,11 @@ public class TaskServiceImpl implements TaskService {
 			return null;
 		}
 
-		// if (task.getPlacementId() == INTERNAL_PLACEMENT_ID) {
-		// InternalTask internalTask = internalTaskRepo.findByTaskId(id);
-		// internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask);
-		//
-		// } else if (task.getPlacementId() == EXTERNAL_PLACEMENT_ID) {
-		// ExternalTask externalTask = externalTaskRepo.findByTaskId(id);
-		// internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
-		// }
-
 		logger.info("Founded internalExternalTaskDTO: " + internalExternalTaskDTO);
 		return internalExternalTaskDTO;
 	}
 
-	// not in used
+
 	@Override
 	public InternalTaskDTO createOrUpdateInternalTask(InternalTaskDTO internalTaskDTO, MultipartFile file) {
 		// TODO Auto-generated method stub
@@ -1807,7 +1516,6 @@ public class TaskServiceImpl implements TaskService {
 
 	}
 
-	// not in used
 	@Override
 	public ExternalTaskDTO createOrUpdateExternalTask(ExternalTaskDTO externalTaskDTO, MultipartFile file) {
 		// TODO Auto-generated method stub
@@ -1944,9 +1652,7 @@ public class TaskServiceImpl implements TaskService {
 					}
 				}
 
-				// adding reason
 				Reason reason = new Reason();
-				// setting values in reasonDTO object
 				reason.setReasonText(externalTaskDTO.getReason());
 				reason.setTaskId(createdTask.getTaskId());
 				reason.setEmployeeId(externalTaskDTO.getEmployeeId());

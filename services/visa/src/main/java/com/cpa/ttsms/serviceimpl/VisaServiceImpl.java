@@ -96,8 +96,6 @@ public class VisaServiceImpl implements VisaService {
 			toUpdatedVisa.setCompanyId(visa.getVisaId());
 			toUpdatedVisa.setForBench(visa.isForBench());
 			toUpdatedVisa.setForSourcing(visa.isForSourcing());
-//			visa.setModifiedBy("admin");
-
 			updatedVisa = visaRepo.save(visa);
 
 			logger.info("updated Visa :" + updatedVisa);

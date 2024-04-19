@@ -47,7 +47,6 @@ public interface CompanyService {
 	 * @param company     The updated Company object.
 	 * @return The updated Company object.
 	 */
-	// Company updateCompanyByCompanyCode(Company company, String companyCode);
 
 	/**
 	 * Updates an existing company in the system.

@@ -78,14 +78,12 @@ public class EmployeeController {
 
 	private ResourceBundle resourceBundle;
 	
-//	public static final HttpStatus EXPIRED_TOKEN = HttpStatus.valueOf(499);
 
 	private static Logger logger;
 	 // Define base URL as a private static final String variable
-//    private static final String BASE_URL = "http://127.0.0.1:8010/security/";
-    private static final String BASE_URL = "http://127.0.0.1:8090/";
+    private static final String BASE_URL = "https://127.0.0.1:8443/security/";
 
-//	 private WebClient webClient;
+
 	 
 
 		static {

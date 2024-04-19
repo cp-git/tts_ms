@@ -37,7 +37,6 @@ public class JwtService {
 
         // Set expiration time
         Date expirationDate = new Date(expirationMillis);
-        // Here you can use expirationDate in your application logic
     }
     public String extractUsername(String token) {
     	
@@ -91,9 +90,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-//                .setExpiration(new Date(System.currentTimeMillis()+ 1000*60*1))
-              .setExpiration(new Date(System.currentTimeMillis()+ expirationTimeMillis))
-
+                .setExpiration(new Date(System.currentTimeMillis()+ expirationTimeMillis))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

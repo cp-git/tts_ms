@@ -39,10 +39,6 @@ public class JobPortalServiceImpl implements JobPortalService {
 	public JobPortal createJobPortal(JobPortal jobportal) {
 		logger.debug("Entering createJobPortal");
 		JobPortal createdJobPortal = null;
-
-		// jobportal.setJobPortalCreatedBy("admin");
-		// jobportal.setJobPortalModifiedBy("admin");
-
 		createdJobPortal = jobportalRepo.save(jobportal);
 		logger.info("created JobPortal :" + createdJobPortal);
 		return createdJobPortal;
@@ -121,7 +117,7 @@ public class JobPortalServiceImpl implements JobPortalService {
 		logger.debug("Entering deleteJobPortalByjobPortalId");
 
 		int jobPortalId = jobportalRepo.deleteJobPortalById(portalId);
-//		logger.info("deleted JobPortal count : " + count);
+
 		return jobPortalId;
 	}
 

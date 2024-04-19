@@ -2,29 +2,27 @@ package com.cpa.ttsms.dto;
 
 import java.util.List;
 
-import com.cpa.ttsms.entity.Task;
-
 public class ParentAndChildTaskDTO {
-	List<Task> parentTasks;
-	List<Task> allTasks;
+	List<TaskDTO> parentTasks;
+	List<TaskDTO> allTasks;
 
-	public List<Task> getParentTasks() {
+	public List<TaskDTO> getParentTasks() {
 		return parentTasks;
 	}
 
-	public void setParentTasks(List<Task> parentTasks) {
+	public void setParentTasks(List<TaskDTO> parentTasks) {
 		this.parentTasks = parentTasks;
 	}
 
-	public List<Task> getChildTasks() {
+	public List<TaskDTO> getChildTasks() {
 		return allTasks;
 	}
 
-	public void setChildTasks(List<Task> allTasks) {
+	public void setChildTasks(List<TaskDTO> allTasks) {
 		this.allTasks = allTasks;
 	}
 
-	public ParentAndChildTaskDTO(List<Task> parentTaskList, List<Task> allTasks) {
+	public ParentAndChildTaskDTO(List<TaskDTO> parentTaskList, List<TaskDTO> allTasks) {
 		super();
 		this.parentTasks = parentTaskList;
 		this.allTasks = allTasks;

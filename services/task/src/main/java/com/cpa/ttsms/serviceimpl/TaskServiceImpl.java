@@ -50,6 +50,7 @@ import com.cpa.ttsms.dto.ParentAndChildTaskDTO;
 import com.cpa.ttsms.dto.StatusDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
+import com.cpa.ttsms.dto.TaskDTO2;
 import com.cpa.ttsms.entity.ExternalTask;
 import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Password;
@@ -841,7 +842,7 @@ public class TaskServiceImpl implements TaskService {
 	 *         the TaskDTO taskid, or ResponseEntity with HTTP status
 	 *         INTERNAL_SERVER_ERROR if an exception occurs during the update.
 	 */
-	public Task updateTask(TaskDTO taskDTO) throws Exception {
+	public Task updateTask(TaskDTO2 taskDTO) throws Exception {
 		// Fetch the empid from the username
 		int empid = getEmpIdFromUsername(taskDTO.getUsername());
 		if (empid <= 0) {
@@ -1026,21 +1027,29 @@ public class TaskServiceImpl implements TaskService {
 		// TODO Auto-generated method stub
 		int createdBy = employeeId;
 		int assignedBy = employeeId;
-		List<Task> allTasks = taskRepo.findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDesc(createdBy, assignedBy);
 
+		List<Task> tasks = taskRepo.findByTaskAssignedToOrTaskCreatedByOrderByTaskEndDateDesc(createdBy, assignedBy);
+		List<TaskDTO> allTasks = new ArrayList<TaskDTO>();
+
+		for (Task task : tasks) {
+			InternalExternalTaskDTO intExtTask = getInternalOrExternalTaskByTaskId(task.getTaskId());
+			TaskDTO taskDto = new TaskDTO(intExtTask);
+			allTasks.add(taskDto);
+		}
 		// List<Integer> parentTaskIds = allTasks.stream().filter(task ->
 		// task.getTaskParent() == 0).map(Task::getTaskId)
 		// .collect(Collectors.toList());
 
-		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
-																					// filtering
+		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(TaskDTO::getTaskParent) // Get all parent task IDs
+																						// without
+																						// filtering
 				.filter(parentId -> parentId != null && parentId != 0) // Filter out null parent task IDs, if any
 				.collect(Collectors.toSet());
 
 		Set<Integer> parentTaskIdsSet2 = allTasks.stream().filter(task -> task.getTaskParent() == 0)
-				.map(Task::getTaskId).collect(Collectors.toSet());
+				.map(TaskDTO::getTaskId).collect(Collectors.toSet());
 
-		List<Task> parentTaskList = new ArrayList<Task>();
+		List<TaskDTO> parentTaskList = new ArrayList<TaskDTO>();
 
 		List<ParentAndChildTaskDTO> parentAndChildDTOs = new ArrayList<>();
 
@@ -1048,7 +1057,8 @@ public class TaskServiceImpl implements TaskService {
 
 		for (Integer parentId : parentTaskIds) {
 
-			Task parentTask = taskRepo.findByTaskId(parentId);
+			InternalExternalTaskDTO intExtParentTask = getInternalOrExternalTaskByTaskId(parentId);
+			TaskDTO parentTask = new TaskDTO(intExtParentTask);
 			parentTaskList.add(parentTask);
 		}
 
@@ -1076,21 +1086,28 @@ public class TaskServiceImpl implements TaskService {
 	@Override
 	public ParentAndChildTaskDTO getAllParentTasksByCompanyId(int companyId) {
 		// TODO Auto-generated method stub
-		List<Task> allTasks = taskRepo.findByCompanyId(companyId);
+		List<Task> tasks = taskRepo.findByCompanyId(companyId);
+		List<TaskDTO> allTasks = new ArrayList<TaskDTO>();
 
+		for (Task task : tasks) {
+			InternalExternalTaskDTO intExtTask = getInternalOrExternalTaskByTaskId(task.getTaskId());
+			TaskDTO taskDto = new TaskDTO(intExtTask);
+			allTasks.add(taskDto);
+		}
 		// List<Integer> parentTaskIds = allTasks.stream().filter(task ->
 		// task.getTaskParent() == 0).map(Task::getTaskId)
 		// .collect(Collectors.toList());
 
-		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(Task::getTaskParent) // Get all parent task IDs without
-																					// filtering
+		Set<Integer> parentTaskIdsSet1 = allTasks.stream().map(TaskDTO::getTaskParent) // Get all parent task IDs
+																						// without
+																						// filtering
 				.filter(parentId -> parentId != null && parentId != 0) // Filter out null parent task IDs, if any
 				.collect(Collectors.toSet());
 
 		Set<Integer> parentTaskIdsSet2 = allTasks.stream().filter(task -> task.getTaskParent() == 0)
-				.map(Task::getTaskId).collect(Collectors.toSet());
+				.map(TaskDTO::getTaskId).collect(Collectors.toSet());
 
-		List<Task> parentTaskList = new ArrayList<Task>();
+		List<TaskDTO> parentTaskList = new ArrayList<TaskDTO>();
 
 		List<ParentAndChildTaskDTO> parentAndChildDTOs = new ArrayList<>();
 
@@ -1098,14 +1115,15 @@ public class TaskServiceImpl implements TaskService {
 
 		for (Integer parentId : parentTaskIds) {
 
-			Task parentTask = taskRepo.findByTaskId(parentId);
+			InternalExternalTaskDTO intExtParentTask = getInternalOrExternalTaskByTaskId(parentId);
+			TaskDTO parentTask = new TaskDTO(intExtParentTask);
 			parentTaskList.add(parentTask);
 		}
 
 		ParentAndChildTaskDTO dto = new ParentAndChildTaskDTO(parentTaskList, allTasks); // Set childTasks as null or an
 																							// empty list
 		parentAndChildDTOs.add(dto);
-		System.out.println(dto);
+//		System.out.println(dto);
 		return dto;
 	}
 

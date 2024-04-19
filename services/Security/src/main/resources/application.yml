@@ -11,14 +11,21 @@ spring.datasource:
   username: postgres
   password: Pass1word
   
+#server:
+#  port : 8010
+
 server:
-  port : 8010
+  port : 8090
 
 #server:
-##   port: 8010
-#  port: 8443
+#  port: 8442
 #  ssl:
 #    key-store-type: PKCS12
 #    key-store: src/main/resources/keystore/ttscertificate.p12
 #    key-store-password: sslpassword
 #    key-alias: ttscertificate
+
+#expiration-time: 3600000 # Expiration time in milliseconds (1000*60*60 = 1 hour)
+expiration-time: 60000 # Expiration time in milliseconds (1000*60*60 = 1 hour)
+
+refresh-token-expiry-millis: 600000 # Expiration time for refresh token in milliseconds (2 minutes)(60000*2)

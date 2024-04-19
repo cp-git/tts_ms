@@ -50,7 +50,9 @@ public class BenchCandidateController {
 	
 	private ResourceBundle resourceBunde;
 	private static Logger logger;
-    private static final String BASE_URL = "http://127.0.0.1:8010/";
+//    private static final String BASE_URL = "http://127.0.0.1:8010/";
+    private static final String BASE_URL = "https://127.0.0.1:8443/";
+
 
 	BenchCandidateController() {
 		resourceBunde = ResourceBundle.getBundle("ErrorMessage", Locale.US);

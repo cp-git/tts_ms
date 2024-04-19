@@ -1,8 +1,10 @@
 package com.cpa.ttsms.config;
 
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -51,8 +53,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf->csrf.disable())
         				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-        				.antMatchers("/products/welcome", "/products/new","/products/login","/products/refreshToken","/user/**","/ttsms/**","/token/generateToken","/token/**","/ttsms/employee/photos/**").permitAll()
-        				.antMatchers("/products/all","/products/**","/user/message","/token/checkToken")
+        				.antMatchers(HttpMethod.POST,"/token/refreshToken","/user/**","/ttsms/**","/token/generateToken","/token/**","/ttsms/employee/photos/**").permitAll()
+        				
+
+        				.antMatchers("/user/message","/token/checkToken")
         				
         				.authenticated())
                         .sessionManagement(sessionManagement -> sessionManagement
@@ -67,7 +71,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-
+   
 
 	@Bean
     public PasswordEncoder passwordEncoder() {

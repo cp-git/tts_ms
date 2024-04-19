@@ -172,7 +172,7 @@ public class TaskController {
 	 *                     meaningful error response to the client.
 	 */
 	@GetMapping("/task/{id}")
-	public ResponseEntity<Object> getTaskById(@PathVariable("id") int id,@RequestHeader("Authorization") String authHeader
+	public ResponseEntity<Object> getTaskById(@PathVariable("id") int id
 ) throws CPException {
 		// Log that the method has been entered and print the task ID received
 		logger.debug("Entering getTaskById");
@@ -182,7 +182,7 @@ public class TaskController {
 		Task task = null;
 
 		try {
-			callCheckToken(authHeader);
+			
 			// Fetch the task by its ID using the taskService
 			task = taskService.getTaskById(id);
 			logger.info("Fetched Task: " + task);
@@ -514,7 +514,8 @@ public class TaskController {
 		// Log that the method has been entered and print task details
 		logger.debug("Entering createOrUpdateTask");
 		logger.info("Data of creating Task: " + internalExternalTaskDTO.toString());
-
+		System.out.println("@@@@@@@@@@@@In createOrUpdateTask @@@@@@@@@@@@@@@@");
+		System.out.println(authHeader);
 		try {
 			callCheckToken(authHeader);
 			InternalExternalTaskDTO createdTask = taskService.createOrUpdateTask(internalExternalTaskDTO, file);

@@ -61,6 +61,9 @@ import com.cpa.ttsms.helper.ResponseHandler;
 import com.cpa.ttsms.service.EmployeeService;
 import com.cpa.ttsms.service.TokenHandler;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
+
 
 
 @CrossOrigin
@@ -74,10 +77,15 @@ public class EmployeeController {
 	private final RestTemplate restTemplate;
 
 	private ResourceBundle resourceBundle;
+	
+//	public static final HttpStatus EXPIRED_TOKEN = HttpStatus.valueOf(499);
+
 	private static Logger logger;
 	 // Define base URL as a private static final String variable
-    private static final String BASE_URL = "http://127.0.0.1:8010/";
-	 private WebClient webClient;
+//    private static final String BASE_URL = "http://127.0.0.1:8010/security/";
+    private static final String BASE_URL = "http://127.0.0.1:8090/";
+
+//	 private WebClient webClient;
 	 
 
 		static {
@@ -95,13 +103,12 @@ public class EmployeeController {
 		
 
 
-	    // Constructor to initialize WebClient
-	    public EmployeeController(WebClient.Builder webClientBuilder, RestTemplate restTemplate) {
-	        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8010/security").build();
-//	        this.webClient = webClientBuilder.baseUrl("http://127.0.0.1:8090").build();
+	
+	    public EmployeeController( RestTemplate restTemplate) {
 
+	      
 	        System.out.println("Entered in Controller class");
-	        System.out.println(webClient);
+
 	        resourceBundle = ResourceBundle.getBundle("ErrorMessage", Locale.US);
 			logger = Logger.getLogger(EmployeeController.class);
 			this.restTemplate = restTemplate;
@@ -116,34 +123,40 @@ public class EmployeeController {
 	
 
 
-	  private String callCheckToken(String authHeader) {
-	        try {
-	            // Extract the token from the Authorization header.
-	            String token = authHeader.substring(7);
+private String callCheckToken(String authHeader) throws ExpiredJwtException{
+    try {
+        // Extract the token from the Authorization header.
+        String token = authHeader.substring(7);
 
-	            // Set the authorization header with the token.
-	            HttpHeaders headers = new HttpHeaders();
-	            headers.set("Authorization", "Bearer " + token);
-	            headers.setContentType(MediaType.APPLICATION_JSON);
+        // Set the authorization header with the token.
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-	            // Create the request entity with headers.
-	            HttpEntity<String> entity = new HttpEntity<>(headers);
+        // Create the request entity with headers.
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-	            // Specify the complete URL for the checkToken endpoint using the base URL variable.
-//	            String checkTokenUrl = BASE_URL + "security/token/checkToken";
-	            String checkTokenUrl = BASE_URL + "token/checkToken";
+        // Specify the complete URL for the checkToken endpoint using the base URL variable.
+        String checkTokenUrl = BASE_URL + "token/checkToken";
 
-	            // Make the HTTP GET request to the checkToken endpoint.
-	            ResponseEntity<String> response = restTemplate.exchange(
-	                    checkTokenUrl, HttpMethod.GET, entity, String.class);
+        // Make the HTTP GET request to the checkToken endpoint.
+        ResponseEntity<String> response = restTemplate.exchange(
+                checkTokenUrl, HttpMethod.GET, entity, String.class);
 
-	            // Return the response body.
-	            return response.getBody();
-	        } catch (Exception ex) {
-	            // Handle exceptions if any.
-	            return null;
-	        }
-	    }
+        // Return the response body.
+        return response.getBody();
+    } catch (ExpiredJwtException ex) {
+        // Handle expired token exception
+        System.out.println("JWT Token expired: " + ex.getMessage());
+        // Perform actions like refreshing token or redirecting to login page
+        return null; // Or any appropriate action
+    } catch (Exception ex) {
+        // Handle other exceptions
+        System.out.println("Exception occurred while checking token: " + ex.getMessage());
+        return null; // Or any appropriate action
+    }
+}
+	
 	/**
 	 * Creates a new employee along with their password information based on the
 	 * provided EmployeePasswordAndEmployeePhotosDTO object and an accompanying
@@ -242,54 +255,6 @@ public class EmployeeController {
 
 	}
 
-	/**
-	 * Updates an employee based on the provided employeeId and Employee object, and
-	 * generates an appropriate response.
-	 *
-	 * @param employee   - The Employee object containing the updated details of the
-	 *                   employee.
-	 * @param employeeId - The ID of the employee to be updated.
-	 *
-	 * @return ResponseEntity containing the updated Employee details with a CREATED
-	 *         status if successful, otherwise returns an INTERNAL_SERVER_ERROR
-	 *         response.
-	 *
-	 * @throws CPException If there is an error while updating the employee or
-	 *                     generating the response.
-	 */
-//	@PutMapping("/employee/update/{employeeId}")
-//	public ResponseEntity<Object> updateEmployeeByEmployeeId(@RequestBody Employee employee,
-//			@PathVariable("employeeId") int employeeId) throws CPException {
-//		// Log the entry of the method
-//		logger.debug("Entering updateEmployee");
-//		logger.info("entered  updateEmployee :" + employee);
-//
-//		// Initialize the updatedEmployee to hold the result of the update
-//		Employee updatedEmployee = null;
-//
-//		try {
-//			// Attempt to update the employee using the employeeService
-//			updatedEmployee = employeeService.updateEmployeeByEmployeeId(employee, employeeId);
-//
-//			if (updatedEmployee == null) {
-//				// If the updatedEmployee is null, log the error message and generate an
-//				// INTERNAL_SERVER_ERROR response
-//				logger.info(resourceBundle.getString("err004"));
-//				return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err004");
-//			} else {
-//				// If the employee was successfully updated, log the updated employee details
-//				// and generate a CREATED response
-//				logger.info("updated employee : " + updatedEmployee);
-//				return ResponseHandler.generateResponse(updatedEmployee, HttpStatus.CREATED);
-//			}
-//		} catch (Exception ex) {
-//			// Log any exceptions that occur during the update process
-//			logger.error("Failed update Employee : " + ex.getMessage());
-//			// Throw a custom CPException with error code "err004" and the corresponding
-//			// error message from the resource bundle
-//			throw new CPException("err004", resourceBundle.getString("err004"));
-//		}
-//	}
 
 	/**
 	 * Updates an employee's information and, optionally, their profile photo by
@@ -321,8 +286,7 @@ public class EmployeeController {
 			// Return a success response with the updated employee data
 			return ResponseHandler.generateResponse(updatedEmployeeDTO, HttpStatus.OK);
 		} else {
-			// Return a not found response if the employee is not found or an error occurs
-			// during update
+		
 			return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, "err006");
 		}
 	}
@@ -528,23 +492,10 @@ public class EmployeeController {
 	public ResponseEntity<List<Object>> getAllEmployees(@RequestHeader("Authorization") String authHeader) throws Exception {
 		logger.debug("Entering getAllEmployees");
 	   	String token = authHeader.substring(7);
-	    // Generate a random AES key
-	   	// Use 16 bytes for AES-128
-//	   	String encryptedToken = TokenHandler.encrypt(token);
-	   	
-//	   	System.out.println("Token Before encryption"+token);
-//	   	System.out.println("Encrypted Token"+encryptedToken);
+
 		List<Object> employees = null;
 		try {
-//			String result = webClient.get()
-//	                .uri(uriBuilder -> uriBuilder
-//	                    .path("/token/getEncryptedToken")
-//	                    .queryParam("encryptedParam", encryptedToken)
-//	                    .build())
-//	                .accept(MediaType.APPLICATION_JSON)
-//	                .retrieve()
-//	                .bodyToMono(String.class)
-//	                .block();
+
 			callCheckToken(authHeader);
 			// Retrieve all active employees from the service layer.
 			employees = employeeService.getAllEmployees();
@@ -604,101 +555,57 @@ public class EmployeeController {
 	 * @throws CPException If there's an error while retrieving or checking the
 	 *                     password.
 	 */
-//	@GetMapping("password/{username}/{password}")
-//	public JwtResponse checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
-//		Password isPasswordValid = null;
-//		try {
-//			// Call the employeeService to validate the username and password.
-//			isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
-//
-//			// If the password is valid, return the Password object.
-//			if (isPasswordValid != null) {
-//	            RefreshToken refreshToken = webClient.post()
-//	                    .uri("/token/create-refresh-token?username={username}", username)
-//	                    .retrieve()
-//	                    .bodyToMono(RefreshToken.class)
-//	                    .block();
-//				 JwtResponse jwtResponse = new JwtResponse();
-//				  String token = webClient.post()
-//		                    .uri("/token/generateToken")
-//		                    .body(BodyInserters.fromValue(username))
-//		                    .retrieve()
-//		                    .bodyToMono(String.class)
-//		                    .block();
-//				  
-//				  jwtResponse.setAccessToken(token);
-////				  jwtResponse.setTokenUniqueID("guhgtddv1258fbfv");
-//			  jwtResponse.setTokenUniqueID(refreshToken.getTokenUniqueID());
-//
-//				return jwtResponse;
-//			} else {
-//				// If the password is not valid, return null.
-//				return null;
-//			}
-//		} catch (Exception ex) {
-//			// If an exception occurs while trying to validate the password,
-//			// log the error message and throw a custom exception (CPException) with an
-//			// error code and message.
-//			logger.error("Failed generating access token: " + ex.getMessage());
-//			throw new CPException("err002", "Error while retrieving all employees");
-//		}
-//	}
-//	
-	@GetMapping("password/{username}/{password}")
-	public Map<String, Object> checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
-	    Map<String, Object> response = new HashMap<>();
-	    Password isPasswordValid = null;
-	    try {
-	        // Call the employeeService to validate the username and password.
-	        isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
-	        System.out.println("Entered in Controllr after service");
-	        // If the password is valid, return the Password object.
-	        if (isPasswordValid != null) {
-//	            RefreshToken refreshToken = webClient.post()
-//	                    .uri("/token/create-refresh-token?username={username}", username)
-//	                    .retrieve()
-//	                    .bodyToMono(RefreshToken.class)
-//	                    .block();
-	            JwtResponse jwtResponse = new JwtResponse();
-	            String token = webClient.post()
-	                    .uri("/token/generateToken")
-	                    .body(BodyInserters.fromValue(username))
-	                    .retrieve()
-	                    .bodyToMono(String.class)
-	                    .block();
-//	        	  RefreshToken refreshToken = restTemplate.postForObject(
-//	                      "http://127.0.0.1:8010/security/token/create-refresh-token?username={username}",
-//	                      null,
-//	                      RefreshToken.class,
-//	                      username
-//	              );
-//
-//	              JwtResponse jwtResponse = new JwtResponse();
-//	              String token = restTemplate.postForObject(
-//	                      "http://127.0.0.1:8010/security/token/generateToken",
-//	                      username,
-//	                      String.class
-//	              );
 
-	            jwtResponse.setAccessToken(token);
-//	            jwtResponse.setTokenUniqueID(refreshToken.getTokenUniqueID());
+	
+	 @GetMapping("password/{username}/{password}")
+	    public Map<String, Object> checkPassword(@PathVariable String username, @PathVariable String password) throws CPException {
+	        Map<String, Object> response = new HashMap<>();
+	        Password isPasswordValid = null;
+	        try {
+	            // Call the employeeService to validate the username and password.
+	            isPasswordValid = employeeService.getPasswordByUsernameAndPassword(username, password);
+	            System.out.println("Entered in Controller after service");
+	            // If the password is valid, return the Password object.
+	            if (isPasswordValid != null) {
+	                // Call the endpoint to create a refresh token using RestTemplate
+	                ResponseEntity<RefreshToken> refreshTokenResponse = restTemplate.postForEntity(
+	                        BASE_URL + "token/create-refresh-token?username={username}",
+	                        null,
+	                        RefreshToken.class,
+	                        username
+	                );
 
-	            response.put("jwtResponse", jwtResponse);
-	            response.put("isPasswordValid", isPasswordValid);
+	                RefreshToken refreshToken = refreshTokenResponse.getBody();
 
-	            return response;
-	        } else {
-	            // If the password is not valid, return null.
-	            return null;
+	                // Call the endpoint to generate an access token using RestTemplate
+	                ResponseEntity<String> tokenResponse = restTemplate.postForEntity(
+	                        BASE_URL + "token/generateToken",
+	                        username,
+	                        String.class
+	                );
+
+	                String token = tokenResponse.getBody();
+
+	                JwtResponse jwtResponse = new JwtResponse();
+	                jwtResponse.setAccessToken(token);
+	                jwtResponse.setTokenUniqueID(refreshToken.getTokenUniqueID());
+
+	                response.put("jwtResponse", jwtResponse);
+	                response.put("isPasswordValid", isPasswordValid);
+
+	                return response;
+	            } else {
+	                // If the password is not valid, return null.
+	                return null;
+	            }
+	        } catch (Exception ex) {
+	            // If an exception occurs while trying to validate the password,
+	            // log the error message and throw a custom exception (CPException) with an
+	            // error code and message.
+	            logger.error("Failed generating access token: " + ex.getMessage());
+	            throw new CPException("err002", "Error while retrieving all employees");
 	        }
-	    } catch (Exception ex) {
-	        // If an exception occurs while trying to validate the password,
-	        // log the error message and throw a custom exception (CPException) with an
-	        // error code and message.
-	        logger.error("Failed generating access token: " + ex.getMessage());
-	        throw new CPException("err002", "Error while retrieving all employees");
 	    }
-	}
 
 	
 
@@ -872,56 +779,73 @@ public class EmployeeController {
 	 * @throws CPException If there is an error while fetching the employees or
 	 *                     generating the response.
 	 */
+
+	
+
+
 	@GetMapping("/comEmpPwd/{companyId}")
 	public ResponseEntity<List<Object>> getAllCompnayEmployeeAndPasswordByCompanyId(
-			@PathVariable("companyId") int companyId,@RequestHeader("Authorization") String authHeader) throws CPException {
+	        @PathVariable("companyId") int companyId, @RequestHeader("Authorization") String authHeader) throws CPException {
 
-		// Initialize a list to store employee data.
-		List<Object> employees = null;
-		
-		try {
-//			String result = webClient.get()
-//	                .uri("/token/checkToken")
-//	                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-//	                .accept(MediaType.APPLICATION_JSON)
-//	                .retrieve()
-//	                .bodyToMono(String.class)
-//	                .block();
-//			
-			callCheckToken(authHeader);
-			// Check if the companyId is a valid non-negative integer.
-			if (companyId >= 0) {
-				// Call a service method to fetch all employees and their passwords by
-				// companyId.
-				employees = employeeService.getAllEmployeeAndPasswordByCompanyId(companyId);
+	    // Initialize a list to store employee data.
+	    List<Object> employees = null;
 
-				// Log a message indicating that employees were successfully fetched.
-				logger.info("Fetched all employees: " + employees);
+	    try {
+	        String checkToken = callCheckToken(authHeader);
+	        System.out.println("***********   " + checkToken);
+	        if (checkToken != null) {
+	            System.out.println("***********   " + checkToken);
+	            // Check if the companyId is a valid non-negative integer.
+	            if (companyId >= 0) {
+	                // Call a service method to fetch all employees and their passwords by
+	                // companyId.
+	                employees = employeeService.getAllEmployeeAndPasswordByCompanyId(companyId);
 
-				// Generate a response with the list of employees and a HTTP status code of 200
-				// (OK).
-				return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
-			} else {
-				// Log an error message indicating an invalid companyId.
-				logger.info(resourceBundle.getString("err002"));
+	                // Log a message indicating that employees were successfully fetched.
+	                logger.info("Fetched all employees: " + employees);
 
-				// Generate a response with a HTTP status code of 404 (Not Found) and an error
-				// message.
-				return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
-			}
-		} catch (Exception ex) {
-			// Log an error message if an exception occurs during the process.
-			logger.error("Failed getting all employees: " + ex.getMessage());
+	                // Generate a response with the list of employees and a HTTP status code of 200
+	                // (OK).
+	                return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
+	            } else {
+	                // Log an error message indicating an invalid companyId.
+	                logger.info(resourceBundle.getString("err002"));
 
-			// Throw a custom exception with an error code and message.
-			throw new CPException("err002", resourceBundle.getString("err002"));
-		}
-	
+	                // Generate a response with a HTTP status code of 404 (Not Found) and an error
+	                // message.
+	                return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+	            }
+	        } else {
+	            String errCodeString = new String();
+	            errCodeString = "Token has expired";
+	            
+	            // If checkToken is null, return an unauthorized response with an appropriate message.
+	            return ResponseHandler.generateListResponse(HttpStatus.UNAUTHORIZED, null);
+	        }
+	    }
+
+	    catch (SignatureException ex) {
+	        // Log an error message if token is expired.
+	        logger.error("Token improper: " + ex.getMessage());
+
+	        // Return 401 Unauthorized response.
+	        return ResponseHandler.generateListResponse(HttpStatus.UNAUTHORIZED, null);
+	    } 
+	    catch (NullPointerException ex) {
+	        // Log an error message if token is expired.
+	        logger.error("Token expired: " + ex.getMessage());
+
+	        // Return 401 Unauthorized response.
+	        return ResponseHandler.generateListResponse(HttpStatus.UNAUTHORIZED, null);
+	    } 
+	    catch (Exception ex) {
+	        // Log an error message if an exception occurs during the process.
+	        logger.error("Failed getting all employees: " + ex.getMessage());
+	        
+	        return ResponseHandler.generateListResponse(HttpStatus.BAD_REQUEST, "bad REquest");
+
+	        // Throw a custom exception with an error code and message.
+	    }
 	}
-	
-	
-	
-	
-	
-	
+
 }

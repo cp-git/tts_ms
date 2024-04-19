@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.cpa.ttsms.entity.Password;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -23,8 +25,22 @@ public class JwtService {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
+    @Value("${expiration-time}")
+    private long expirationTimeMillis;
 
+    public void setExpirationTime() {
+        // Current time in milliseconds
+        long currentTimeMillis = System.currentTimeMillis();
+        
+        // Calculate expiration time
+        long expirationMillis = currentTimeMillis + expirationTimeMillis;
+
+        // Set expiration time
+        Date expirationDate = new Date(expirationMillis);
+        // Here you can use expirationDate in your application logic
+    }
     public String extractUsername(String token) {
+    	
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -51,8 +67,16 @@ public class JwtService {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
+    	try {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    	}
+    	catch (ExpiredJwtException ex) {
+            // Handle expired JWT exception
+        	System.out.println("Token has Expired");
+            
+        }
+    	return false;
     }
 
 
@@ -67,7 +91,9 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000*60*60))
+//                .setExpiration(new Date(System.currentTimeMillis()+ 1000*60*1))
+              .setExpiration(new Date(System.currentTimeMillis()+ expirationTimeMillis))
+
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
@@ -75,4 +101,12 @@ public class JwtService {
         byte[] keyBytes= Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+    
+    public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
+
+		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() +expirationTimeMillis ))
+				.signWith( SignatureAlgorithm.HS256, SECRET).compact();
+
+	}
 }

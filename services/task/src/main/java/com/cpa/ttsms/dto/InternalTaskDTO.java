@@ -2,6 +2,7 @@ package com.cpa.ttsms.dto;
 
 import java.util.Date;
 
+import com.cpa.ttsms.entity.BenchCandidate;
 import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -91,6 +92,8 @@ public class InternalTaskDTO {
 	private String portalName;
 
 	private String commentsOnCandidate;
+
+	private int benchCandidateVisaTypeId;
 
 	public int getBenchCandidateId() {
 		return benchCandidateId;
@@ -404,6 +407,20 @@ public class InternalTaskDTO {
 		this.commentsOnCandidate = commentsOnCandidate;
 	}
 
+	/**
+	 * @return the benchCandidateVisaTypeId
+	 */
+	public int getBenchCandidateVisaTypeId() {
+		return benchCandidateVisaTypeId;
+	}
+
+	/**
+	 * @param benchCandidateVisaTypeId the benchCandidateVisaTypeId to set
+	 */
+	public void setBenchCandidateVisaTypeId(int benchCandidateVisaTypeId) {
+		this.benchCandidateVisaTypeId = benchCandidateVisaTypeId;
+	}
+
 	public InternalTaskDTO(int benchCandidateId, int taskId, String taskName, String taskDescription, int taskCreatedBy,
 			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
 			Date taskActualEndDate, int companyId, int placementId, int taskParent, String reason, int employeeId,
@@ -411,7 +428,7 @@ public class InternalTaskDTO {
 			String jobTitle, int jobLocationId, String jobAddress, String jobCity, String jobState,
 			int experienceRequired, float rate, Date datePosted, String jobLink, int jobPortalId,
 			String jobReferenceNumber, int taxTypeId, String vendorName, String vendorEmail, String vendorPhone,
-			int jobSubmissionPortalId, String portalName, String commentsOnCandidate) {
+			int jobSubmissionPortalId, String portalName, String commentsOnCandidate, int benchCandidateVisaTypeId) {
 		super();
 		this.benchCandidateId = benchCandidateId;
 		this.taskId = taskId;
@@ -452,12 +469,14 @@ public class InternalTaskDTO {
 		this.jobSubmissionPortalId = jobSubmissionPortalId;
 		this.portalName = portalName;
 		this.commentsOnCandidate = commentsOnCandidate;
+		this.benchCandidateVisaTypeId = benchCandidateVisaTypeId;
 	}
 
 //	public InternalTaskDTO(Task associatedTask, InternalTask internalTask) {
 //	
 //		// TODO Auto-generated constructor stub
 //	}
+
 	public InternalTaskDTO(Task task, InternalTask internalTask) {
 		this.benchCandidateId = internalTask.getBenchCandidateId();
 
@@ -501,6 +520,51 @@ public class InternalTaskDTO {
 		this.commentsOnCandidate = internalTask.getCommentOnCandidate();
 	}
 
+	public InternalTaskDTO(Task task, InternalTask internalTask, BenchCandidate benchCandidate) {
+		this.benchCandidateId = internalTask.getBenchCandidateId();
+
+		this.taskId = task.getTaskId();
+		this.taskName = task.getTaskName();
+		this.taskDescription = task.getTaskDescription();
+		this.taskCreatedBy = task.getTaskCreatedBy();
+		this.taskAssignedTo = task.getTaskAssignedTo();
+		this.taskStatus = task.getTaskStatus();
+		this.taskStartDate = task.getTaskStartDate();
+		this.taskEndDate = task.getTaskEndDate();
+		this.taskActualStartDate = task.getTaskActualStartDate();
+		this.taskActualEndDate = task.getTaskActualEndDate();
+		this.companyId = task.getCompanyId();
+		this.taskParent = task.getTaskParent();
+		this.havingChild = task.isHavingChild();
+		this.placementId = task.getPlacementId();
+		this.taskChangeDate = task.getTaskChangeDate();
+
+		this.internalId = internalTask.getInternalId();
+
+		this.hiringCompanyName = internalTask.getHiringCompanyName();
+		this.jobTitle = internalTask.getJobTitle();
+		this.jobLocationId = internalTask.getJobLocationId();
+		this.jobAddress = internalTask.getJobAddress();
+		this.jobCity = internalTask.getJobCity();
+		this.jobState = internalTask.getJobState();
+		this.experienceRequired = internalTask.getExperienceRequired();
+		this.rate = internalTask.getRate();
+		this.datePosted = internalTask.getDatePosted();
+		this.jobLink = internalTask.getJobLink();
+		this.jobPortalId = internalTask.getJobPortalId();
+		this.jobReferenceNumber = internalTask.getJobReferenceNumber();
+
+		this.vendorName = internalTask.getVendorName();
+		this.vendorEmail = internalTask.getVendorEmail();
+		this.vendorPhone = internalTask.getVendorPhone();
+
+		this.jobSubmissionPortalId = internalTask.getJobSubmissionPortalId();
+		this.portalName = internalTask.getPortalName();
+		this.commentsOnCandidate = internalTask.getCommentOnCandidate();
+
+		this.benchCandidateVisaTypeId = benchCandidate.getVisaTypeId();
+	}
+
 	@Override
 	public String toString() {
 		return "InternalTaskDTO [benchCandidateId=" + benchCandidateId + ", taskId=" + taskId + ", taskName=" + taskName
@@ -516,7 +580,8 @@ public class InternalTaskDTO {
 				+ ", jobLink=" + jobLink + ", jobPortalId=" + jobPortalId + ", jobReferenceNumber=" + jobReferenceNumber
 				+ ", taxTypeId=" + taxTypeId + ", vendorName=" + vendorName + ", vendorEmail=" + vendorEmail
 				+ ", vendorPhone=" + vendorPhone + ", jobSubmissionPortalId=" + jobSubmissionPortalId + ", portalName="
-				+ portalName + ", commentsOnCandidate=" + commentsOnCandidate + "]";
+				+ portalName + ", commentsOnCandidate=" + commentsOnCandidate + ", benchCandidateVisaTypeId="
+				+ benchCandidateVisaTypeId + "]";
 	}
 
 }

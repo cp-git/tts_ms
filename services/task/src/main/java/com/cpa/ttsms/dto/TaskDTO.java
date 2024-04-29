@@ -44,6 +44,36 @@ public class TaskDTO {
 
 	private int hiringCompanyId;
 
+	private String jobTitle; // Job Title
+
+	private int experienceRequired; // Indicates the number of years of experience needed for the job
+
+	private float rate; // $ per hour
+
+	private int visaTypeId;
+
+	private int jobLocationId; // job mode
+
+//	private String benchCandidateJobTitle; // Job Title
+//
+//	private int benchCandidateExperienceRequired; // Indicates the number of years of experience needed for the job
+//
+//	private float benchCandidateRate; // $ per hour
+//
+//	private int benchCandidateVisaTypeId;
+//
+//	private int benchCandidateJobLocationId; // job mode
+//
+//	private String hiringCompanyJobTitle; // Job Title
+//
+//	private int hiringCompanyExperienceRequired; // Indicates the number of years of experience needed for the job
+//
+//	private float hiringCompanyRate; // $ per hour
+//
+//	private int hiringCompanyVisaTypeId;
+//
+//	private int hiringCompanyJobLocationId; // job mode
+
 	public TaskDTO() {
 		super();
 	}
@@ -51,7 +81,8 @@ public class TaskDTO {
 	public TaskDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
 			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
 			int companyId, int taskParent, boolean havingChild, int placementId, Date taskChangeDate,
-			int benchCandidateId, int hiringCompanyId) {
+			int benchCandidateId, int hiringCompanyId, String jobTitle, int experienceRequired, float rate,
+			int visaTypeId, int jobLocationId) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -70,6 +101,11 @@ public class TaskDTO {
 		this.taskChangeDate = taskChangeDate;
 		this.benchCandidateId = benchCandidateId;
 		this.hiringCompanyId = hiringCompanyId;
+		this.jobTitle = jobTitle;
+		this.experienceRequired = experienceRequired;
+		this.rate = rate;
+		this.visaTypeId = visaTypeId;
+		this.jobLocationId = jobLocationId;
 	}
 
 	public TaskDTO(InternalExternalTaskDTO intExtParentTask) {
@@ -90,6 +126,55 @@ public class TaskDTO {
 		this.taskChangeDate = intExtParentTask.getTaskChangeDate();
 		this.benchCandidateId = intExtParentTask.getBenchCandidateId();
 		this.hiringCompanyId = intExtParentTask.getHiringCompanyId();
+
+//		this.benchCandidateJobTitle = intExtParentTask.getJobTitle();
+//		this.benchCandidateExperienceRequired = intExtParentTask.getExperienceRequired();
+//		this.benchCandidateRate = intExtParentTask.getRate();
+//
+//		this.benchCandidateVisaTypeId = intExtParentTask.getBenchCandidateVisaTypeId();
+//
+//		this.benchCandidateJobLocationId = intExtParentTask.getJobLocationId();
+//
+//		this.hiringCompanyJobTitle = intExtParentTask.getHiringCompanyJobTitle();
+//
+//		this.hiringCompanyExperienceRequired = intExtParentTask.getHiringCompanyExperienceRequired();
+//
+//		this.hiringCompanyRate = intExtParentTask.getHiringCompanyRate();
+//
+//		this.hiringCompanyVisaTypeId = intExtParentTask.getVisaId();
+//
+//		this.hiringCompanyJobLocationId = intExtParentTask.getHiringCompanyJobLocationId();
+
+		if (intExtParentTask.getJobTitle() != null) {
+			this.jobTitle = intExtParentTask.getJobTitle();
+		} else {
+			this.jobTitle = intExtParentTask.getHiringCompanyJobTitle();
+		}
+
+		if (intExtParentTask.getExperienceRequired() != 0) {
+			this.experienceRequired = intExtParentTask.getExperienceRequired();
+		} else {
+			this.experienceRequired = intExtParentTask.getHiringCompanyExperienceRequired();
+		}
+
+		if (intExtParentTask.getBenchCandidateVisaTypeId() != 0) {
+			this.visaTypeId = intExtParentTask.getBenchCandidateVisaTypeId();
+		} else {
+			this.visaTypeId = intExtParentTask.getVisaId();
+		}
+
+		if (intExtParentTask.getRate() != 0) {
+			this.rate = intExtParentTask.getRate();
+		} else {
+			this.rate = intExtParentTask.getHiringCompanyRate();
+		}
+
+		if (intExtParentTask.getJobLocationId() != 0) {
+			this.jobLocationId = intExtParentTask.getJobLocationId();
+		} else {
+			this.jobLocationId = intExtParentTask.getHiringCompanyJobLocationId();
+		}
+
 	}
 
 	public int getTaskId() {
@@ -228,6 +313,76 @@ public class TaskDTO {
 		this.hiringCompanyId = hiringCompanyId;
 	}
 
+	/**
+	 * @return the jobTitle
+	 */
+	public String getJobTitle() {
+		return jobTitle;
+	}
+
+	/**
+	 * @param jobTitle the jobTitle to set
+	 */
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+
+	/**
+	 * @return the experienceRequired
+	 */
+	public int getExperienceRequired() {
+		return experienceRequired;
+	}
+
+	/**
+	 * @param experienceRequired the experienceRequired to set
+	 */
+	public void setExperienceRequired(int experienceRequired) {
+		this.experienceRequired = experienceRequired;
+	}
+
+	/**
+	 * @return the rate
+	 */
+	public float getRate() {
+		return rate;
+	}
+
+	/**
+	 * @param rate the rate to set
+	 */
+	public void setRate(float rate) {
+		this.rate = rate;
+	}
+
+	/**
+	 * @return the visaTypeId
+	 */
+	public int getVisaTypeId() {
+		return visaTypeId;
+	}
+
+	/**
+	 * @param visaTypeId the visaTypeId to set
+	 */
+	public void setVisaTypeId(int visaTypeId) {
+		this.visaTypeId = visaTypeId;
+	}
+
+	/**
+	 * @return the jobLocationId
+	 */
+	public int getJobLocationId() {
+		return jobLocationId;
+	}
+
+	/**
+	 * @param jobLocationId the jobLocationId to set
+	 */
+	public void setJobLocationId(int jobLocationId) {
+		this.jobLocationId = jobLocationId;
+	}
+
 	@Override
 	public String toString() {
 		return "TaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription=" + taskDescription
@@ -236,7 +391,9 @@ public class TaskDTO {
 				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
 				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild
 				+ ", placementId=" + placementId + ", taskChangeDate=" + taskChangeDate + ", benchCandidateId="
-				+ benchCandidateId + ", hiringCompanyId=" + hiringCompanyId + "]";
+				+ benchCandidateId + ", hiringCompanyId=" + hiringCompanyId + ", jobTitle=" + jobTitle
+				+ ", experienceRequired=" + experienceRequired + ", rate=" + rate + ", visaTypeId=" + visaTypeId
+				+ ", jobLocationId=" + jobLocationId + "]";
 	}
 
 }

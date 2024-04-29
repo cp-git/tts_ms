@@ -3,6 +3,7 @@ package com.cpa.ttsms.dto;
 import java.util.Date;
 
 import com.cpa.ttsms.entity.ExternalTask;
+import com.cpa.ttsms.entity.HiringCompany;
 import com.cpa.ttsms.entity.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -80,6 +81,14 @@ public class ExternalTaskDTO {
 	private boolean willingToNegotiateSalary;
 
 	private String reasonToFitForJob;
+
+	private String hiringCompanyJobTitle;
+
+	private int hiringCompanyExperienceRequired;
+
+	private int hirinCompanyJobMode;
+
+	private float hiringCompanyRate;
 
 	public int getHiringCompanyId() {
 		return hiringCompanyId;
@@ -353,6 +362,63 @@ public class ExternalTaskDTO {
 		this.reasonToFitForJob = reasonToFitForJob;
 	}
 
+	/**
+	 * @return the hiringCompanyJobTitle
+	 */
+	public String getHiringCompanyJobTitle() {
+		return hiringCompanyJobTitle;
+	}
+
+	/**
+	 * @param hiringCompanyJobTitle the hiringCompanyJobTitle to set
+	 */
+	public void setHiringCompanyJobTitle(String hiringCompanyJobTitle) {
+		this.hiringCompanyJobTitle = hiringCompanyJobTitle;
+	}
+
+	/**
+	 * @return the hiringCompanyExperienceRequired
+	 */
+	public int getHiringCompanyExperienceRequired() {
+		return hiringCompanyExperienceRequired;
+	}
+
+	/**
+	 * @param hiringCompanyExperienceRequired the hiringCompanyExperienceRequired to
+	 *                                        set
+	 */
+	public void setHiringCompanyExperienceRequired(int hiringCompanyExperienceRequired) {
+		this.hiringCompanyExperienceRequired = hiringCompanyExperienceRequired;
+	}
+
+	/**
+	 * @return the hirinCompanyJobMode
+	 */
+	public int getHirinCompanyJobMode() {
+		return hirinCompanyJobMode;
+	}
+
+	/**
+	 * @param hirinCompanyJobMode the hirinCompanyJobMode to set
+	 */
+	public void setHirinCompanyJobMode(int hirinCompanyJobMode) {
+		this.hirinCompanyJobMode = hirinCompanyJobMode;
+	}
+
+	/**
+	 * @return the rate
+	 */
+	public float getHiringCompanyRate() {
+		return hiringCompanyRate;
+	}
+
+	/**
+	 * @param rate the rate to set
+	 */
+	public void setHiringCompanyRate(float hiringCompanyRate) {
+		this.hiringCompanyRate = hiringCompanyRate;
+	}
+
 	public ExternalTaskDTO(int hiringCompanyId, int taskId, String taskName, String taskDescription, int taskCreatedBy,
 			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
 			Date taskActualEndDate, int companyId, int placementId, int taskParent, String reason, int employeeId,
@@ -360,7 +426,8 @@ public class ExternalTaskDTO {
 			String companyAddress, String recruiterName, String recruiterEmail, String recruiterPhone,
 			String candidateName, int visaId, int taxTypeId, int candidateExperience, int expectedMaxSalary,
 			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary,
-			String reasonToFitForJob) {
+			String reasonToFitForJob, String hiringCompanyJobTitle, int hiringCompanyExperienceRequired,
+			int hirinCompanyJobMode, float hiringCompanyRate) {
 		super();
 		this.hiringCompanyId = hiringCompanyId;
 		this.taskId = taskId;
@@ -396,6 +463,10 @@ public class ExternalTaskDTO {
 		this.willingToRelocate = willingToRelocate;
 		this.willingToNegotiateSalary = willingToNegotiateSalary;
 		this.reasonToFitForJob = reasonToFitForJob;
+		this.hiringCompanyJobTitle = hiringCompanyJobTitle;
+		this.hiringCompanyExperienceRequired = hiringCompanyExperienceRequired;
+		this.hirinCompanyJobMode = hirinCompanyJobMode;
+		this.hiringCompanyRate = hiringCompanyRate;
 	}
 
 //	public ExternalTaskDTO(Task associatedTask, ExternalTask externalTask) {
@@ -441,6 +512,50 @@ public class ExternalTaskDTO {
 
 	}
 
+	public ExternalTaskDTO(Task task, ExternalTask externalTask, HiringCompany hiringCompany) {
+		this.hiringCompanyId = externalTask.getHiringCompanyId();
+
+		this.taskId = task.getTaskId();
+		this.taskName = task.getTaskName();
+		this.taskDescription = task.getTaskDescription();
+		this.taskCreatedBy = task.getTaskCreatedBy();
+		this.taskAssignedTo = task.getTaskAssignedTo();
+		this.taskStatus = task.getTaskStatus();
+		this.taskStartDate = task.getTaskStartDate();
+		this.taskEndDate = task.getTaskEndDate();
+		this.taskActualStartDate = task.getTaskActualStartDate();
+		this.taskActualEndDate = task.getTaskActualEndDate();
+		this.companyId = task.getCompanyId();
+		this.taskParent = task.getTaskParent();
+		this.havingChild = task.isHavingChild();
+		this.placementId = task.getPlacementId();
+		this.taskChangeDate = task.getTaskChangeDate();
+		this.externalId = externalTask.getExternalId();
+
+		this.candidateName = externalTask.getCandidateName();
+		this.taxTypeId = externalTask.getTaxTypeId();
+		this.visaId = externalTask.getVisaId();
+
+		this.candidateExperience = externalTask.getCandidateExperience();
+		this.expectedMinSalary = externalTask.getExpectedMinSalary();
+		this.expectedMaxSalary = externalTask.getExpectedMaxSalary();
+		this.willingToRelocate = externalTask.isWillingToRelocate();
+		this.willingToNegotiateSalary = externalTask.isWillingToNegotiateSalary();
+		this.reasonToFitForJob = externalTask.getReasonToFitForJob();
+
+		this.candidateCompany = externalTask.getCandidateCompany();
+		this.companyAddress = externalTask.getCompanyAddress();
+		this.recruiterName = externalTask.getRecruiterName();
+		this.recruiterEmail = externalTask.getRecruiterEmail();
+		this.recruiterPhone = externalTask.getRecruiterPhone();
+
+		this.hiringCompanyJobTitle = hiringCompany.getHiringCompanyName();
+		this.hiringCompanyExperienceRequired = hiringCompany.getExperienceRequired();
+		this.hirinCompanyJobMode = hiringCompany.getJobMode();
+		this.hiringCompanyRate = hiringCompany.getRate();
+
+	}
+
 	@Override
 	public String toString() {
 		return "ExternalTaskDTO [hiringCompanyId=" + hiringCompanyId + ", taskId=" + taskId + ", taskName=" + taskName
@@ -456,7 +571,9 @@ public class ExternalTaskDTO {
 				+ ", candidateExperience=" + candidateExperience + ", expectedMaxSalary=" + expectedMaxSalary
 				+ ", expectedMinSalary=" + expectedMinSalary + ", willingToRelocate=" + willingToRelocate
 				+ ", willingToNegotiateSalary=" + willingToNegotiateSalary + ", reasonToFitForJob=" + reasonToFitForJob
-				+ "]";
+				+ ", hiringCompanyJobTitle=" + hiringCompanyJobTitle + ", hiringCompanyExperienceRequired="
+				+ hiringCompanyExperienceRequired + ", hirinCompanyJobMode=" + hirinCompanyJobMode
+				+ ", hiringCompanyRate=" + hiringCompanyRate + "]";
 	}
 
 }

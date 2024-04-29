@@ -2,7 +2,9 @@ package com.cpa.ttsms.dto;
 
 import java.util.Date;
 
+import com.cpa.ttsms.entity.BenchCandidate;
 import com.cpa.ttsms.entity.ExternalTask;
+import com.cpa.ttsms.entity.HiringCompany;
 import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Task;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -72,24 +74,33 @@ public class InternalExternalTaskDTO {
 	private int hiringCompanyId;
 	private int benchCandidateId;
 
+	private int benchCandidateVisaTypeId;
+
+	private String hiringCompanyJobTitle;
+	private int hiringCompanyExperienceRequired;
+	private float hiringCompanyRate;
+	private int hiringCompanyJobLocationId;
+
 	/**
 	 * 
-	 */
+	 */ 
 	public InternalExternalTaskDTO() {
 		super();
 	}
 
 	public InternalExternalTaskDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy,
 			int taskAssignedTo, int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate,
-			Date taskActualEndDate, int companyId, int taskParent, boolean havingChild, int placementId,Date taskChangeDate, String reason,
-			int employeeId, int internalId, String hiringCompanyName, String jobTitle, int jobLocationId,
-			String jobAddress, String jobCity, String jobState, int experienceRequired, float rate, Date datePosted,
-			String jobLink, int jobPortalId, String jobReferenceNumber, int taxTypeId, String recruiterName,
-			String recruiterEmail, String recruiterPhone, int jobSubmissionPortalId, String portalName,
-			String commentOnCandidate, int minBillingRate, int externalId, String candidateName,
-			String candidateCompany, String companyAddress, int visaId, int candidateExperience, int expectedMaxSalary,
-			int expectedMinSalary, boolean willingToRelocate, boolean willingToNegotiateSalary,
-			String reasonToFitForJob, int hiringCompanyId, int benchCandidateId) {
+			Date taskActualEndDate, int companyId, int taskParent, boolean havingChild, int placementId,
+			Date taskChangeDate, String reason, int employeeId, int internalId, String hiringCompanyName,
+			String jobTitle, int jobLocationId, String jobAddress, String jobCity, String jobState,
+			int experienceRequired, float rate, Date datePosted, String jobLink, int jobPortalId,
+			String jobReferenceNumber, int taxTypeId, String recruiterName, String recruiterEmail,
+			String recruiterPhone, int jobSubmissionPortalId, String portalName, String commentOnCandidate,
+			int minBillingRate, int externalId, String candidateName, String candidateCompany, String companyAddress,
+			int visaId, int candidateExperience, int expectedMaxSalary, int expectedMinSalary,
+			boolean willingToRelocate, boolean willingToNegotiateSalary, String reasonToFitForJob, int hiringCompanyId,
+			int benchCandidateId, int benchCandidateVisaTypeId, String hiringCompanyJobTitle,
+			int hiringCompanyExperienceRequired, float hiringCompanyRate, int hiringCompanyJobLocationId) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -142,9 +153,14 @@ public class InternalExternalTaskDTO {
 		this.reasonToFitForJob = reasonToFitForJob;
 		this.hiringCompanyId = hiringCompanyId;
 		this.benchCandidateId = benchCandidateId;
+		this.benchCandidateVisaTypeId = benchCandidateVisaTypeId;
+		this.hiringCompanyJobTitle = hiringCompanyJobTitle;
+		this.hiringCompanyExperienceRequired = hiringCompanyExperienceRequired;
+		this.hiringCompanyRate = hiringCompanyRate;
+		this.hiringCompanyJobLocationId = hiringCompanyJobLocationId;
 	}
 
-	public InternalExternalTaskDTO(Task task, InternalTask internalTask) {
+	public InternalExternalTaskDTO(Task task, InternalTask internalTask, BenchCandidate benchCandidate) {
 		this.taskId = task.getTaskId();
 		this.taskName = task.getTaskName();
 		this.taskDescription = task.getTaskDescription();
@@ -159,7 +175,7 @@ public class InternalExternalTaskDTO {
 		this.taskParent = task.getTaskParent();
 		this.havingChild = task.isHavingChild();
 		this.placementId = task.getPlacementId();
-this.taskChangeDate = task.getTaskChangeDate();
+		this.taskChangeDate = task.getTaskChangeDate();
 		this.internalId = internalTask.getInternalId();
 		this.benchCandidateId = internalTask.getBenchCandidateId();
 		this.jobPortalId = internalTask.getJobPortalId();
@@ -183,9 +199,10 @@ this.taskChangeDate = task.getTaskChangeDate();
 		this.commentOnCandidate = internalTask.getCommentOnCandidate();
 
 		this.minBillingRate = internalTask.getMinBillingRate();
+		this.benchCandidateVisaTypeId = benchCandidate.getVisaTypeId();
 	}
 
-	public InternalExternalTaskDTO(Task task, ExternalTask externalTask) {
+	public InternalExternalTaskDTO(Task task, ExternalTask externalTask, HiringCompany hiringCompany) {
 		this.taskId = task.getTaskId();
 		this.taskName = task.getTaskName();
 		this.taskDescription = task.getTaskDescription();
@@ -200,7 +217,7 @@ this.taskChangeDate = task.getTaskChangeDate();
 		this.taskParent = task.getTaskParent();
 		this.havingChild = task.isHavingChild();
 		this.placementId = task.getPlacementId();
-this.taskChangeDate = task.getTaskChangeDate();
+		this.taskChangeDate = task.getTaskChangeDate();
 		this.externalId = externalTask.getExternalId();
 		this.candidateName = externalTask.getCandidateName();
 		this.candidateCompany = externalTask.getCandidateCompany();
@@ -223,6 +240,11 @@ this.taskChangeDate = task.getTaskChangeDate();
 		this.reasonToFitForJob = externalTask.getReasonToFitForJob();
 
 		this.hiringCompanyId = externalTask.getHiringCompanyId();
+
+		this.hiringCompanyJobTitle = hiringCompany.getHiringCompanyName();
+		this.hiringCompanyExperienceRequired = hiringCompany.getExperienceRequired();
+		this.hiringCompanyRate = hiringCompany.getRate();
+		this.hiringCompanyJobLocationId = hiringCompany.getJobMode();
 	}
 
 	/**
@@ -420,7 +442,7 @@ this.taskChangeDate = task.getTaskChangeDate();
 	public void setPlacementId(int placementId) {
 		this.placementId = placementId;
 	}
-	
+
 	public Date getTaskChangeDate() {
 		return taskChangeDate;
 	}
@@ -936,6 +958,70 @@ this.taskChangeDate = task.getTaskChangeDate();
 		this.minBillingRate = minBillingRate;
 	}
 
+	/**
+	 * @return the benchCandidateVisaTypeId
+	 */
+	public int getBenchCandidateVisaTypeId() {
+		return benchCandidateVisaTypeId;
+	}
+
+	/**
+	 * @param benchCandidateVisaTypeId the benchCandidateVisaTypeId to set
+	 */
+	public void setBenchCandidateVisaTypeId(int benchCandidateVisaTypeId) {
+		this.benchCandidateVisaTypeId = benchCandidateVisaTypeId;
+	}
+
+	/**
+	 * @return the hiringCompanyJobTitle
+	 */
+	public String getHiringCompanyJobTitle() {
+		return hiringCompanyJobTitle;
+	}
+
+	/**
+	 * @param hiringCompanyJobTitle the hiringCompanyJobTitle to set
+	 */
+	public void setHiringCompanyJobTitle(String hiringCompanyJobTitle) {
+		this.hiringCompanyJobTitle = hiringCompanyJobTitle;
+	}
+
+	/**
+	 * @return the hiringCompanyExperienceRequired
+	 */
+	public int getHiringCompanyExperienceRequired() {
+		return hiringCompanyExperienceRequired;
+	}
+
+	/**
+	 * @param hiringCompanyExperienceRequired the hiringCompanyExperienceRequired to
+	 *                                        set
+	 */
+	public void setHiringCompanyExperienceRequired(int hiringCompanyExperienceRequired) {
+		this.hiringCompanyExperienceRequired = hiringCompanyExperienceRequired;
+	}
+
+	/**
+	 * @return the hiringCompanyRate
+	 */
+	public float getHiringCompanyRate() {
+		return hiringCompanyRate;
+	}
+
+	/**
+	 * @param hiringCompanyRate the hiringCompanyRate to set
+	 */
+	public void setHiringCompanyRate(float hiringCompanyRate) {
+		this.hiringCompanyRate = hiringCompanyRate;
+	}
+
+	/**
+	 * @return the hiringCompanyJobLocationId
+	 */
+	public int getHiringCompanyJobLocationId() {
+		return hiringCompanyJobLocationId;
+	}
+
 	@Override
 	public String toString() {
 		return "InternalExternalTaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription="
@@ -943,21 +1029,25 @@ this.taskChangeDate = task.getTaskChangeDate();
 				+ ", taskStatus=" + taskStatus + ", taskStartDate=" + taskStartDate + ", taskEndDate=" + taskEndDate
 				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
 				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild
-				+ ", placementId=" + placementId + ", reason=" + reason + ", employeeId=" + employeeId + ", internalId="
-				+ internalId + ", hiringCompanyName=" + hiringCompanyName + ", jobTitle=" + jobTitle
-				+ ", jobLocationId=" + jobLocationId + ", jobAddress=" + jobAddress + ", jobCity=" + jobCity
-				+ ", jobState=" + jobState + ", experienceRequired=" + experienceRequired + ", rate=" + rate
-				+ ", datePosted=" + datePosted + ", jobLink=" + jobLink + ", jobPortalId=" + jobPortalId
-				+ ", jobReferenceNumber=" + jobReferenceNumber + ", taxTypeId=" + taxTypeId + ", recruiterName="
-				+ recruiterName + ", recruiterEmail=" + recruiterEmail + ", recruiterPhone=" + recruiterPhone
-				+ ", jobSubmissionPortalId=" + jobSubmissionPortalId + ", portalName=" + portalName
-				+ ", commentOnCandidate=" + commentOnCandidate + ", minBillingRate=" + minBillingRate + ", externalId="
-				+ externalId + ", candidateName=" + candidateName + ", candidateCompany=" + candidateCompany
-				+ ", companyAddress=" + companyAddress + ", visaId=" + visaId + ", candidateExperience="
-				+ candidateExperience + ", expectedMaxSalary=" + expectedMaxSalary + ", expectedMinSalary="
-				+ expectedMinSalary + ", willingToRelocate=" + willingToRelocate + ", willingToNegotiateSalary="
-				+ willingToNegotiateSalary + ", reasonToFitForJob=" + reasonToFitForJob + ", hiringCompanyId="
-				+ hiringCompanyId + ", benchCandidateId=" + benchCandidateId + "]";
+				+ ", placementId=" + placementId + ", taskChangeDate=" + taskChangeDate + ", reason=" + reason
+				+ ", employeeId=" + employeeId + ", internalId=" + internalId + ", hiringCompanyName="
+				+ hiringCompanyName + ", jobTitle=" + jobTitle + ", jobLocationId=" + jobLocationId + ", jobAddress="
+				+ jobAddress + ", jobCity=" + jobCity + ", jobState=" + jobState + ", experienceRequired="
+				+ experienceRequired + ", rate=" + rate + ", datePosted=" + datePosted + ", jobLink=" + jobLink
+				+ ", jobPortalId=" + jobPortalId + ", jobReferenceNumber=" + jobReferenceNumber + ", taxTypeId="
+				+ taxTypeId + ", recruiterName=" + recruiterName + ", recruiterEmail=" + recruiterEmail
+				+ ", recruiterPhone=" + recruiterPhone + ", jobSubmissionPortalId=" + jobSubmissionPortalId
+				+ ", portalName=" + portalName + ", commentOnCandidate=" + commentOnCandidate + ", minBillingRate="
+				+ minBillingRate + ", externalId=" + externalId + ", candidateName=" + candidateName
+				+ ", candidateCompany=" + candidateCompany + ", companyAddress=" + companyAddress + ", visaId=" + visaId
+				+ ", candidateExperience=" + candidateExperience + ", expectedMaxSalary=" + expectedMaxSalary
+				+ ", expectedMinSalary=" + expectedMinSalary + ", willingToRelocate=" + willingToRelocate
+				+ ", willingToNegotiateSalary=" + willingToNegotiateSalary + ", reasonToFitForJob=" + reasonToFitForJob
+				+ ", hiringCompanyId=" + hiringCompanyId + ", benchCandidateId=" + benchCandidateId
+				+ ", benchCandidateVisaTypeId=" + benchCandidateVisaTypeId + ", hiringCompanyJobTitle="
+				+ hiringCompanyJobTitle + ", hiringCompanyExperienceRequired=" + hiringCompanyExperienceRequired
+				+ ", hiringCompanyRate=" + hiringCompanyRate + ", hiringCompanyJobLocationId="
+				+ hiringCompanyJobLocationId + "]";
 	}
 
 }

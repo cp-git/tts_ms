@@ -51,7 +51,9 @@ import com.cpa.ttsms.dto.StatusDTO;
 import com.cpa.ttsms.dto.TaskAndReasonDTO;
 import com.cpa.ttsms.dto.TaskDTO;
 import com.cpa.ttsms.dto.TaskDTO2;
+import com.cpa.ttsms.entity.BenchCandidate;
 import com.cpa.ttsms.entity.ExternalTask;
+import com.cpa.ttsms.entity.HiringCompany;
 import com.cpa.ttsms.entity.InternalTask;
 import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.entity.Reason;
@@ -59,7 +61,9 @@ import com.cpa.ttsms.entity.Status;
 import com.cpa.ttsms.entity.Task;
 import com.cpa.ttsms.entity.TaskAttachment;
 import com.cpa.ttsms.exception.CPException;
+import com.cpa.ttsms.repository.BenchCandidateRepo;
 import com.cpa.ttsms.repository.ExternalTaskRepository;
+import com.cpa.ttsms.repository.HiringCompanyRepo;
 import com.cpa.ttsms.repository.InternalTaskRepository;
 import com.cpa.ttsms.repository.PasswordRepo;
 import com.cpa.ttsms.repository.ReasonRepo;
@@ -127,6 +131,12 @@ public class TaskServiceImpl implements TaskService {
 
 	@Autowired
 	private ExternalTaskRepository externalTaskRepo;
+
+	@Autowired
+	private BenchCandidateRepo benchCandidateRepo;
+
+	@Autowired
+	private HiringCompanyRepo hiringCompanyRepo;
 
 	private static Logger logger;
 
@@ -1604,18 +1614,25 @@ public class TaskServiceImpl implements TaskService {
 		InternalExternalTaskDTO internalExternalTaskDTO = null;
 		InternalTask internalTask = null;
 		ExternalTask externalTask = null;
+		BenchCandidate benchCandidate = null;
+		HiringCompany hiringCompany = null;
 
 		try {
 			if (task != null) {
 
 				internalTask = internalTaskRepo.findByTaskId(task.getTaskId());
+
 				if (internalTask != null) {
-					internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask);
+					benchCandidate = benchCandidateRepo.findByBenchCandidateId(internalTask.getBenchCandidateId());
+
+					internalExternalTaskDTO = new InternalExternalTaskDTO(task, internalTask, benchCandidate);
 				} else {
 					externalTask = externalTaskRepo.findByTaskId(task.getTaskId());
 					System.out.println(externalTask.toString());
+
 					if (externalTask != null) {
-						internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask);
+						hiringCompany = hiringCompanyRepo.findByHiringCompanyId(externalTask.getHiringCompanyId());
+						internalExternalTaskDTO = new InternalExternalTaskDTO(task, externalTask, hiringCompany);
 					}
 				}
 

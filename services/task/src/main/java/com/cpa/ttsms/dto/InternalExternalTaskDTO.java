@@ -81,9 +81,13 @@ public class InternalExternalTaskDTO {
 	private float hiringCompanyRate;
 	private int hiringCompanyJobLocationId;
 
+	private int hiringCompanyCandidateTaxTypeId;
+	private int hiringCompanyCandidateVisaType;
+	private int hiringCompanyCandidateExperience;
+
 	/**
 	 * 
-	 */ 
+	 */
 	public InternalExternalTaskDTO() {
 		super();
 	}
@@ -100,7 +104,9 @@ public class InternalExternalTaskDTO {
 			int visaId, int candidateExperience, int expectedMaxSalary, int expectedMinSalary,
 			boolean willingToRelocate, boolean willingToNegotiateSalary, String reasonToFitForJob, int hiringCompanyId,
 			int benchCandidateId, int benchCandidateVisaTypeId, String hiringCompanyJobTitle,
-			int hiringCompanyExperienceRequired, float hiringCompanyRate, int hiringCompanyJobLocationId) {
+			int hiringCompanyExperienceRequired, float hiringCompanyRate, int hiringCompanyJobLocationId,
+			int hiringCompanyCandidateTaxTypeId, int hiringCompanyCandidateVisaType,
+			int hiringCompanyCandidateExperience) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -158,6 +164,9 @@ public class InternalExternalTaskDTO {
 		this.hiringCompanyExperienceRequired = hiringCompanyExperienceRequired;
 		this.hiringCompanyRate = hiringCompanyRate;
 		this.hiringCompanyJobLocationId = hiringCompanyJobLocationId;
+		this.hiringCompanyCandidateTaxTypeId = hiringCompanyCandidateTaxTypeId;
+		this.hiringCompanyCandidateVisaType = hiringCompanyCandidateVisaType;
+		this.hiringCompanyCandidateExperience = hiringCompanyCandidateExperience;
 	}
 
 	public InternalExternalTaskDTO(Task task, InternalTask internalTask, BenchCandidate benchCandidate) {
@@ -241,10 +250,61 @@ public class InternalExternalTaskDTO {
 
 		this.hiringCompanyId = externalTask.getHiringCompanyId();
 
-		this.hiringCompanyJobTitle = hiringCompany.getHiringCompanyName();
-		this.hiringCompanyExperienceRequired = hiringCompany.getExperienceRequired();
-		this.hiringCompanyRate = hiringCompany.getRate();
-		this.hiringCompanyJobLocationId = hiringCompany.getJobMode();
+		this.hiringCompanyCandidateVisaType = externalTask.getVisaId();
+		this.hiringCompanyCandidateTaxTypeId = externalTask.getTaxTypeId();
+		this.hiringCompanyCandidateExperience = externalTask.getCandidateExperience();
+	}
+
+	/**
+	 * @return the hiringCompanyCandidateTaxTypeId
+	 */
+	public int getHiringCompanyCandidateTaxTypeId() {
+		return hiringCompanyCandidateTaxTypeId;
+	}
+
+	/**
+	 * @param hiringCompanyCandidateTaxTypeId the hiringCompanyCandidateTaxTypeId to
+	 *                                        set
+	 */
+	public void setHiringCompanyCandidateTaxTypeId(int hiringCompanyCandidateTaxTypeId) {
+		this.hiringCompanyCandidateTaxTypeId = hiringCompanyCandidateTaxTypeId;
+	}
+
+	/**
+	 * @return the hiringCompanyCandidateVisaType
+	 */
+	public int getHiringCompanyCandidateVisaType() {
+		return hiringCompanyCandidateVisaType;
+	}
+
+	/**
+	 * @param hiringCompanyCandidateVisaType the hiringCompanyCandidateVisaType to
+	 *                                       set
+	 */
+	public void setHiringCompanyCandidateVisaType(int hiringCompanyCandidateVisaType) {
+		this.hiringCompanyCandidateVisaType = hiringCompanyCandidateVisaType;
+	}
+
+	/**
+	 * @return the hiringCompanyCandidateExperience
+	 */
+	public int getHiringCompanyCandidateExperience() {
+		return hiringCompanyCandidateExperience;
+	}
+
+	/**
+	 * @param hiringCompanyCandidateExperience the hiringCompanyCandidateExperience
+	 *                                         to set
+	 */
+	public void setHiringCompanyCandidateExperience(int hiringCompanyCandidateExperience) {
+		this.hiringCompanyCandidateExperience = hiringCompanyCandidateExperience;
+	}
+
+	/**
+	 * @param hiringCompanyJobLocationId the hiringCompanyJobLocationId to set
+	 */
+	public void setHiringCompanyJobLocationId(int hiringCompanyJobLocationId) {
+		this.hiringCompanyJobLocationId = hiringCompanyJobLocationId;
 	}
 
 	/**
@@ -1047,7 +1107,9 @@ public class InternalExternalTaskDTO {
 				+ ", benchCandidateVisaTypeId=" + benchCandidateVisaTypeId + ", hiringCompanyJobTitle="
 				+ hiringCompanyJobTitle + ", hiringCompanyExperienceRequired=" + hiringCompanyExperienceRequired
 				+ ", hiringCompanyRate=" + hiringCompanyRate + ", hiringCompanyJobLocationId="
-				+ hiringCompanyJobLocationId + "]";
+				+ hiringCompanyJobLocationId + ", hiringCompanyCandidateTaxTypeId=" + hiringCompanyCandidateTaxTypeId
+				+ ", hiringCompanyCandidateVisaType=" + hiringCompanyCandidateVisaType
+				+ ", hiringCompanyCandidateExperience=" + hiringCompanyCandidateExperience + "]";
 	}
 
 }

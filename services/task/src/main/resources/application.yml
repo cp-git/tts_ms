@@ -25,7 +25,7 @@ server:
     key-store: src/main/resources/keystore/ttscertificate.p12
     key-store-password: sslpassword
     key-alias: ttscertificate
-
+    
 file:
   base-path: D:/demo/tts
 

@@ -44,6 +44,24 @@ public class TaskDTO {
 
 	private int hiringCompanyId;
 
+	private String jobTitle; // Job Title
+
+	private int experienceRequired; // Indicates the number of years of experience needed for the job
+
+	private float rate; // $ per hour
+
+	private int visaTypeId;
+
+	private int jobLocationId; // job mode
+
+	private int taxTypeId;
+
+	private int candidateExperience;
+
+	private int expectedMinSalary;
+
+	private int expectedMaxSalary;
+
 	public TaskDTO() {
 		super();
 	}
@@ -51,7 +69,9 @@ public class TaskDTO {
 	public TaskDTO(int taskId, String taskName, String taskDescription, int taskCreatedBy, int taskAssignedTo,
 			int taskStatus, Date taskStartDate, Date taskEndDate, Date taskActualStartDate, Date taskActualEndDate,
 			int companyId, int taskParent, boolean havingChild, int placementId, Date taskChangeDate,
-			int benchCandidateId, int hiringCompanyId) {
+			int benchCandidateId, int hiringCompanyId, String jobTitle, int experienceRequired, float rate,
+			int visaTypeId, int jobLocationId, int taxTypeId, int candidateExperience, int expectedMinSalary,
+			int expectedMaxSalary) {
 		super();
 		this.taskId = taskId;
 		this.taskName = taskName;
@@ -70,6 +90,15 @@ public class TaskDTO {
 		this.taskChangeDate = taskChangeDate;
 		this.benchCandidateId = benchCandidateId;
 		this.hiringCompanyId = hiringCompanyId;
+		this.jobTitle = jobTitle;
+		this.experienceRequired = experienceRequired;
+		this.rate = rate;
+		this.visaTypeId = visaTypeId;
+		this.jobLocationId = jobLocationId;
+		this.taxTypeId = taxTypeId;
+		this.candidateExperience = candidateExperience;
+		this.expectedMinSalary = expectedMinSalary;
+		this.expectedMaxSalary = expectedMaxSalary;
 	}
 
 	public TaskDTO(InternalExternalTaskDTO intExtParentTask) {
@@ -90,6 +119,52 @@ public class TaskDTO {
 		this.taskChangeDate = intExtParentTask.getTaskChangeDate();
 		this.benchCandidateId = intExtParentTask.getBenchCandidateId();
 		this.hiringCompanyId = intExtParentTask.getHiringCompanyId();
+
+		if (intExtParentTask.getJobTitle() != null) {
+			this.jobTitle = intExtParentTask.getJobTitle();
+		} else {
+			this.jobTitle = intExtParentTask.getHiringCompanyJobTitle();
+		}
+
+		if (intExtParentTask.getExperienceRequired() != 0) {
+			this.experienceRequired = intExtParentTask.getExperienceRequired();
+		} else {
+			this.experienceRequired = intExtParentTask.getHiringCompanyExperienceRequired();
+		}
+
+		if (intExtParentTask.getBenchCandidateVisaTypeId() != 0) {
+			this.visaTypeId = intExtParentTask.getBenchCandidateVisaTypeId();
+		} else {
+			this.visaTypeId = intExtParentTask.getVisaId();
+		}
+
+		if (intExtParentTask.getRate() != 0) {
+			this.rate = intExtParentTask.getRate();
+		} else {
+			this.rate = intExtParentTask.getHiringCompanyRate();
+		}
+
+		if (intExtParentTask.getJobLocationId() != 0) {
+			this.jobLocationId = intExtParentTask.getJobLocationId();
+		} else {
+			this.jobLocationId = intExtParentTask.getHiringCompanyJobLocationId();
+		}
+
+		if (intExtParentTask.getTaxTypeId() != 0) {
+			this.taxTypeId = intExtParentTask.getTaxTypeId();
+		} else {
+			this.taxTypeId = intExtParentTask.getHiringCompanyCandidateTaxTypeId();
+		}
+
+		if (intExtParentTask.getCandidateExperience() != 0) {
+			this.candidateExperience = intExtParentTask.getCandidateExperience();
+		} else {
+			this.candidateExperience = intExtParentTask.getHiringCompanyCandidateExperience();
+		}
+
+		this.expectedMinSalary = intExtParentTask.getExpectedMinSalary();
+
+		this.expectedMaxSalary = intExtParentTask.getExpectedMaxSalary();
 	}
 
 	public int getTaskId() {
@@ -228,6 +303,132 @@ public class TaskDTO {
 		this.hiringCompanyId = hiringCompanyId;
 	}
 
+	/**
+	 * @return the jobTitle
+	 */
+	public String getJobTitle() {
+		return jobTitle;
+	}
+
+	/**
+	 * @param jobTitle the jobTitle to set
+	 */
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+
+	/**
+	 * @return the experienceRequired
+	 */
+	public int getExperienceRequired() {
+		return experienceRequired;
+	}
+
+	/**
+	 * @param experienceRequired the experienceRequired to set
+	 */
+	public void setExperienceRequired(int experienceRequired) {
+		this.experienceRequired = experienceRequired;
+	}
+
+	/**
+	 * @return the rate
+	 */
+	public float getRate() {
+		return rate;
+	}
+
+	/**
+	 * @param rate the rate to set
+	 */
+	public void setRate(float rate) {
+		this.rate = rate;
+	}
+
+	/**
+	 * @return the visaTypeId
+	 */
+	public int getVisaTypeId() {
+		return visaTypeId;
+	}
+
+	/**
+	 * @param visaTypeId the visaTypeId to set
+	 */
+	public void setVisaTypeId(int visaTypeId) {
+		this.visaTypeId = visaTypeId;
+	}
+
+	/**
+	 * @return the jobLocationId
+	 */
+	public int getJobLocationId() {
+		return jobLocationId;
+	}
+
+	/**
+	 * @param jobLocationId the jobLocationId to set
+	 */
+	public void setJobLocationId(int jobLocationId) {
+		this.jobLocationId = jobLocationId;
+	}
+
+	/**
+	 * @return the taxTypeId
+	 */
+	public int getTaxTypeId() {
+		return taxTypeId;
+	}
+
+	/**
+	 * @param taxTypeId the taxTypeId to set
+	 */
+	public void setTaxTypeId(int taxTypeId) {
+		this.taxTypeId = taxTypeId;
+	}
+
+	/**
+	 * @return the candidateExperience
+	 */
+	public int getCandidateExperience() {
+		return candidateExperience;
+	}
+
+	/**
+	 * @param candidateExperience the candidateExperience to set
+	 */
+	public void setCandidateExperience(int candidateExperience) {
+		this.candidateExperience = candidateExperience;
+	}
+
+	/**
+	 * @return the expectedMinSalary
+	 */
+	public int getExpectedMinSalary() {
+		return expectedMinSalary;
+	}
+
+	/**
+	 * @param expectedMinSalary the expectedMinSalary to set
+	 */
+	public void setExpectedMinSalary(int expectedMinSalary) {
+		this.expectedMinSalary = expectedMinSalary;
+	}
+
+	/**
+	 * @return the expectedMaxSalary
+	 */
+	public int getExpectedMaxSalary() {
+		return expectedMaxSalary;
+	}
+
+	/**
+	 * @param expectedMaxSalary the expectedMaxSalary to set
+	 */
+	public void setExpectedMaxSalary(int expectedMaxSalary) {
+		this.expectedMaxSalary = expectedMaxSalary;
+	}
+
 	@Override
 	public String toString() {
 		return "TaskDTO [taskId=" + taskId + ", taskName=" + taskName + ", taskDescription=" + taskDescription
@@ -236,7 +437,11 @@ public class TaskDTO {
 				+ ", taskActualStartDate=" + taskActualStartDate + ", taskActualEndDate=" + taskActualEndDate
 				+ ", companyId=" + companyId + ", taskParent=" + taskParent + ", havingChild=" + havingChild
 				+ ", placementId=" + placementId + ", taskChangeDate=" + taskChangeDate + ", benchCandidateId="
-				+ benchCandidateId + ", hiringCompanyId=" + hiringCompanyId + "]";
+				+ benchCandidateId + ", hiringCompanyId=" + hiringCompanyId + ", jobTitle=" + jobTitle
+				+ ", experienceRequired=" + experienceRequired + ", rate=" + rate + ", visaTypeId=" + visaTypeId
+				+ ", jobLocationId=" + jobLocationId + ", taxTypeId=" + taxTypeId + ", candidateExperience="
+				+ candidateExperience + ", expectedMinSalary=" + expectedMinSalary + ", expectedMaxSalary="
+				+ expectedMaxSalary + "]";
 	}
 
 }

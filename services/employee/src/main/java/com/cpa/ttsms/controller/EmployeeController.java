@@ -44,6 +44,8 @@ import com.cpa.ttsms.entity.EmployeePhotos;
 import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
+import com.cpa.ttsms.repository.EmployeeRepo;
+import com.cpa.ttsms.repository.PasswordRepo;
 import com.cpa.ttsms.service.EmployeeService;
 
 @CrossOrigin
@@ -53,6 +55,14 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;;
+	
+	
+	@Autowired
+	private EmployeeRepo employeeRepo;
+	
+	
+	@Autowired
+	private PasswordRepo passRepo;
 
 	private ResourceBundle resourceBundle;
 	private static Logger logger;
@@ -83,38 +93,85 @@ public class EmployeeController {
 	 * @throws CPException If there is an error while creating the employee or
 	 *                     generating the response.
 	 */
+//	@PostMapping("/employee")
+//	public ResponseEntity<Object> createEmployee(
+//			@RequestPart("employee") EmployeePasswordAndEmployeePhotosDTO employeePasswordAndEmployeePhotosDTO,
+//			@RequestParam("file") MultipartFile file) throws CPException {
+//		// Log the entry of the method
+//		logger.debug("Entering createEmployee");
+//
+//		// Log information about the data received for creating an employee
+//		logger.info("Data of creating Employee: " + employeePasswordAndEmployeePhotosDTO.toString());
+//
+//		try {
+//			// Call the employeeService to create an employee with the provided data
+//			EmployeePasswordAndEmployeePhotosDTO createdDTO = employeeService
+//					.createEmployee(employeePasswordAndEmployeePhotosDTO, file);
+//
+//			// Log information about the created employee and password
+//			logger.info("Employee and password created: " + createdDTO);
+//
+//			if (createdDTO != null) {
+//				// Generate a CREATED response with a success message
+//				return ResponseHandler.generateResponse(createdDTO, HttpStatus.CREATED);
+//			} else {
+//				// Generate a BAD_REQUEST response with an error message for a failed operation
+//				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "Failed to create employee.");
+//			}
+//		} catch (Exception e) {
+//			// Log any exceptions that occur during the creation process
+//			logger.error(resourceBundle.getString("err003"));
+//
+//			// Generate an INTERNAL_SERVER_ERROR response with an error message
+//			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+//		}
+//	}
+	
 	@PostMapping("/employee")
-	public ResponseEntity<Object> createEmployee(
-			@RequestPart("employee") EmployeePasswordAndEmployeePhotosDTO employeePasswordAndEmployeePhotosDTO,
-			@RequestParam("file") MultipartFile file) throws CPException {
+	public EmployeePasswordAndEmployeePhotosDTO createEmployee(
+			@RequestPart("employee") EmployeePasswordAndEmployeePhotosDTO employeePasswordAndEmployeePhotosDTO) throws CPException {
 		// Log the entry of the method
 		logger.debug("Entering createEmployee");
 
 		// Log information about the data received for creating an employee
 		logger.info("Data of creating Employee: " + employeePasswordAndEmployeePhotosDTO.toString());
 
-		try {
-			// Call the employeeService to create an employee with the provided data
-			EmployeePasswordAndEmployeePhotosDTO createdDTO = employeeService
-					.createEmployee(employeePasswordAndEmployeePhotosDTO, file);
-
-			// Log information about the created employee and password
-			logger.info("Employee and password created: " + createdDTO);
-
-			if (createdDTO != null) {
-				// Generate a CREATED response with a success message
-				return ResponseHandler.generateResponse(createdDTO, HttpStatus.CREATED);
-			} else {
-				// Generate a BAD_REQUEST response with an error message for a failed operation
-				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "Failed to create employee.");
-			}
-		} catch (Exception e) {
-			// Log any exceptions that occur during the creation process
-			logger.error(resourceBundle.getString("err003"));
-
-			// Generate an INTERNAL_SERVER_ERROR response with an error message
-			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
-		}
+		Employee emp= new Employee();
+		Password password = new Password();
+		emp.setEmployeeId(employeePasswordAndEmployeePhotosDTO.getEmployeeId());
+		emp.setFirstName(employeePasswordAndEmployeePhotosDTO.getFirstName());
+		emp.setLastName(employeePasswordAndEmployeePhotosDTO.getLastName());
+		
+		password.setEmployeeId(employeePasswordAndEmployeePhotosDTO.getEmployeeId());
+		password.setUsername(employeePasswordAndEmployeePhotosDTO.getUsername());
+		password.setPassword(employeePasswordAndEmployeePhotosDTO.getPassword());
+		employeeRepo.save(emp);
+		passRepo.save(password);
+		
+		return employeePasswordAndEmployeePhotosDTO;
+		
+//		try {
+//			// Call the employeeService to create an employee with the provided data
+//			EmployeePasswordAndEmployeePhotosDTO createdDTO = employeeService
+//					.createEmployee(employeePasswordAndEmployeePhotosDTO, file);
+//
+//			// Log information about the created employee and password
+//			logger.info("Employee and password created: " + createdDTO);
+//
+//			if (createdDTO != null) {
+//				// Generate a CREATED response with a success message
+//				return ResponseHandler.generateResponse(createdDTO, HttpStatus.CREATED);
+//			} else {
+//				// Generate a BAD_REQUEST response with an error message for a failed operation
+//				return ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, "Failed to create employee.");
+//			}
+//		} catch (Exception e) {
+//			// Log any exceptions that occur during the creation process
+//			logger.error(resourceBundle.getString("err003"));
+//
+//			// Generate an INTERNAL_SERVER_ERROR response with an error message
+//			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
+//		}
 	}
 
 	/**

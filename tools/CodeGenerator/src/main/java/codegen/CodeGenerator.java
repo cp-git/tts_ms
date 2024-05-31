@@ -740,7 +740,7 @@ public class CodeGenerator {
 		velocityEngine.init(velocityProperties);
 
 		loadProperties(
-				"D:\\BE pull\\TTS BE PULLS\\BE 1212 ChangeReq\\tts_ms\\tools\\CodeGenerator\\src\\main\\resources\\CodeGen.properties");
+				"D:\\TTS\\TTS_ssl_tts_Branch\\Backend\\tts_ms\\tools\\CodeGenerator\\src\\main\\resources\\CodeGen_ChatMessage.properties");
 
 		String rootFolder = props.getProperty("rootFolder");
 		String serviceName = props.getProperty("service");

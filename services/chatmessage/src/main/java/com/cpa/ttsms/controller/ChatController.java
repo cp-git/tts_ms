@@ -29,12 +29,16 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 @CrossOrigin
 public class ChatController {
 
 //    private SimpMessagingTemplate messagingTemplate;
-//    @Autowired
+
+	//    @Autowired
 //    private  ChatMessageService chatMessageService;
 
 	private final SimpMessagingTemplate messagingTemplate;
@@ -56,7 +60,7 @@ public class ChatController {
     	System.out.println(chatMessage.getRecipientId());
     	System.out.println(chatMessage.getSenderId());
 
-//        ChatMessage savedMsg = chatMessageService.save(chatMessage);
+        ChatMessage savedMsg = chatMessageService.save(chatMessage);
    
         messagingTemplate.convertAndSend("/user/"+chatMessage.getRecipientId()+"/queue/messages",chatMessage );
     
@@ -185,6 +189,15 @@ public class ChatController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+    
+    @PostMapping("/setUserId")
+    public ResponseEntity<String> setUserId(@RequestParam String senderId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.setAttribute("USER_ID", senderId);
+        String userId = (String) session.getAttribute("USER_ID");
+        System.out.println("User ID set in session: " + userId);
+        return ResponseEntity.ok(userId);
     }
     
     

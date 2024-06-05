@@ -6,7 +6,8 @@ spring.jpa:
 
 spring.datasource:
   driverClassName: org.postgresql.Driver
-  url: jdbc:postgresql://44.223.233.206:5432/tts
+  url: jdbc:postgresql://127.0.0.1:5432/tts
+
   username: postgres
   password: "7$Rt6&m,6&Ui4!as9^Yu2"
 
@@ -16,7 +17,7 @@ spring.datasource:
 server:
   port: 8443
   ssl:
-    key-store: classpath:upload.jks
+    key-store: classpath:keystore/ttscert.p12
     key-store-password: sslpassword
     key-password: sslpassword
-    key-alias: upload
+    key-alias: javadevjournal

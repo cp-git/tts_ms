@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 public class ChatMessageService {
 	
-    private static final String UPLOAD_DIR = "D:/uploads/";
+    private static final String UPLOAD_DIR = "/demo/tts";
 
     private  ChatMessageRepository repository;
 	

@@ -16,7 +16,12 @@ spring.datasource:
 server:
   port: 8443
   ssl:
-    key-store-type: PKCS12
-    key-store: src/main/resources/keystore/ttscertificate.p12
+    key-store: classpath:keystore/ttscert.p12
     key-store-password: sslpassword
-    key-alias: ttscertificate
+    key-password: sslpassword
+    key-alias: javadevjournal
+#    key-store-type: PKCS12
+#    key-store: src/main/resources/keystore/ttscertificate.p12
+#    key-store-password: sslpassword
+#    key-alias: ttscertificate
+

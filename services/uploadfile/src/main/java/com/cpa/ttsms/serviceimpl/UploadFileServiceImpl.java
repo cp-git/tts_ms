@@ -13,6 +13,18 @@ import com.cpa.ttsms.service.UploadFileService;
 
 @Service
 public class UploadFileServiceImpl implements UploadFileService {
+	static {
+		// for 127.0.0.1 testing only
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(new javax.net.ssl.HostnameVerifier() {
+
+			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
+				if (hostname.equals("127.0.0.1")) {
+					return true;
+				}
+				return false;
+			}
+		});
+	}
 
 	@Override
 	public boolean uploadFile(String basePath, String folderName, String fileName, MultipartFile file) {

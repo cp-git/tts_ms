@@ -44,6 +44,8 @@ import com.cpa.ttsms.entity.EmployeePhotos;
 import com.cpa.ttsms.entity.Password;
 import com.cpa.ttsms.exception.CPException;
 import com.cpa.ttsms.helper.ResponseHandler;
+import com.cpa.ttsms.repository.EmployeeRepo;
+import com.cpa.ttsms.repository.PasswordRepo;
 import com.cpa.ttsms.service.EmployeeService;
 
 @CrossOrigin
@@ -53,6 +55,14 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;;
+	
+	
+	@Autowired
+	private EmployeeRepo employeeRepo;
+	
+	
+	@Autowired
+	private PasswordRepo passRepo;
 
 	private ResourceBundle resourceBundle;
 	private static Logger logger;
@@ -116,6 +126,8 @@ public class EmployeeController {
 			return ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, "err003");
 		}
 	}
+	
+
 
 	/**
 	 * Retrieves an EmployeeAndPasswordDTO object containing employee and password

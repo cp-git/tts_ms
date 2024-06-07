@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.cpa.ttsms.entity.ChatMessage;
 
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, String> {
+public interface ChatMessageRepository extends JpaRepository<ChatMessage, Integer> {
     List<ChatMessage> findByChatId(String chatId);
     
     // Define the method to delete messages older than a specified timestamp

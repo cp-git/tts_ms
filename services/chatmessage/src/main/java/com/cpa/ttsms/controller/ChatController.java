@@ -60,6 +60,9 @@ public class ChatController {
     	System.out.println(chatMessage.getRecipientId());
     	System.out.println(chatMessage.getSenderId());
 
+    	chatMessage.setRecipientId(chatMessage.getRecipientId().toLowerCase());
+    	chatMessage.setSenderId(chatMessage.getSenderId().toLowerCase());
+
         ChatMessage savedMsg = chatMessageService.save(chatMessage);
    
         messagingTemplate.convertAndSend("/user/"+chatMessage.getRecipientId()+"/queue/messages",chatMessage );

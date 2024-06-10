@@ -14,7 +14,7 @@ spring.datasource:
 #  port: 8080
 
 server:
-  port: 8443
+  port: 8442
   ssl:
     key-store: classpath:keystore/ttscert.p12
     key-store-password: sslpassword

@@ -83,17 +83,27 @@ public class LoggedInStatusController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+//
+//    @GetMapping("/getByUsername/{username}")
+//    public ResponseEntity<LoggedInStatus> getLoggedInStatusByUsername(@PathVariable String username) {
+//        LoggedInStatus status = loggedInStatusService.findByUsername(username);
+//        if (status != null) {
+//            return new ResponseEntity<>(status, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+//    
+    
     @GetMapping("/getByUsername/{username}")
-    public ResponseEntity<LoggedInStatus> getLoggedInStatusByUsername(@PathVariable String username) {
+    public ResponseEntity<?> getLoggedInStatusByUsername(@PathVariable String username) {
         LoggedInStatus status = loggedInStatusService.findByUsername(username);
         if (status != null) {
-            return new ResponseEntity<>(status, HttpStatus.OK);
+            return ResponseEntity.ok(status); // Username found, return status
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
     @PostMapping
     public LoggedInStatus createLoggedInStatus(@RequestBody LoggedInStatus status) {
         return loggedInStatusService.save(status);

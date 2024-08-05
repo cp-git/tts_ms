@@ -28,6 +28,11 @@ public interface LeadDetailsRepo extends JpaRepository<LeadDetails, Integer> {
 	 */
 	public LeadDetails findById(int id);
 	
+	
+	  List<LeadDetails> findByIdIn(List<Integer> ids);
+	
+
+	
 	/*
 	 * Find Details By User id
 	 */
@@ -73,4 +78,41 @@ public interface LeadDetailsRepo extends JpaRepository<LeadDetails, Integer> {
 	 //Select All Data in Searching...
 	   @Query("SELECT p FROM LeadDetails p WHERE (:companyName IS NULL OR p.companyName LIKE %:companyName%) OR (:recruiterName IS NULL OR p.recruiterName LIKE %:recruiterName%) OR (:recruiterMail IS NULL OR p.recruiterMail LIKE %:recruiterMail%) OR (:positionName IS NULL OR p.positionName LIKE %:positionName%) OR (:jobLocation IS NULL OR p.jobLocation LIKE %:jobLocation%)")
 	    List<LeadDetails> search(@Param("companyName") String companyName, @Param("recruiterName") String recruiterName, @Param("recruiterMail") String recruiterMail,@Param("positionName") String positionName,@Param("jobLocation") String jobLocation);
+
+	   
+	   
+	   /*
+	    * Searching by specific User id...
+	    */
+	   
+	   @Query("SELECT p FROM LeadDetails p WHERE (:companyName IS NULL OR p.companyName LIKE %:companyName%) AND p.userId = :userId")
+		  List<LeadDetails> searchByCompanyNameAndId(@Param("companyName") String companyName, @Param("userId") int userId);
+	   
+	   
+	   /*
+	    * Searching Details by specific Recruiter name and User Id
+	    */
+	   @Query("SELECT p FROM LeadDetails p WHERE (:recruiterName IS NULL OR p.recruiterName LIKE %:recruiterName%) AND p.userId = :userId")
+		List<LeadDetails> searchByRecuiterNameAndID(@Param("recruiterName") String recruiterName, @Param("userId") int userId);
+		
+	   
+	    //Search Details By Recruiter Email with user id
+		 @Query("SELECT p FROM LeadDetails p WHERE (:recruiterMail IS NULL OR p.recruiterMail LIKE %:recruiterMail%) AND p.userId = :userId")
+		  List<LeadDetails> searchByRecruiterMailAndId(@Param("recruiterMail") String recruiterMail,@Param("userId") int userId);
+		 
+		 
+		//Search Details By Position Name
+		 @Query("SELECT p FROM LeadDetails p WHERE (:positionName IS NULL OR p.positionName LIKE %:positionName%) AND p.userId = :userId")
+		  List<LeadDetails> searchBypositionNameAndId(@Param("positionName") String positionName,@Param("userId") int userId);
+		 
+		//Search Details By Job Location 
+		 @Query("SELECT p FROM LeadDetails p WHERE (:jobLocation IS NULL OR p.jobLocation LIKE %:jobLocation%) AND p.userId = :userId ")
+		  List<LeadDetails> searchByjobLocationAndId(@Param("jobLocation") String jobLocation,@Param("userId") int userId);
+		 
+		 
+//		 //GetAll
+		 @Query("SELECT p FROM LeadDetails p WHERE (:companyName IS NULL OR p.companyName LIKE %:companyName%) OR (:recruiterName IS NULL OR p.recruiterName LIKE %:recruiterName%) OR (:recruiterMail IS NULL OR p.recruiterMail LIKE %:recruiterMail%) OR (:positionName IS NULL OR p.positionName LIKE %:positionName%) OR (:jobLocation IS NULL OR p.jobLocation LIKE %:jobLocation%) AND p.userId = :userId")
+		 List<LeadDetails> searchById(@Param("companyName") String companyName, @Param("recruiterName") String recruiterName, @Param("recruiterMail") String recruiterMail,@Param("positionName") String positionName,@Param("jobLocation") String jobLocation ,@Param("userId") int userId);
+	   
+	   
 }

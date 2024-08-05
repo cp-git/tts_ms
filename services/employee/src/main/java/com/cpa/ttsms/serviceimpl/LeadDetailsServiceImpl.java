@@ -1,5 +1,8 @@
 package com.cpa.ttsms.serviceimpl;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cpa.ttsms.entity.Employee;
 import com.cpa.ttsms.entity.LeadDetails;
 import com.cpa.ttsms.repository.LeadDetailsRepo;
 import com.cpa.ttsms.service.LeadDetailsService;
@@ -22,6 +26,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 @Service
 public class LeadDetailsServiceImpl implements LeadDetailsService {
@@ -188,7 +193,23 @@ public class LeadDetailsServiceImpl implements LeadDetailsService {
 			leadDetailsRepo.deleteById(id);
 			
 		}
+
+		@Override
+		public List<Object> getAllLeadDetails() {
+			// TODO Auto-generated method stub
 		
+				List<LeadDetails> employees = leadDetailsRepo.findAll();
+					
+				// Create a new list to store objects
+				List<Object> objects = new ArrayList<>(employees); 
+																	
+
+				return objects; 
+			
+
+		}
+
+	
 		
 
 }

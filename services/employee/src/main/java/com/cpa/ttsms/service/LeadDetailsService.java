@@ -1,5 +1,6 @@
 package com.cpa.ttsms.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -25,5 +26,11 @@ public interface LeadDetailsService {
 	
 	//Delete the Lead details by User Id
 	void deleteLeadDetailsById(int id);
+	
+	
+	//GetAll Lead Details...
+	List<Object> getAllLeadDetails();
+	
 
+	
 }

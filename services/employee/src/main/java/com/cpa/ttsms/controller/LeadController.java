@@ -1,13 +1,19 @@
 package com.cpa.ttsms.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -216,5 +222,65 @@ public class LeadController {
 		    	 
 		     }
 	    }
+	  
+	  
+	  @GetMapping("/allLeadDetails")
+		public ResponseEntity<List<Object>> getAllLeadDetails() throws CPException {
+			logger.debug("Entering getAllEmployees");
+
+			List<Object> employees = null;
+			try {
+				// Retrieve all active employees from the service layer.
+				employees = leadDetailsService.getAllLeadDetails();
+
+				if (employees != null && !employees.isEmpty()) {
+					// If active employees are found, generate a success response with the list of
+
+					logger.info("Fetched all Employee: " + employees);
+					return ResponseHandler.generateListResponse(employees, HttpStatus.OK);
+				} else {
+
+					// logger.info(resourceBundle.getString("err002"));
+					return ResponseHandler.generateListResponse(HttpStatus.NOT_FOUND, "err002");
+				}
+			} catch (Exception ex) {
+				// Log and throw a custom exception for error response.
+				logger.error("Failed getting all employees: " + ex.getMessage());
+				throw new CPException("err002", "Error while retrieving all employees");
+			}
+		}
+	  
+	  
+	  @GetMapping("/lead/searching/{userId}/data")
+	    public List<LeadDetails> searchProductsandId(@PathVariable("userId") int userId,@RequestParam(required = false) String companyName, @RequestParam(required = false) String recruiterName, @RequestParam(required = false) String recruiterMail, @RequestParam(required = false) String positionName, @RequestParam(required = false) String jobLocation) {   
+		      if(recruiterName ==null && recruiterMail==null && positionName ==null &&  jobLocation ==null) {
+		    	 System.out.println("User Id is..."+userId);
+		    	 return  leadDetailsRepo.searchByCompanyNameAndId(companyName,userId);
+		     }
+		     else if(companyName ==null && recruiterMail==null && positionName ==null &&  jobLocation ==null) {
+		    	 	return leadDetailsRepo.searchByRecuiterNameAndID(recruiterName,userId);
+		     }
+		     else if(companyName ==null && recruiterName==null && positionName ==null &&  jobLocation ==null) {
+		    	 return leadDetailsRepo.searchByRecruiterMailAndId(recruiterMail,userId);
+		     }
+		     else if(companyName ==null && recruiterName==null && recruiterMail ==null &&  jobLocation ==null) {
+		    	 return leadDetailsRepo.searchBypositionNameAndId(positionName,userId);
+		     }
+		     else if(companyName ==null && recruiterName==null && recruiterMail ==null &&  positionName ==null) {
+		    	 return leadDetailsRepo.searchByjobLocationAndId(jobLocation,userId);
+		     }
+		     else {
+		    	 System.out.println("In Function....");
+		    	return leadDetailsService.getLeadDetailsByUserId(userId);
+		    	
+		    	 
+		    	 
+      	    }
+	    }
+	  
+	  
+	
+	  
+	
 
 }

@@ -40,7 +40,7 @@ public class LeadDetails {
 	@Column(name = "recruitermail")
 	private String recruiterMail;
 
-	@Column(name = "link")
+	@Column(name = "link",length = 500)
 	private String link;
 
 	@Column(name = "date")
